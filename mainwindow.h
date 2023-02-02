@@ -18,9 +18,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    /*void mousePressEvent(QMouseEvent *e);*/
-    void PositionSouris();
-
 
 private:
     Ui::MainWindow *ui;

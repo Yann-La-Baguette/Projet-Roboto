@@ -22,13 +22,6 @@ MainWindow::~MainWindow(){
 }
 
 
-void MainWindow::PositionSouris(){
-    QPoint p = ui->cooSouris->mapFromGlobal(QCursor::pos());
-    ui->cooSouris->setText("x : " + QString::number(p.rx()) + "     y : " + QString::number(p.ry()));
-    qDebug()<<p.rx();
-    qDebug()<<p.ry();
-}
-
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton) {
         QRect rect = ui->image->geometry();
