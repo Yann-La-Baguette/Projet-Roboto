@@ -25,12 +25,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton) {
         QRect rect = ui->image->geometry();
         if (rect.contains(event->pos())) {
+
             QPoint p = ui->image->mapFromParent(event->pos());
+            QPainter painter(ui->image);
+            painter.begin(ui->image);
+            painter.drawPoint(p);
+            painter.end();
+
             ui->cooSouris->setText("x : " + QString::number(p.rx()) + "     y : " + QString::number(p.ry()));
-            qDebug()<<p.rx();
-            qDebug()<<p.ry();
         }
-
-
     }
 }

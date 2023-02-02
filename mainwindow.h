@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QMouseEvent>
-#include <QWidget>
+#include <QPainter>
 #include <QHBoxLayout>
 
 QT_BEGIN_NAMESPACE
