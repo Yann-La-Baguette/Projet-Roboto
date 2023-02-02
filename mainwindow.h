@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QWidget>
+#include <QHBoxLayout>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,12 +19,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     /*void mousePressEvent(QMouseEvent *e);*/
-    QPoint PositionSouris();
+    void PositionSouris();
+
 
 private:
     Ui::MainWindow *ui;
+    QWidget *uwu;
 
 private slots:
-
+    void mousePressEvent(QMouseEvent *event);
 };
 #endif // MAINWINDOW_H

@@ -17,26 +17,26 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="image" native="true">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>100</y>
-      <width>581</width>
-      <height>421</height>
+      <x>230</x>
+      <y>70</y>
+      <width>611</width>
+      <height>491</height>
      </rect>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="cooSouris">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>530</y>
-      <width>171</width>
-      <height>41</height>
+      <y>20</y>
+      <width>91</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
