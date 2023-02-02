@@ -27,8 +27,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         if (rect.contains(event->pos())) {
 
             QPoint p = ui->image->mapFromParent(event->pos());
+
             QPainter painter(ui->image);
             painter.begin(ui->image);
+            QPen pen;
+            pen.setWidth(10);
+            pen.setColor(Qt::red);
+            painter.setPen(pen);
             painter.drawPoint(p);
             painter.end();
 
