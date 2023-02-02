@@ -5,16 +5,15 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
     ui->image->setStyleSheet("background-color: #FF0000;");
+
     QLabel *label = new QLabel(ui->image);
     QPixmap pixmap("./Image_satellite_test.png");
-    if (pixmap.isNull()) {
-        qDebug() << "Could not load image";
-    } else {
-        label->setPixmap(pixmap);
-        QHBoxLayout *layout = new QHBoxLayout();
-        layout->addWidget(label);
-        ui->image->setLayout(layout);
-    }
+
+    label->setPixmap(pixmap);
+    ui->image->setFixedSize(pixmap.width(), pixmap.height());
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(label);
+    ui->image->setLayout(layout);
 }
 
 MainWindow::~MainWindow(){
