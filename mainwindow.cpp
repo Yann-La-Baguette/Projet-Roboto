@@ -28,14 +28,27 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 
             QPoint p = ui->image->mapFromParent(event->pos());
 
-            QPainter painter(ui->image);
-            painter.begin(ui->image);
+            QImage Image = ui->image->grab().toImage();
+
+            QPainter painter(&Image);
             QPen pen;
-            pen.setWidth(10);
+            pen.setWidth(15);
             pen.setColor(Qt::red);
             painter.setPen(pen);
             painter.drawPoint(p);
             painter.end();
+
+            QLabel *label = new QLabel(ui->image);
+            label->setPixmap(QPixmap::fromImage(Image));
+
+            QHBoxLayout *layout = new QHBoxLayout();
+            layout->addWidget(label);
+
+            QLayout *oldLayout = ui->image->layout();
+            if (oldLayout != nullptr) {
+                delete oldLayout;
+            }
+            ui->image->setLayout(layout);
 
             ui->cooSouris->setText("x : " + QString::number(p.rx()) + "     y : " + QString::number(p.ry()));
         }
