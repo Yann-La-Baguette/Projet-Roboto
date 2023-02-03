@@ -33,7 +33,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             QPainter painter(&Image);
             QPen pen;
             pen.setWidth(15);
-            pen.setColor(Qt::red);
+            pen.setColor(Qt::blue);
             painter.setPen(pen);
             painter.drawPoint(p);
             painter.end();
@@ -44,11 +44,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             QHBoxLayout *layout = new QHBoxLayout();
             layout->addWidget(label);
 
-            QLayout *oldLayout = ui->image->layout();
-            if (oldLayout != nullptr) {
-                delete oldLayout;
-            }
+            delete ui->image->layout();
             ui->image->setLayout(layout);
+
 
             ui->cooSouris->setText("x : " + QString::number(p.rx()) + "     y : " + QString::number(p.ry()));
         }
