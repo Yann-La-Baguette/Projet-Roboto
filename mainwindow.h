@@ -28,5 +28,6 @@ private:
 private slots:
     void loop();
     void mousePressEvent(QMouseEvent *event);
+    void reset();
 };
 #endif // MAINWINDOW_H

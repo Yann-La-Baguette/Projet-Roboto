@@ -43,6 +43,19 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="Reset">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>70</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -57,5 +70,26 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>Reset</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>77</x>
+     <y>124</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>clicked()</signal>
+  <slot>reset()</slot>
+ </slots>
 </ui>

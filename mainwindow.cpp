@@ -59,3 +59,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         }
     }
 }
+
+void MainWindow::reset(){
+    points.clear();
+    valeurDispo = true;
+}
