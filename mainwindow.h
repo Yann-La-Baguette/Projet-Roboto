@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QMouseEvent>
-#include <QWidget>
+#include <QPainter>
 #include <QHBoxLayout>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,9 +22,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QWidget *uwu;
+    QVector<QPoint> points;
+    bool valeurDispo = true;
 
 private slots:
+    void loop();
     void mousePressEvent(QMouseEvent *event);
+    void reset();
 };
 #endif // MAINWINDOW_H
