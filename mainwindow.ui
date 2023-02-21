@@ -40,7 +40,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>Coordonnées :</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Reset">

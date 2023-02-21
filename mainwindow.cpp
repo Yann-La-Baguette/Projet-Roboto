@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
     ui->image->setStyleSheet("background-color: #FF0000;");
 
+    setWindowTitle("Roboto Collaboratif");
+    setWindowIcon(QIcon("./icone"));
+
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
@@ -24,7 +27,7 @@ void MainWindow::loop(){
 
     QPainter painter(&Image);
     QPen pen;
-    pen.setWidth(15);
+    pen.setWidth(10);
     pen.setColor(Qt::blue);
     painter.setPen(pen);
     for(int i = 0 ; i<points.count() ; i++){
@@ -54,7 +57,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             QPoint p = ui->image->mapFromParent(event->pos());
             points.append(p);
 
-            ui->cooSouris->setText("x : " + QString::number(p.rx()) + "     y : " + QString::number(p.ry()));
+            ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
             valeurDispo = true;
         }
     }
