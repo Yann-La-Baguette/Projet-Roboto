@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
@@ -8,6 +8,24 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     setWindowTitle("Roboto Collaboratif");
     setWindowIcon(QIcon("./icone"));
+
+
+    mAirspeedGauge = new QcGaugeWidget;
+    mAirspeedGauge->addArc(55);
+    mAirspeedGauge->addDegrees(65)->setValueRange(0,120);
+    QcColorBand *clrBand = mAirspeedGauge->addColorBand(50);
+    clrBand->setValueRange(0,100);
+    mAirspeedGauge->addValues(80)->setValueRange(0,30);
+    mAirspeedGauge->addLabel(70)->setText("Height (m)");
+    QcLabelItem *lab = mAirspeedGauge->addLabel(40);
+    lab->setText("0");
+    mAirspeedNeedle = mAirspeedGauge->addNeedle(60);
+    mAirspeedNeedle->setLabel(lab);
+    mAirspeedNeedle->setColor(Qt::blue);
+    mAirspeedNeedle->setValueRange(0,30);
+    mAirspeedGauge->addBackground(7);
+    ui->horizontalLayout_2->addWidget(mAirspeedGauge);
+
 
 
     QTimer *timer = new QTimer(this);
@@ -66,4 +84,5 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 void MainWindow::reset(){
     points.clear();
     valeurDispo = true;
+    ui->cooSouris->setText("Coordonnées : \nx : \ny : ");
 }

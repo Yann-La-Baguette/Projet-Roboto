@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QHBoxLayout>
 #include <QTimer>
+#include "qcgaugewidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,6 +25,8 @@ private:
     Ui::MainWindow *ui;
     QVector<QPoint> points;
     bool valeurDispo = true;
+    QcGaugeWidget *mAirspeedGauge;
+    QcNeedleItem *mAirspeedNeedle;
 
 private slots:
     void loop();
