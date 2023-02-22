@@ -101,22 +101,127 @@ y : </string>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>50</y>
-        <width>781</width>
-        <height>701</height>
+        <x>1580</x>
+        <y>10</y>
+        <width>321</width>
+        <height>291</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+      <layout class="QHBoxLayout" name="heightGauge"/>
+     </widget>
+     <widget class="QProgressBar" name="batteryPercentage">
+      <property name="geometry">
+       <rect>
+        <x>1580</x>
+        <y>710</y>
+        <width>321</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="batteryLabel">
+      <property name="geometry">
+       <rect>
+        <x>1580</x>
+        <y>680</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Battery :</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="verticalSlider">
+      <property name="geometry">
+       <rect>
+        <x>1540</x>
+        <y>10</y>
+        <width>16</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>30</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>1581</x>
+        <y>320</y>
+        <width>321</width>
+        <height>321</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="attitudeMeter"/>
+     </widget>
+     <widget class="QSlider" name="verticalSlider_2">
+      <property name="geometry">
+       <rect>
+        <x>1540</x>
+        <y>320</y>
+        <width>16</width>
+        <height>321</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>-100</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
      </widget>
      <widget class="QSlider" name="horizontalSlider">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>280</y>
-        <width>382</width>
-        <height>15</height>
+        <x>1580</x>
+        <y>650</y>
+        <width>321</width>
+        <height>16</height>
        </rect>
+      </property>
+      <property name="minimum">
+       <number>-100</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>1150</x>
+        <y>10</y>
+        <width>351</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="compass"/>
+     </widget>
+     <widget class="QSlider" name="horizontalSlider_2">
+      <property name="geometry">
+       <rect>
+        <x>1150</x>
+        <y>310</y>
+        <width>351</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>360</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>

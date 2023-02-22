@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 
     mAirspeedGauge = new QcGaugeWidget;
+
     mAirspeedGauge->addArc(55);
     mAirspeedGauge->addDegrees(65)->setValueRange(0,120);
     QcColorBand *clrBand = mAirspeedGauge->addColorBand(50);
@@ -24,8 +25,78 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     mAirspeedNeedle->setColor(Qt::blue);
     mAirspeedNeedle->setValueRange(0,30);
     mAirspeedGauge->addBackground(7);
-    ui->horizontalLayout_2->addWidget(mAirspeedGauge);
+    ui->heightGauge->addWidget(mAirspeedGauge);
 
+
+
+
+    mAttitudeGauge = new QcGaugeWidget;
+    mAttitudeGauge->addBackground(99);
+    QcBackgroundItem *bkg = mAttitudeGauge->addBackground(92);
+    bkg->clearrColors();
+    bkg->addColor(0.1,Qt::black);
+    bkg->addColor(1.0,Qt::white);
+    mAttMeter = mAttitudeGauge->addAttitudeMeter(88);
+
+    mAttitudeNeedle = mAttitudeGauge->addNeedle(70);
+    mAttitudeNeedle->setMinDegree(0);
+    mAttitudeNeedle->setMaxDegree(180);
+    mAttitudeNeedle->setValueRange(0,180);
+    mAttitudeNeedle->setCurrentValue(90);
+    mAttitudeNeedle->setColor(Qt::white);
+    mAttitudeNeedle->setNeedle(QcNeedleItem::AttitudeMeterNeedle);
+    mAttitudeGauge->addGlass(80);
+    ui->attitudeMeter->addWidget(mAttitudeGauge);
+
+
+
+
+    mCompassGauge = new QcGaugeWidget;
+
+    mCompassGauge->addBackground(99);
+    QcBackgroundItem *bkg1 = mCompassGauge->addBackground(92);
+    bkg1->clearrColors();
+    bkg1->addColor(0.1,Qt::black);
+    bkg1->addColor(1.0,Qt::white);
+
+    QcBackgroundItem *bkg2 = mCompassGauge->addBackground(88);
+    bkg2->clearrColors();
+    bkg2->addColor(0.1,Qt::white);
+    bkg2->addColor(1.0,Qt::black);
+
+    QcLabelItem *w = mCompassGauge->addLabel(80);
+    w->setText("W");
+    w->setAngle(0);
+    w->setColor(Qt::white);
+
+    QcLabelItem *n = mCompassGauge->addLabel(80);
+    n->setText("N");
+    n->setAngle(90);
+    n->setColor(Qt::white);
+
+    QcLabelItem *e = mCompassGauge->addLabel(80);
+    e->setText("E");
+    e->setAngle(180);
+    e->setColor(Qt::white);
+
+    QcLabelItem *s = mCompassGauge->addLabel(80);
+    s->setText("S");
+    s->setAngle(270);
+    s->setColor(Qt::white);
+
+    QcDegreesItem *deg = mCompassGauge->addDegrees(70);
+    deg->setStep(5);
+    deg->setMaxDegree(270);
+    deg->setMinDegree(-75);
+    deg->setColor(Qt::white);
+    mCompassNeedle = mCompassGauge->addNeedle(60);
+    mCompassNeedle->setNeedle(QcNeedleItem::CompassNeedle);
+    mCompassNeedle->setValueRange(0,360);
+    mCompassNeedle->setMaxDegree(360);
+    mCompassNeedle->setMinDegree(0);
+    mCompassGauge->addBackground(7);
+    mCompassGauge->addGlass(88);
+    ui->compass->addWidget(mCompassGauge);
 
 
     QTimer *timer = new QTimer(this);
@@ -86,3 +157,30 @@ void MainWindow::reset(){
     valeurDispo = true;
     ui->cooSouris->setText("Coordonnées : \nx : \ny : ");
 }
+
+
+void MainWindow::on_verticalSlider_valueChanged(int value)
+{
+    mAirspeedNeedle->setCurrentValue(value);
+}
+
+
+void MainWindow::on_verticalSlider_2_valueChanged(int value)
+{
+    mAttMeter->setCurrentPitch(value);
+}
+
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    // roll
+    mAttitudeNeedle->setCurrentValue(90-value);
+    mAttMeter->setCurrentRoll(value);
+}
+
+
+void MainWindow::on_horizontalSlider_2_valueChanged(int value)
+{
+    mCompassNeedle->setCurrentValue(value);
+}
+
