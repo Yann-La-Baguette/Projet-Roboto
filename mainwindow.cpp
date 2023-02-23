@@ -1,15 +1,85 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QVBoxLayout>
+
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
     ui->image->setStyleSheet("background-color: #FF0000;");
 
+    // Icone et nom d'application
     setWindowTitle("Roboto Collaboratif");
     setWindowIcon(QIcon("./icone"));
 
+    // Affichage des données du drone
+    affichageCompass();
+    affichageAttitude();
+    affichageHeight();
+    affichageWifi();
 
+    // Affichage waypoints robot
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
+    timer->start((1/1000)*1000);
+}
+
+MainWindow::~MainWindow(){
+    delete ui;
+}
+
+
+
+void MainWindow::loop(){
+
+    if(valeurDispo==true){
+
+    QImage Image("./Image_satellite_test.png");
+
+    QPainter painter(&Image);
+    QPen pen;
+    pen.setWidth(10);
+    pen.setColor(Qt::blue);
+    painter.setPen(pen);
+    for(int i = 0 ; i<points.count() ; i++){
+        QPoint point = points[i];
+        painter.drawPoint(point);
+    }
+    painter.end();
+
+    QLabel *label = new QLabel(ui->image);
+    label->setPixmap(QPixmap::fromImage(Image));
+
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(label);
+
+    delete ui->image->layout();
+    ui->image->setFixedSize(Image.width(), Image.height());
+    ui->image->setLayout(layout);
+    valeurDispo = false;
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    if (event->button() == Qt::LeftButton) {
+        QRect rect = ui->image->geometry();
+        if (rect.contains(event->pos())){
+            QPoint p = ui->image->mapFromParent(event->pos());
+            points.append(p);
+
+            ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
+            valeurDispo = true;
+        }
+    }
+}
+
+void MainWindow::reset(){
+    points.clear();
+    valeurDispo = true;
+    ui->cooSouris->setText("Coordonnées : \nx : \ny : ");
+}
+
+
+
+void MainWindow::affichageHeight(){
     mAirspeedGauge = new QcGaugeWidget;
 
     mAirspeedGauge->addArc(55);
@@ -26,10 +96,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     mAirspeedNeedle->setValueRange(0,30);
     mAirspeedGauge->addBackground(7);
     ui->heightGauge->addWidget(mAirspeedGauge);
+}
 
-
-
-
+void MainWindow::affichageAttitude(){
     mAttitudeGauge = new QcGaugeWidget;
     mAttitudeGauge->addBackground(99);
     QcBackgroundItem *bkg = mAttitudeGauge->addBackground(92);
@@ -47,10 +116,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     mAttitudeNeedle->setNeedle(QcNeedleItem::AttitudeMeterNeedle);
     mAttitudeGauge->addGlass(80);
     ui->attitudeMeter->addWidget(mAttitudeGauge);
+}
 
-
-
-
+void MainWindow::affichageCompass(){
     mCompassGauge = new QcGaugeWidget;
 
     mCompassGauge->addBackground(99);
@@ -97,90 +165,47 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     mCompassGauge->addBackground(7);
     mCompassGauge->addGlass(88);
     ui->compass->addWidget(mCompassGauge);
-
-
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-    timer->start((1/1000)*1000);
 }
 
-MainWindow::~MainWindow(){
-    delete ui;
-}
-
-void MainWindow::loop(){
-
-    if(valeurDispo==true){
-
-    QImage Image("./Image_satellite_test.png");
-
-    QPainter painter(&Image);
-    QPen pen;
-    pen.setWidth(10);
-    pen.setColor(Qt::blue);
-    painter.setPen(pen);
-    for(int i = 0 ; i<points.count() ; i++){
-        QPoint point = points[i];
-        painter.drawPoint(point);
-    }
-    painter.end();
-
-    QLabel *label = new QLabel(ui->image);
-    label->setPixmap(QPixmap::fromImage(Image));
-
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(label);
-
-    delete ui->image->layout();
-    ui->image->setFixedSize(Image.width(), Image.height());
-    ui->image->setLayout(layout);
-    valeurDispo = false;
-    }
-}
-
-
-void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (event->button() == Qt::LeftButton) {
-        QRect rect = ui->image->geometry();
-        if (rect.contains(event->pos())){
-            QPoint p = ui->image->mapFromParent(event->pos());
-            points.append(p);
-
-            ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
-            valeurDispo = true;
-        }
-    }
-}
-
-void MainWindow::reset(){
-    points.clear();
-    valeurDispo = true;
-    ui->cooSouris->setText("Coordonnées : \nx : \ny : ");
+void MainWindow::affichageWifi(){
+    QString imageName = "./images_wifi/wifi4.png"; // Nom de l'image à charger
+    QPixmap image(imageName); // Chargement de l'image
+    QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
+    ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
 
 
 void MainWindow::on_verticalSlider_valueChanged(int value)
 {
+    // Height
     mAirspeedNeedle->setCurrentValue(value);
 }
 
-
 void MainWindow::on_verticalSlider_2_valueChanged(int value)
 {
+    // Attitude Pitch
     mAttMeter->setCurrentPitch(value);
 }
 
-
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
-    // roll
+    // Attitude Roll
     mAttitudeNeedle->setCurrentValue(90-value);
     mAttMeter->setCurrentRoll(value);
 }
 
-
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 {
+    // Compass
     mCompassNeedle->setCurrentValue(value);
+}
+
+void MainWindow::on_horizontalSlider_3_valueChanged(int value)
+{
+    // Wifi Symbol
+    QString imageName = "./images_wifi/wifi" + QString::number(value) + ".png"; // Nom de l'image à charger
+    QPixmap image(imageName); // Chargement de l'image
+    QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
+    ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
 

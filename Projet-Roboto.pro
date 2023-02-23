@@ -27,4 +27,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     Image_satellite_test.png \
-    icone.ico
+    icone.ico \
+    images_wifi/wifi0.png \
+    images_wifi/wifi1.png \
+    images_wifi/wifi2.png \
+    images_wifi/wifi3.png \
+    images_wifi/wifi4.png
