@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     affichageHeight();
     affichageWifi();
 
+
+
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
@@ -133,22 +135,22 @@ void MainWindow::affichageCompass(){
     bkg2->addColor(1.0,Qt::black);
 
     QcLabelItem *w = mCompassGauge->addLabel(80);
-    w->setText("W");
+    w->setText("");
     w->setAngle(0);
     w->setColor(Qt::white);
 
     QcLabelItem *n = mCompassGauge->addLabel(80);
-    n->setText("N");
+    n->setText("Launch");
     n->setAngle(90);
     n->setColor(Qt::white);
 
     QcLabelItem *e = mCompassGauge->addLabel(80);
-    e->setText("E");
+    e->setText("");
     e->setAngle(180);
     e->setColor(Qt::white);
 
     QcLabelItem *s = mCompassGauge->addLabel(80);
-    s->setText("S");
+    s->setText("");
     s->setAngle(270);
     s->setColor(Qt::white);
 
@@ -165,6 +167,7 @@ void MainWindow::affichageCompass(){
     mCompassGauge->addBackground(7);
     mCompassGauge->addGlass(88);
     ui->compass->addWidget(mCompassGauge);
+    mCompassNeedle->setCurrentValue(90);
 }
 
 void MainWindow::affichageWifi(){
@@ -173,6 +176,72 @@ void MainWindow::affichageWifi(){
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
+
+
+void MainWindow::on_upBtn_clicked(){
+    qDebug()<<"w";
+}
+
+void MainWindow::on_downBtn_clicked(){
+    qDebug()<<"x";
+}
+
+void MainWindow::on_rightBtn_clicked(){
+    qDebug()<<"d";
+}
+
+void MainWindow::on_tRightBtn_clicked(){
+    qDebug()<<"e";
+}
+
+void MainWindow::on_backBtn_clicked(){
+    qDebug()<<"s";
+}
+
+void MainWindow::on_forwardBtn_clicked(){
+    qDebug()<<"z";
+}
+
+void MainWindow::on_leftBtn_clicked(){
+    qDebug()<<"q";
+}
+
+void MainWindow::on_tLeftBtn_clicked(){
+    qDebug()<<"a";
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event){
+    switch (event->key()) {
+            case Qt::Key_Z:
+                ui->forwardBtn->animateClick();
+                break;
+            case Qt::Key_S:
+                ui->backBtn->animateClick();
+                break;
+            case Qt::Key_Q:
+                ui->leftBtn->animateClick();
+                break;
+            case Qt::Key_D:
+                ui->rightBtn->animateClick();
+                break;
+            case Qt::Key_A:
+                ui->tLeftBtn->animateClick();
+                break;
+            case Qt::Key_E:
+                ui->tRightBtn->animateClick();
+                break;
+            case Qt::Key_W:
+                ui->upBtn->animateClick();
+                break;
+            case Qt::Key_X:
+                ui->downBtn->animateClick();
+                break;
+            default:
+                QWidget::keyPressEvent(event);
+                break;
+        }
+}
+
 
 
 void MainWindow::on_verticalSlider_valueChanged(int value)
@@ -208,4 +277,6 @@ void MainWindow::on_horizontalSlider_3_valueChanged(int value)
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
+
+
 

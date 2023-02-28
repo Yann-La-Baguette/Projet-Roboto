@@ -58,6 +58,16 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
+
+    bool forwardKeyPressed;
+    bool backKeyPressed;
+    bool leftKeyPressed;
+    bool rightKeyPressed;
+    bool tLeftKeyPressed;
+    bool tRightKeyPressed;
+    bool upKeyPressed;
+    bool downKeyPressed;
+
 private slots:
 
     /**
@@ -72,6 +82,12 @@ private slots:
     void mousePressEvent(QMouseEvent *event);
 
     /**
+     * @brief Récupération des touches du clavier pressées
+     * @param event
+     */
+    void keyPressEvent(QKeyEvent *event);
+
+    /**
      * @brief Bouton pour réinitialiser les points
      */
     void reset();
@@ -82,5 +98,13 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
     void on_horizontalSlider_2_valueChanged(int value);
     void on_horizontalSlider_3_valueChanged(int value);
+    void on_upBtn_clicked();
+    void on_downBtn_clicked();
+    void on_rightBtn_clicked();
+    void on_tRightBtn_clicked();
+    void on_backBtn_clicked();
+    void on_forwardBtn_clicked();
+    void on_leftBtn_clicked();
+    void on_tLeftBtn_clicked();
 };
 #endif // MAINWINDOW_H
