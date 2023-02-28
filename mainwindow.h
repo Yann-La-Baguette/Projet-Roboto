@@ -10,6 +10,10 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 #include "qcgaugewidget.h"
+#include <opencv2\core\core.hpp>
+#include <opencv2\highgui\highgui.hpp>
+#include <opencv2\opencv.hpp>
+#include <tello.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -73,6 +77,9 @@ private:
     bool upKeyPressed;
     bool downKeyPressed;
 
+    Tello tello;
+    bool connectBtnClicked = false;
+
 private slots:
 
     /**
@@ -97,12 +104,6 @@ private slots:
      */
     void reset();
 
-
-    void on_verticalSlider_valueChanged(int value);
-    void on_verticalSlider_2_valueChanged(int value);
-    void on_horizontalSlider_valueChanged(int value);
-    void on_horizontalSlider_2_valueChanged(int value);
-    void on_horizontalSlider_3_valueChanged(int value);
     void on_upBtn_clicked();
     void on_downBtn_clicked();
     void on_rightBtn_clicked();
@@ -115,5 +116,11 @@ private slots:
     void on_takeOffBtn_clicked();
     void on_landBtn_clicked();
     void on_connectBtn_clicked();
+
+    //GUI DATA
+    void updateGUI();
+    void updateConnectionStatus();
+    void updateCommandReponse();
+    void on_stopMoveBtn_clicked();
 };
 #endif // MAINWINDOW_H

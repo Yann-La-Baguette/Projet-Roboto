@@ -781,7 +781,7 @@ QcValuesItem::QcValuesItem(QObject *parent) :
 {
     setPosition(70);
     mColor = Qt::black;
-    mStep = 5;
+    mStep = 100;
 }
 
 

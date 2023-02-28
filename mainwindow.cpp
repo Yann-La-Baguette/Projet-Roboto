@@ -4,7 +4,12 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
-    ui->image->setStyleSheet("background-color: #FF0000;");
+    connect(&tello,SIGNAL(newStateDataAvailable()),this,SLOT(updateGUI()));
+    connect(&tello,SIGNAL(connectionStatusChanged()),this,SLOT(updateConnectionStatus()));
+    connect(&tello,SIGNAL(newCommandReponseAvailable()),this,SLOT(updateCommandReponse()));
+    connect(&tello,SIGNAL(cameraStreamAvailable()),this,SLOT(openCameraStream()));
+
+    ui->image->setStyleSheet("background-color: #7F7F7F;");
 
     // Icone et nom d'application
     setWindowTitle("Roboto Collaboratif");
@@ -39,12 +44,13 @@ void MainWindow::loop(){
 
     QPainter painter(&Image);
     QPen pen;
-    pen.setWidth(10);
-    pen.setColor(Qt::blue);
+    pen.setWidth(3);
+    pen.setColor(Qt::red);
     painter.setPen(pen);
     for(int i = 0 ; i<points.count() ; i++){
         QPoint point = points[i];
-        painter.drawPoint(point);
+        painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
+        painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
     }
     painter.end();
 
@@ -66,10 +72,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         if(ui->tabWidget->currentIndex() == 0){
             QRect rect = ui->image->geometry();
             if (rect.contains(event->pos())){
-                QPoint p = ui->image->mapFromParent(event->pos());
-                points.append(p);
+                //QPoint p = ui->image->mapFrom(this, event->pos());
+                QPoint globalPos = event->globalPos();
+                QPoint imagePos = ui->image->mapFromGlobal(globalPos);
+                imagePos.setX(imagePos.x()-10);
+                points.append(imagePos);
 
-                ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
+                ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(imagePos.rx()) + "\ny : " + QString::number(imagePos.ry()));
                 valeurDispo = true;
             }
         }
@@ -88,17 +97,17 @@ void MainWindow::affichageHeight(){
     mAirspeedGauge = new QcGaugeWidget;
 
     mAirspeedGauge->addArc(55);
-    mAirspeedGauge->addDegrees(65)->setValueRange(0,120);
+    mAirspeedGauge->addDegrees(65)->setValueRange(0,100);
     QcColorBand *clrBand = mAirspeedGauge->addColorBand(50);
     clrBand->setValueRange(0,100);
-    mAirspeedGauge->addValues(80)->setValueRange(0,30);
-    mAirspeedGauge->addLabel(70)->setText("Height (m)");
+    mAirspeedGauge->addValues(80)->setValueRange(0,1000);
+    mAirspeedGauge->addLabel(70)->setText("Height (cm)");
     QcLabelItem *lab = mAirspeedGauge->addLabel(40);
     lab->setText("0");
     mAirspeedNeedle = mAirspeedGauge->addNeedle(60);
     mAirspeedNeedle->setLabel(lab);
     mAirspeedNeedle->setColor(Qt::blue);
-    mAirspeedNeedle->setValueRange(0,30);
+    mAirspeedNeedle->setValueRange(0,1000);
     mAirspeedGauge->addBackground(7);
     ui->heightGauge->addWidget(mAirspeedGauge);
 }
@@ -196,52 +205,67 @@ void MainWindow::logosBoutons(){
 }
 
 
+
 void MainWindow::on_connectBtn_clicked(){
-    qDebug()<<"Connect";
+    if(connectBtnClicked == false){
+        connectBtnClicked = true;
+        ui->connectBtn->setText("Disconnect \n(Enter)");
+        tello.init(QHostAddress("192.168.10.1"), 8889, 8890, 11111);
+    }
+    else{
+        connectBtnClicked = false;
+        ui->connectBtn->setText("Connect \n(Enter)");
+        tello.close();
+    }
 }
 
 void MainWindow::on_upBtn_clicked(){
-    qDebug()<<"w";
+    tello.sendCommand_generic("rc 0 0 40 0");
 }
 
 void MainWindow::on_downBtn_clicked(){
-    qDebug()<<"x";
+    tello.sendCommand_generic("rc 0 0 -40 0");
 }
 
 void MainWindow::on_rightBtn_clicked(){
-    qDebug()<<"d";
+    tello.sendCommand_generic("rc 50 0 0");
 }
 
 void MainWindow::on_tRightBtn_clicked(){
-    qDebug()<<"e";
+    tello.sendCommand_generic("rc 0 0 0 70");
 }
 
 void MainWindow::on_backBtn_clicked(){
-    qDebug()<<"s";
+    tello.sendCommand_generic("rc 0 -50 0 0");
 }
 
 void MainWindow::on_forwardBtn_clicked(){
-    qDebug()<<"z";
+    tello.sendCommand_generic("rc 0 50 0 0");
 }
 
 void MainWindow::on_leftBtn_clicked(){
-    qDebug()<<"q";
+    tello.sendCommand_generic("rc -50 0 0 0");
 }
 
 void MainWindow::on_tLeftBtn_clicked(){
-    qDebug()<<"a";
+    tello.sendCommand_generic("rc 0 0 0 -70");
+}
+
+void MainWindow::on_stopMoveBtn_clicked()
+{
+    tello.sendCommand_generic("rc 0 0 0 0");
 }
 
 void MainWindow::on_emergencyButton_clicked(){
-    qDebug()<<"EMERGENCY";
+    tello.sendCommand_generic("emergency");
 }
 
 void MainWindow::on_takeOffBtn_clicked(){
-    qDebug("Take off");
+    tello.sendCommand_generic("takeoff");
 }
 
 void MainWindow::on_landBtn_clicked(){
-    qDebug("Land");
+    tello.sendCommand_generic("land");
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -273,13 +297,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_X:
                 ui->downBtn->animateClick();
                 break;
+            case Qt::Key_F:
+                ui->stopMoveBtn->animateClick();
+                break;
             case Qt::Key_Space:
                 ui->emergencyButton->animateClick();
                 break;
-            case Qt::Key_Up:
+            case Qt::Key_PageUp:
                 ui->takeOffBtn->animateClick();
                 break;
-            case Qt::Key_Down:
+            case Qt::Key_PageDown:
                 ui->landBtn->animateClick();
                 break;
             default:
@@ -290,40 +317,76 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 
 
-void MainWindow::on_verticalSlider_valueChanged(int value)
-{
-    // Height
-    mAirspeedNeedle->setCurrentValue(value);
-}
+void MainWindow::updateGUI(){
 
-void MainWindow::on_verticalSlider_2_valueChanged(int value)
-{
-    // Attitude Pitch
-    mAttMeter->setCurrentPitch(value);
-}
+    int wifiValue = 0;
+    if (tello.getWifiSNR()>=90){
+        wifiValue = 4;
+    } else if(tello.getWifiSNR()>=70){
+        wifiValue = 3;
+    } else if(tello.getWifiSNR()>=50){
+        wifiValue = 2;
+    } else if(tello.getWifiSNR()>=30){
+        wifiValue = 1;
+    } else{
+        wifiValue = 0;
+    }
 
-void MainWindow::on_horizontalSlider_valueChanged(int value)
-{
-    // Attitude Roll
-    mAttitudeNeedle->setCurrentValue(90-value);
-    mAttMeter->setCurrentRoll(value);
-}
-
-void MainWindow::on_horizontalSlider_2_valueChanged(int value)
-{
-    // Compass
-    mCompassNeedle->setCurrentValue(value);
-}
-
-void MainWindow::on_horizontalSlider_3_valueChanged(int value)
-{
-    // Wifi Symbol
-    QString imageName = "./images_wifi/wifi" + QString::number(value) + ".png"; // Nom de l'image à charger
+    QString imageName = "./images_wifi/wifi" + QString::number(wifiValue) + ".png"; // Nom de l'image à charger
     QPixmap image(imageName); // Chargement de l'image
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
+
+    ui->batteryPercentage->setValue(tello.getBattery());
+
+    mAttMeter->setCurrentPitch(tello.getPitch());
+    mAttMeter->setCurrentRoll(tello.getRoll());
+
+    int valueCompass;
+    if(tello.getYaw() + 270 >= 360){
+        valueCompass = tello.getYaw()-90;
+    } else{
+        valueCompass = tello.getYaw()+270;
+    }
+    mCompassNeedle->setCurrentValue(valueCompass);
+
+    mAirspeedNeedle->setCurrentValue(tello.getHeight());
 }
 
+void MainWindow::updateConnectionStatus(){
+
+    switch(tello.getStatus()){
+        case Tello::Status::NO_RESPONSE:
+            ui->label_status->setText("No Response");
+            break;
+        case Tello::Status::NO_RESPONSE_TIMEOUT: {
+            ui->label_status->setText("No Response since 15s, Reboot");
+            QPixmap image("./images_wifi/wifi0.png");
+            QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
+            ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
+            break;
+            }
+        case Tello::Status::CONNECTED:
+            ui->label_status->setText("Connected");
+            //ui->groupBox->setEnabled(true);
+            break;
+
+        case Tello::Status::CLOSED:
+            ui->label_status->setText("Closed");
+            //ui->groupBox->setEnabled(false);
+            break;
+        default:
+            ui->label_status->setText("Error");
+            //ui->groupBox->setEnabled(false);
+            break;
+    }
+
+}
+
+void MainWindow::updateCommandReponse(){
+    QString str = "cmd: " + tello.getLastCommmandUsed() + " -> " + tello.getCommandResponseData();
+    ui->lineEdit_cmd_reponse->setText(str);
+}
 
 
 

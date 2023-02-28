@@ -82,8 +82,8 @@ y : </string>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>1580</x>
-        <y>10</y>
+        <x>1490</x>
+        <y>30</y>
         <width>321</width>
         <height>291</height>
        </rect>
@@ -93,8 +93,8 @@ y : </string>
      <widget class="QProgressBar" name="batteryPercentage">
       <property name="geometry">
        <rect>
-        <x>1580</x>
-        <y>710</y>
+        <x>80</x>
+        <y>700</y>
         <width>321</width>
         <height>71</height>
        </rect>
@@ -106,8 +106,8 @@ y : </string>
      <widget class="QLabel" name="batteryLabel">
       <property name="geometry">
        <rect>
-        <x>1580</x>
-        <y>680</y>
+        <x>80</x>
+        <y>670</y>
         <width>101</width>
         <height>16</height>
        </rect>
@@ -116,107 +116,34 @@ y : </string>
        <string>Battery :</string>
       </property>
      </widget>
-     <widget class="QSlider" name="verticalSlider">
-      <property name="geometry">
-       <rect>
-        <x>1540</x>
-        <y>10</y>
-        <width>16</width>
-        <height>291</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>30</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
      <widget class="QWidget" name="layoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>1581</x>
-        <y>320</y>
+        <x>1491</x>
+        <y>340</y>
         <width>321</width>
         <height>321</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="attitudeMeter"/>
      </widget>
-     <widget class="QSlider" name="verticalSlider_2">
-      <property name="geometry">
-       <rect>
-        <x>1540</x>
-        <y>320</y>
-        <width>16</width>
-        <height>321</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <number>-100</number>
-      </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="horizontalSlider">
-      <property name="geometry">
-       <rect>
-        <x>1580</x>
-        <y>650</y>
-        <width>321</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <number>-100</number>
-      </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
      <widget class="QWidget" name="layoutWidget_3">
       <property name="geometry">
        <rect>
-        <x>1150</x>
-        <y>10</y>
+        <x>80</x>
+        <y>360</y>
         <width>351</width>
         <height>291</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="compass"/>
      </widget>
-     <widget class="QSlider" name="horizontalSlider_2">
-      <property name="geometry">
-       <rect>
-        <x>1150</x>
-        <y>310</y>
-        <width>351</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>360</number>
-      </property>
-      <property name="value">
-       <number>90</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
      <widget class="QLabel" name="wifiLogo">
       <property name="geometry">
        <rect>
-        <x>1150</x>
-        <y>350</y>
-        <width>382</width>
+        <x>1490</x>
+        <y>670</y>
+        <width>321</width>
         <height>300</height>
        </rect>
       </property>
@@ -224,30 +151,11 @@ y : </string>
        <string>Image</string>
       </property>
      </widget>
-     <widget class="QSlider" name="horizontalSlider_3">
-      <property name="geometry">
-       <rect>
-        <x>1150</x>
-        <y>650</y>
-        <width>351</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>4</number>
-      </property>
-      <property name="value">
-       <number>4</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
      <widget class="QPushButton" name="connectBtn">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>40</y>
+        <x>520</x>
+        <y>50</y>
         <width>211</width>
         <height>71</height>
        </rect>
@@ -266,8 +174,8 @@ y : </string>
      <widget class="QWidget" name="verticalLayoutWidget_6">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>120</y>
+        <x>520</x>
+        <y>130</y>
         <width>601</width>
         <height>601</height>
        </rect>
@@ -480,8 +388,8 @@ y : </string>
      <widget class="QPushButton" name="emergencyButton">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>730</y>
+        <x>520</x>
+        <y>740</y>
         <width>601</width>
         <height>231</height>
        </rect>
@@ -500,10 +408,10 @@ y : </string>
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>650</x>
-        <y>280</y>
+        <x>1140</x>
+        <y>290</y>
         <width>271</width>
-        <height>258</height>
+        <height>389</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -547,7 +455,50 @@ y : </string>
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="stopMoveBtn">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>125</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Stop Moving 
+(F)</string>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </widget>
+     <widget class="QLabel" name="label_status">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>80</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_cmd_reponse">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>80</y>
+        <width>331</width>
+        <height>24</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>

@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    qcgaugewidget.cpp
+    qcgaugewidget.cpp \
+    tello.cpp
 
 HEADERS += \
     mainwindow.h \
-    qcgaugewidget.h
+    qcgaugewidget.h \
+    tello.h
 
 FORMS += \
     mainwindow.ui
@@ -36,3 +38,23 @@ DISTFILES += \
     images_wifi/wifi2.png \
     images_wifi/wifi3.png \
     images_wifi/wifi4.png
+
+DEFINES += QT_DEPRECATED_WARNINGS
+
+INCLUDEPATH += C:\Users\ydipadova\Documents\opencv\build\include
+
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_calib3d470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_core470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_features2d470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_flann470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_gapi470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_highgui470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_imgcodecs470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_imgproc470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_ml470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_objdetect470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_photo470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_stitching470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_video470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_videoio470.dll
+LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\opencv_videoio_ffmpeg470_64.dll
