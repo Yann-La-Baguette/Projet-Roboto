@@ -243,7 +243,7 @@ y : </string>
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
-     <widget class="QPushButton" name="Connexion">
+     <widget class="QPushButton" name="connectBtn">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -252,8 +252,15 @@ y : </string>
         <height>71</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial Black</family>
+        <pointsize>17</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Connexion</string>
+       <string>Connect 
+(Enter)</string>
       </property>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget_6">
@@ -274,8 +281,15 @@ y : </string>
            <height>100</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string>Up</string>
+          <string>Up 
+(W)</string>
          </property>
         </widget>
        </item>
@@ -291,8 +305,15 @@ y : </string>
                <height>125</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Turn Left</string>
+              <string>Turn Left 
+(A)</string>
              </property>
             </widget>
            </item>
@@ -304,8 +325,15 @@ y : </string>
                <height>125</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Left</string>
+              <string>Left 
+(Q)</string>
              </property>
             </widget>
            </item>
@@ -334,8 +362,15 @@ y : </string>
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Forward</string>
+              <string>Forward 
+(Z)</string>
              </property>
             </widget>
            </item>
@@ -347,8 +382,15 @@ y : </string>
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Backward</string>
+              <string>Backward 
+(S)</string>
              </property>
             </widget>
            </item>
@@ -364,8 +406,15 @@ y : </string>
                <height>125</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Turn Right</string>
+              <string>Turn Right 
+(E)</string>
              </property>
             </widget>
            </item>
@@ -377,8 +426,15 @@ y : </string>
                <height>125</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Arial Black</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Right</string>
+              <string>Right 
+(D)</string>
              </property>
             </widget>
            </item>
@@ -407,8 +463,87 @@ y : </string>
            <height>100</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string>Down</string>
+          <string>Down 
+(X)</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="emergencyButton">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>730</y>
+        <width>601</width>
+        <height>231</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial Black</family>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Emergency Stop 
+(Space)</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>280</y>
+        <width>271</width>
+        <height>258</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="takeOffBtn">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>125</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Take Off 
+(Up Arrow)     </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="landBtn">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>125</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Land 
+(Down Arrow)</string>
          </property>
         </widget>
        </item>

@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     affichageHeight();
     affichageWifi();
 
-
+    //Affichage de logos pour les boutons du drone
+    logosBoutons();
 
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
@@ -62,13 +63,15 @@ void MainWindow::loop(){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton) {
-        QRect rect = ui->image->geometry();
-        if (rect.contains(event->pos())){
-            QPoint p = ui->image->mapFromParent(event->pos());
-            points.append(p);
+        if(ui->tabWidget->currentIndex() == 0){
+            QRect rect = ui->image->geometry();
+            if (rect.contains(event->pos())){
+                QPoint p = ui->image->mapFromParent(event->pos());
+                points.append(p);
 
-            ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
-            valeurDispo = true;
+                ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(p.rx()) + "\ny : " + QString::number(p.ry()));
+                valeurDispo = true;
+            }
         }
     }
 }
@@ -177,6 +180,25 @@ void MainWindow::affichageWifi(){
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
 
+void MainWindow::logosBoutons(){
+    QIcon ermergencyLogo("./images_boutons/Stop.png");
+    ui->emergencyButton->setIcon(ermergencyLogo);
+    ui->emergencyButton->setIconSize(QSize(50,50));
+
+    QIcon landLogo("./images_boutons/land.png");
+    ui->landBtn->setIcon(landLogo);
+    ui->landBtn->setIconSize(QSize(50,50));
+
+    QIcon takeOffLogo("./images_boutons/take_off.png");
+    ui->takeOffBtn->setIcon(takeOffLogo);
+    ui->takeOffBtn->setIconSize(QSize(50,50));
+
+}
+
+
+void MainWindow::on_connectBtn_clicked(){
+    qDebug()<<"Connect";
+}
 
 void MainWindow::on_upBtn_clicked(){
     qDebug()<<"w";
@@ -210,8 +232,23 @@ void MainWindow::on_tLeftBtn_clicked(){
     qDebug()<<"a";
 }
 
+void MainWindow::on_emergencyButton_clicked(){
+    qDebug()<<"EMERGENCY";
+}
+
+void MainWindow::on_takeOffBtn_clicked(){
+    qDebug("Take off");
+}
+
+void MainWindow::on_landBtn_clicked(){
+    qDebug("Land");
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
+            case Qt::Key_Return:
+                ui->connectBtn->animateClick();
+                break;
             case Qt::Key_Z:
                 ui->forwardBtn->animateClick();
                 break;
@@ -235,6 +272,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 break;
             case Qt::Key_X:
                 ui->downBtn->animateClick();
+                break;
+            case Qt::Key_Space:
+                ui->emergencyButton->animateClick();
+                break;
+            case Qt::Key_Up:
+                ui->takeOffBtn->animateClick();
+                break;
+            case Qt::Key_Down:
+                ui->landBtn->animateClick();
                 break;
             default:
                 QWidget::keyPressEvent(event);
@@ -277,6 +323,7 @@ void MainWindow::on_horizontalSlider_3_valueChanged(int value)
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
+
 
 
 

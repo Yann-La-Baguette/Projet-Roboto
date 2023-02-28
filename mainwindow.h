@@ -43,6 +43,11 @@ public:
      */
     void affichageWifi();
 
+    /**
+     * @brief logosBoutons
+     */
+    void logosBoutons();
+
 private:
     Ui::MainWindow *ui;
     QVector<QPoint> points;
@@ -106,5 +111,9 @@ private slots:
     void on_forwardBtn_clicked();
     void on_leftBtn_clicked();
     void on_tLeftBtn_clicked();
+    void on_emergencyButton_clicked();
+    void on_takeOffBtn_clicked();
+    void on_landBtn_clicked();
+    void on_connectBtn_clicked();
 };
 #endif // MAINWINDOW_H
