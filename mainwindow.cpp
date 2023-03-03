@@ -4,16 +4,13 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
+
     connect(&tello,SIGNAL(newStateDataAvailable()),this,SLOT(updateGUI()));
     connect(&tello,SIGNAL(connectionStatusChanged()),this,SLOT(updateConnectionStatus()));
     connect(&tello,SIGNAL(newCommandReponseAvailable()),this,SLOT(updateCommandReponse()));
     connect(&tello,SIGNAL(cameraStreamAvailable()),this,SLOT(openCameraStream()));
 
     ui->image->setStyleSheet("background-color: #7F7F7F;");
-
-    // Icone et nom d'application
-    setWindowTitle("Roboto Collaboratif");
-    setWindowIcon(QIcon("./icone"));
 
     // Affichage des données du drone
     affichageCompass();
@@ -26,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
+    pointsLabel = new QLabel(ui->image);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start((1/1000)*1000);
 }
@@ -42,9 +40,11 @@ void MainWindow::loop(){
 
     QImage Image("./Image_satellite_test.png");
 
+    Image = Image.scaled(ui->image->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
     QPainter painter(&Image);
     QPen pen;
-    pen.setWidth(3);
+    pen.setWidth(4);
     pen.setColor(Qt::red);
     painter.setPen(pen);
     for(int i = 0 ; i<points.count() ; i++){
@@ -54,11 +54,10 @@ void MainWindow::loop(){
     }
     painter.end();
 
-    QLabel *label = new QLabel(ui->image);
-    label->setPixmap(QPixmap::fromImage(Image));
+    pointsLabel->setPixmap(QPixmap::fromImage(Image));
 
     QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(label);
+    layout->addWidget(pointsLabel);
 
     delete ui->image->layout();
     ui->image->setFixedSize(Image.width(), Image.height());
@@ -69,18 +68,13 @@ void MainWindow::loop(){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton) {
-        if(ui->tabWidget->currentIndex() == 0){
-            QRect rect = ui->image->geometry();
-            if (rect.contains(event->pos())){
-                //QPoint p = ui->image->mapFrom(this, event->pos());
-                QPoint globalPos = event->globalPos();
-                QPoint imagePos = ui->image->mapFromGlobal(globalPos);
-                imagePos.setX(imagePos.x()-10);
-                points.append(imagePos);
-
-                ui->cooSouris->setText("Coordonnées : \nx : " + QString::number(imagePos.rx()) + "\ny : " + QString::number(imagePos.ry()));
-                valeurDispo = true;
-            }
+        QPoint clickPos = ui->image->mapFrom(this, event->pos());
+        if (ui->image->rect().contains(clickPos)) {
+            clickPos.setX(clickPos.x()-8);
+            clickPos.setY(clickPos.y());
+            points.append(clickPos);
+            ui->cooSouris->setText("Waypoints Coordinates : \nx : " + QString::number(clickPos.x()) + "\ny : " + QString::number(clickPos.y()));
+            valeurDispo = true;
         }
     }
 }
@@ -88,7 +82,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 void MainWindow::reset(){
     points.clear();
     valeurDispo = true;
-    ui->cooSouris->setText("Coordonnées : \nx : \ny : ");
+    ui->cooSouris->setText("Waypoints Coordinates : \nx : \ny : ");
 }
 
 
@@ -183,7 +177,7 @@ void MainWindow::affichageCompass(){
 }
 
 void MainWindow::affichageWifi(){
-    QString imageName = "./images_wifi/wifi4.png"; // Nom de l'image à charger
+    QString imageName = "./images_wifi/wifi0.png"; // Nom de l'image à charger
     QPixmap image(imageName); // Chargement de l'image
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
@@ -193,15 +187,65 @@ void MainWindow::logosBoutons(){
     QIcon ermergencyLogo("./images_boutons/Stop.png");
     ui->emergencyButton->setIcon(ermergencyLogo);
     ui->emergencyButton->setIconSize(QSize(50,50));
+    ui->emergencyButton->setStyleSheet("background-color: white;");
 
     QIcon landLogo("./images_boutons/land.png");
     ui->landBtn->setIcon(landLogo);
     ui->landBtn->setIconSize(QSize(50,50));
+    ui->landBtn->setStyleSheet("background-color: orange;");
 
     QIcon takeOffLogo("./images_boutons/take_off.png");
     ui->takeOffBtn->setIcon(takeOffLogo);
     ui->takeOffBtn->setIconSize(QSize(50,50));
+    ui->takeOffBtn->setStyleSheet("background-color: white;");
 
+    QIcon upLogo("./images_boutons/up.png");
+    ui->upBtn->setIcon(upLogo);
+    ui->upBtn->setIconSize(QSize(50,50));
+
+    QIcon downLogo("./images_boutons/down.png");
+    ui->downBtn->setIcon(downLogo);
+    ui->downBtn->setIconSize(QSize(50,50));
+
+    QIcon forwardLogo("./images_boutons/forward.png");
+    ui->forwardBtn->setIcon(forwardLogo);
+    ui->forwardBtn->setIconSize(QSize(50,50));
+
+    QIcon backLogo("./images_boutons/back.png");
+    ui->backBtn->setIcon(backLogo);
+    ui->backBtn->setIconSize(QSize(50,50));
+
+    QIcon rightLogo("./images_boutons/right.png");
+    ui->rightBtn->setIcon(rightLogo);
+    ui->rightBtn->setIconSize(QSize(50,50));
+
+    QIcon leftLogo("./images_boutons/left.png");
+    ui->leftBtn->setIcon(leftLogo);
+    ui->leftBtn->setIconSize(QSize(50,50));
+
+    QIcon tRightLogo("./images_boutons/tRight.png");
+    ui->tRightBtn->setIcon(tRightLogo);
+    ui->tRightBtn->setIconSize(QSize(50,50));
+
+    QIcon tLeftLogo("./images_boutons/tLeft.png");
+    ui->tLeftBtn->setIcon(tLeftLogo);
+    ui->tLeftBtn->setIconSize(QSize(50,50));
+
+    QIcon stopMoveLogo("./images_boutons/stopMove.png");
+    ui->stopMoveBtn->setIcon(stopMoveLogo);
+    ui->stopMoveBtn->setIconSize(QSize(50,50));
+
+    QIcon connectLogo("./images_boutons/connect.png");
+    ui->connectBtn->setIcon(connectLogo);
+    ui->connectBtn->setIconSize(QSize(30,30));
+    ui->connectBtn->setStyleSheet("background-color: white;");
+
+    QIcon resetWaypointsLogo("./images_boutons/reset_waypoints.png");
+    ui->Reset->setIcon(resetWaypointsLogo);
+    ui->Reset->setIconSize(QSize(50,50));
+    ui->Reset->setStyleSheet("background-color: white;");
+
+    allMoveBtnWhite();
 }
 
 
@@ -209,7 +253,6 @@ void MainWindow::logosBoutons(){
 void MainWindow::on_connectBtn_clicked(){
     if(connectBtnClicked == false){
         connectBtnClicked = true;
-        ui->connectBtn->setText("Disconnect \n(Enter)");
         tello.init(QHostAddress("192.168.10.1"), 8889, 8890, 11111);
     }
     else{
@@ -221,51 +264,78 @@ void MainWindow::on_connectBtn_clicked(){
 
 void MainWindow::on_upBtn_clicked(){
     tello.sendCommand_generic("rc 0 0 40 0");
+    allMoveBtnWhite();
+    ui->upBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_downBtn_clicked(){
     tello.sendCommand_generic("rc 0 0 -40 0");
+    allMoveBtnWhite();
+    ui->downBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_rightBtn_clicked(){
     tello.sendCommand_generic("rc 50 0 0");
+    allMoveBtnWhite();
+    ui->rightBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_tRightBtn_clicked(){
     tello.sendCommand_generic("rc 0 0 0 70");
+    allMoveBtnWhite();
+    ui->tRightBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_backBtn_clicked(){
     tello.sendCommand_generic("rc 0 -50 0 0");
+    allMoveBtnWhite();
+    ui->backBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_forwardBtn_clicked(){
     tello.sendCommand_generic("rc 0 50 0 0");
+    allMoveBtnWhite();
+    ui->forwardBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_leftBtn_clicked(){
     tello.sendCommand_generic("rc -50 0 0 0");
+    allMoveBtnWhite();
+    ui->leftBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_tLeftBtn_clicked(){
     tello.sendCommand_generic("rc 0 0 0 -70");
+    allMoveBtnWhite();
+    ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
 
-void MainWindow::on_stopMoveBtn_clicked()
-{
+void MainWindow::on_stopMoveBtn_clicked(){
     tello.sendCommand_generic("rc 0 0 0 0");
+    allMoveBtnWhite();
+    ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
 }
 
 void MainWindow::on_emergencyButton_clicked(){
     tello.sendCommand_generic("emergency");
+    ui->emergencyButton->setStyleSheet("background-color: red;");
+    ui->landBtn->setStyleSheet("background-color: orange");
+    ui->takeOffBtn->setStyleSheet("background-color: white");
+    ui->emergencyButton->setText("Emergency Stop \nUse take off to reset \n(Escape)");
 }
 
 void MainWindow::on_takeOffBtn_clicked(){
     tello.sendCommand_generic("takeoff");
+    ui->landBtn->setStyleSheet("background-color: white;");
+    ui->emergencyButton->setStyleSheet("background-color: white");
+    ui->takeOffBtn->setStyleSheet("background-color: orange;");
+    ui->emergencyButton->setText("Emergency Stop \n(Escape)");
 }
 
 void MainWindow::on_landBtn_clicked(){
     tello.sendCommand_generic("land");
+    ui->takeOffBtn->setStyleSheet("background-color: white;");
+    ui->landBtn->setStyleSheet("background-color: orange;");
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -300,7 +370,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_F:
                 ui->stopMoveBtn->animateClick();
                 break;
-            case Qt::Key_Space:
+            case Qt::Key_Escape:
                 ui->emergencyButton->animateClick();
                 break;
             case Qt::Key_PageUp:
@@ -313,6 +383,19 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 QWidget::keyPressEvent(event);
                 break;
         }
+}
+
+void MainWindow::allMoveBtnWhite(){
+    ui->stopMoveBtn->setStyleSheet("background-color: white;");
+    ui->backBtn->setStyleSheet("background-color: white;");
+    ui->downBtn->setStyleSheet("background-color: white;");
+    ui->forwardBtn->setStyleSheet("background-color: white;");
+    ui->leftBtn->setStyleSheet("background-color: white;");
+    ui->tLeftBtn->setStyleSheet("background-color: white;");
+    ui->rightBtn->setStyleSheet("background-color: white;");
+    ui->tRightBtn->setStyleSheet("background-color: white;");
+    ui->upBtn->setStyleSheet("background-color: white;");
+    ui->stopMoveBtn->setStyleSheet("background-color: white;");
 }
 
 
@@ -334,7 +417,7 @@ void MainWindow::updateGUI(){
 
     QString imageName = "./images_wifi/wifi" + QString::number(wifiValue) + ".png"; // Nom de l'image à charger
     QPixmap image(imageName); // Chargement de l'image
-    QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
+    QPixmap scaledImage = image.scaled(ui->wifiLogo->size());
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 
     ui->batteryPercentage->setValue(tello.getBattery());
@@ -354,39 +437,45 @@ void MainWindow::updateGUI(){
 }
 
 void MainWindow::updateConnectionStatus(){
-
     switch(tello.getStatus()){
-        case Tello::Status::NO_RESPONSE:
-            ui->label_status->setText("No Response");
+        case Tello::Status::NO_RESPONSE:{
+            ui->connectBtn->setText("Disconnect \nStatus : No Response \n(Enter)");
+            ui->connectBtn->setStyleSheet("background-color: red;");
+            ui->batteryPercentage->setValue(0);
             break;
+        }
         case Tello::Status::NO_RESPONSE_TIMEOUT: {
-            ui->label_status->setText("No Response since 15s, Reboot");
+            ui->connectBtn->setText("Disconnect \nStatus : No Response since 15s, Reboot \n(Enter)");
+            QPixmap image("./images_wifi/wifi0.png");
+            QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
+            ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
+            ui->connectBtn->setStyleSheet("background-color: red;");
+            ui->batteryPercentage->setValue(0);
+            break;
+        }
+        case Tello::Status::CONNECTED:
+            ui->connectBtn->setText("Disconnect \nStatus : Connected \n(Enter)");
+            ui->connectBtn->setStyleSheet("background-color: green;");
+            break;
+
+        case Tello::Status::CLOSED:{
+            ui->connectBtn->setStyleSheet("background-color: white;");
             QPixmap image("./images_wifi/wifi0.png");
             QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
             ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
             break;
-            }
-        case Tello::Status::CONNECTED:
-            ui->label_status->setText("Connected");
-            //ui->groupBox->setEnabled(true);
-            break;
-
-        case Tello::Status::CLOSED:
-            ui->label_status->setText("Closed");
-            //ui->groupBox->setEnabled(false);
-            break;
+        }
         default:
-            ui->label_status->setText("Error");
-            //ui->groupBox->setEnabled(false);
+            ui->connectBtn->setText("Disconnect \nStatus : Error \n(Enter)");
+            ui->connectBtn->setStyleSheet("background-color: red;");
             break;
     }
 
 }
 
 void MainWindow::updateCommandReponse(){
-    QString str = "cmd: " + tello.getLastCommmandUsed() + " -> " + tello.getCommandResponseData();
+    QString str = "Sending command : " + tello.getLastCommmandUsed() + "        Response : " + tello.getCommandResponseData();
+    ui->lineEdit_cmd_reponse->setReadOnly(false);
     ui->lineEdit_cmd_reponse->setText(str);
+    ui->lineEdit_cmd_reponse->setReadOnly(true);
 }
-
-
-
