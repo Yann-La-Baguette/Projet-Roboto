@@ -4,13 +4,13 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
+    tello = new Tello;
 
-    connect(&tello,SIGNAL(newStateDataAvailable()),this,SLOT(updateGUI()));
-    connect(&tello,SIGNAL(connectionStatusChanged()),this,SLOT(updateConnectionStatus()));
-    connect(&tello,SIGNAL(newCommandReponseAvailable()),this,SLOT(updateCommandReponse()));
-    connect(&tello,SIGNAL(cameraStreamAvailable()),this,SLOT(openCameraStream()));
+    connect(tello->tello_command,&TelloCommand::responseSignal,this,&MainWindow::updateCommandReponse);
+    connect(tello->tello_state,&TelloState::dataAvailable,this,&MainWindow::updateGUI);
+    connect(tello->tello_command,&TelloCommand::alertSignal,this,&MainWindow::updateConnectionStatus);
+    connect(tello->tello_stream,&TelloStream::newFrame,this,&MainWindow::displayStream);
 
-    ui->image->setStyleSheet("background-color: #7F7F7F;");
 
     // Affichage des données du drone
     affichageCompass();
@@ -23,68 +23,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
-    pointsLabel = new QLabel(ui->image);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start((1/1000)*1000);
 }
-
 MainWindow::~MainWindow(){
     delete ui;
 }
-
-
-
-void MainWindow::loop(){
-
-    if(valeurDispo==true){
-
-    QImage Image("./Image_satellite_test.png");
-
-    Image = Image.scaled(ui->image->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    QPainter painter(&Image);
-    QPen pen;
-    pen.setWidth(4);
-    pen.setColor(Qt::red);
-    painter.setPen(pen);
-    for(int i = 0 ; i<points.count() ; i++){
-        QPoint point = points[i];
-        painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
-        painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
-    }
-    painter.end();
-
-    pointsLabel->setPixmap(QPixmap::fromImage(Image));
-
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(pointsLabel);
-
-    delete ui->image->layout();
-    ui->image->setFixedSize(Image.width(), Image.height());
-    ui->image->setLayout(layout);
-    valeurDispo = false;
-    }
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (event->button() == Qt::LeftButton) {
-        QPoint clickPos = ui->image->mapFrom(this, event->pos());
-        if (ui->image->rect().contains(clickPos)) {
-            clickPos.setX(clickPos.x()-8);
-            clickPos.setY(clickPos.y());
-            points.append(clickPos);
-            ui->cooSouris->setText("Waypoints Coordinates : \nx : " + QString::number(clickPos.x()) + "\ny : " + QString::number(clickPos.y()));
-            valeurDispo = true;
-        }
-    }
-}
-
-void MainWindow::reset(){
-    points.clear();
-    valeurDispo = true;
-    ui->cooSouris->setText("Waypoints Coordinates : \nx : \ny : ");
-}
-
 
 
 void MainWindow::affichageHeight(){
@@ -105,7 +49,6 @@ void MainWindow::affichageHeight(){
     mAirspeedGauge->addBackground(7);
     ui->heightGauge->addWidget(mAirspeedGauge);
 }
-
 void MainWindow::affichageAttitude(){
     mAttitudeGauge = new QcGaugeWidget;
     mAttitudeGauge->addBackground(99);
@@ -125,7 +68,6 @@ void MainWindow::affichageAttitude(){
     mAttitudeGauge->addGlass(80);
     ui->attitudeMeter->addWidget(mAttitudeGauge);
 }
-
 void MainWindow::affichageCompass(){
     mCompassGauge = new QcGaugeWidget;
 
@@ -175,14 +117,12 @@ void MainWindow::affichageCompass(){
     ui->compass->addWidget(mCompassGauge);
     mCompassNeedle->setCurrentValue(90);
 }
-
 void MainWindow::affichageWifi(){
     QString imageName = "./images_wifi/wifi0.png"; // Nom de l'image à charger
     QPixmap image(imageName); // Chargement de l'image
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 }
-
 void MainWindow::logosBoutons(){
     QIcon ermergencyLogo("./images_boutons/Stop.png");
     ui->emergencyButton->setIcon(ermergencyLogo);
@@ -249,95 +189,92 @@ void MainWindow::logosBoutons(){
 }
 
 
-
 void MainWindow::on_connectBtn_clicked(){
-    if(connectBtnClicked == false){
-        connectBtnClicked = true;
-        tello.init(QHostAddress("192.168.10.1"), 8889, 8890, 11111);
+    if(tello->isStarted()){
+        ui->connectBtn->setText("Connect \n(Enter)");
+        tello->stop();
+        //tello->disableStream();
     }
     else{
-        connectBtnClicked = false;
-        ui->connectBtn->setText("Connect \n(Enter)");
-        tello.close();
+        ui->connectBtn->setText("Disconnect \n(Enter)");
+        tello->start();
+        //tello->enableStream();
     }
 }
-
 void MainWindow::on_upBtn_clicked(){
-    tello.sendCommand_generic("rc 0 0 40 0");
+    tello->tello_command->setPosition(0,0,40,0);
+    //tello->tello_command->sendCommand_generic("rc 0 0 40 0");
     allMoveBtnWhite();
     ui->upBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_downBtn_clicked(){
-    tello.sendCommand_generic("rc 0 0 -40 0");
+    tello->tello_command->setPosition(0,0,-40,0);
+    //tello->tello_command->sendCommand_generic("rc 0 0 -40 0");
     allMoveBtnWhite();
     ui->downBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_rightBtn_clicked(){
-    tello.sendCommand_generic("rc 50 0 0");
+    tello->tello_command->setPosition(50,0,0,0);
+    //tello->tello_command->sendCommand_generic("rc 50 0 0");
     allMoveBtnWhite();
     ui->rightBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_tRightBtn_clicked(){
-    tello.sendCommand_generic("rc 0 0 0 70");
+    tello->tello_command->setPosition(0,0,0,70);
+    //tello->tello_command->sendCommand_generic("rc 0 0 0 70");
     allMoveBtnWhite();
     ui->tRightBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_backBtn_clicked(){
-    tello.sendCommand_generic("rc 0 -50 0 0");
+    tello->tello_command->setPosition(0,-50,0,0);
+    //tello->tello_command->sendCommand_generic("rc 0 -50 0 0");
     allMoveBtnWhite();
     ui->backBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_forwardBtn_clicked(){
-    tello.sendCommand_generic("rc 0 50 0 0");
+    tello->tello_command->setPosition(0,80,0,0);
+    //tello->tello_command->sendCommand_generic("rc 0 50 0 0");
     allMoveBtnWhite();
     ui->forwardBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_leftBtn_clicked(){
-    tello.sendCommand_generic("rc -50 0 0 0");
+    tello->tello_command->setPosition(-50,0,0,0);
+    //tello->tello_command->sendCommand_generic("rc -50 0 0 0");
     allMoveBtnWhite();
     ui->leftBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_tLeftBtn_clicked(){
-    tello.sendCommand_generic("rc 0 0 0 -70");
+    tello->tello_command->setPosition(0,0,0,-70);
+    //tello->tello_command->sendCommand_generic("rc 0 0 0 -70");
     allMoveBtnWhite();
     ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_stopMoveBtn_clicked(){
-    tello.sendCommand_generic("rc 0 0 0 0");
+    tello->tello_command->setPosition(0,0,0,0);
+    //tello->tello_command->sendCommand_generic("rc 0 0 0 0");
     allMoveBtnWhite();
     ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
 }
-
 void MainWindow::on_emergencyButton_clicked(){
-    tello.sendCommand_generic("emergency");
+    tello->tello_command->emergency();
+    //tello->tello_command->sendCommand_generic("emergency");
     ui->emergencyButton->setStyleSheet("background-color: red;");
     ui->landBtn->setStyleSheet("background-color: orange");
     ui->takeOffBtn->setStyleSheet("background-color: white");
     ui->emergencyButton->setText("Emergency Stop \nUse take off to reset \n(Escape)");
 }
-
 void MainWindow::on_takeOffBtn_clicked(){
-    tello.sendCommand_generic("takeoff");
+    tello->tello_command->takeoff();
     ui->landBtn->setStyleSheet("background-color: white;");
     ui->emergencyButton->setStyleSheet("background-color: white");
     ui->takeOffBtn->setStyleSheet("background-color: orange;");
     ui->emergencyButton->setText("Emergency Stop \n(Escape)");
 }
-
 void MainWindow::on_landBtn_clicked(){
-    tello.sendCommand_generic("land");
+    tello->tello_command->land();
     ui->takeOffBtn->setStyleSheet("background-color: white;");
     ui->landBtn->setStyleSheet("background-color: orange;");
 }
-
 void MainWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
             case Qt::Key_Return:
@@ -384,7 +321,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 break;
         }
 }
-
 void MainWindow::allMoveBtnWhite(){
     ui->stopMoveBtn->setStyleSheet("background-color: white;");
     ui->backBtn->setStyleSheet("background-color: white;");
@@ -399,17 +335,86 @@ void MainWindow::allMoveBtnWhite(){
 }
 
 
+void MainWindow::on_streamOnBtn_clicked(){
+    tello->enableStream();
+}
+void MainWindow::displayStream(QPixmap videoPix){
+    ui->video->setFixedSize(tello->tello_stream->getCaptureSize());
+
+    aspectRatio = (float)videoPix.width() / videoPix.height();
+    ui->video->setFixedSize(400 * aspectRatio, 400);
+    ui->dronePicture->setFixedSize(400 * aspectRatio, 400);
+
+    ui->video->setPixmap(videoPix);
+    if(showPic == true){
+        ui->dronePicture->setFixedSize(tello->tello_stream->getCaptureSize());
+        showPic = false;
+        ui->dronePicture->setPixmap(videoPix);
+        savePixmap = videoPix;
+        reset();
+    }
+}
+void MainWindow::on_captureBtn_clicked(){
+    showPic = true;
+}
+
+
+void MainWindow::loop(){
+
+    if(valeurDispo==true){
+        QPixmap Pixmap = savePixmap;
+        //Pixmap.scaled(ui->dronePicture->width(), ui->dronePicture->height());
+        ui->dronePicture->clear();
+
+        QPainter painter(&Pixmap);
+        QPen pen;
+        pen.setWidth(4);
+        pen.setColor(Qt::red);
+        painter.setPen(pen);
+
+        for(int i = 0 ; i<points.count() ; i++){
+            QPoint point = points[i];
+            qDebug() << point;
+            painter.drawLine(point.x()*aspectRatio-5, point.y()*aspectRatio, point.x()*aspectRatio+5, point.y()*aspectRatio);
+            painter.drawLine(point.x()*aspectRatio, point.y()*aspectRatio-5, point.x()*aspectRatio, point.y()*aspectRatio+5);
+        }
+
+        painter.end();
+
+        ui->dronePicture->setPixmap(Pixmap);
+
+        valeurDispo = false;
+    }
+}
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    if (event->button() == Qt::LeftButton) {
+         QPoint clickPos = event->pos() - ui->dronePicture->pos();
+        if (ui->dronePicture->rect().contains(clickPos)) {
+            qDebug() << clickPos;
+            points.append(clickPos);
+            ui->cooSouris->setText("Waypoints Coordinates : \nx : " + QString::number(clickPos.x()) + "\ny : " + QString::number(clickPos.y()));
+            valeurDispo = true;
+        }
+    }
+}
+void MainWindow::reset(){
+    points.clear();
+    valeurDispo = true;
+    ui->cooSouris->setText("Waypoints Coordinates : \nx : \ny : ");
+}
+
 
 void MainWindow::updateGUI(){
-
     int wifiValue = 0;
-    if (tello.getWifiSNR()>=90){
+    int SNR = 90;
+    //qDebug()<<SNR;
+    if (SNR>=90){
         wifiValue = 4;
-    } else if(tello.getWifiSNR()>=70){
+    } else if(SNR>=70){
         wifiValue = 3;
-    } else if(tello.getWifiSNR()>=50){
+    } else if(SNR>=50){
         wifiValue = 2;
-    } else if(tello.getWifiSNR()>=30){
+    } else if(SNR>=30){
         wifiValue = 1;
     } else{
         wifiValue = 0;
@@ -420,32 +425,31 @@ void MainWindow::updateGUI(){
     QPixmap scaledImage = image.scaled(ui->wifiLogo->size());
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 
-    ui->batteryPercentage->setValue(tello.getBattery());
+    ui->batteryPercentage->setValue(tello->tello_state->getBattery());
 
-    mAttMeter->setCurrentPitch(tello.getPitch());
-    mAttMeter->setCurrentRoll(tello.getRoll());
+    mAttMeter->setCurrentPitch(tello->tello_state->getPitch());
+    mAttMeter->setCurrentRoll(tello->tello_state->getRoll());
 
     int valueCompass;
-    if(tello.getYaw() + 270 >= 360){
-        valueCompass = tello.getYaw()-90;
+    if(tello->tello_state->getYaw() + 270 >= 360){
+        valueCompass = tello->tello_state->getYaw()-90;
     } else{
-        valueCompass = tello.getYaw()+270;
+        valueCompass = tello->tello_state->getYaw()+270;
     }
     mCompassNeedle->setCurrentValue(valueCompass);
 
-    mAirspeedNeedle->setCurrentValue(tello.getHeight());
+    mAirspeedNeedle->setCurrentValue(tello->tello_state->getHeight());
 }
-
-void MainWindow::updateConnectionStatus(){
-    switch(tello.getStatus()){
-        case Tello::Status::NO_RESPONSE:{
-            ui->connectBtn->setText("Disconnect \nStatus : No Response \n(Enter)");
+void MainWindow::updateConnectionStatus(TelloAlerts alertSignal){
+    switch(alertSignal){
+        case TelloAlerts::SOCKET_CONNECTION_FAILED:{
+            ui->connectBtn->setText("Disconnect \nStatus : Socket Connection Failed \n(Enter)");
             ui->connectBtn->setStyleSheet("background-color: red;");
             ui->batteryPercentage->setValue(0);
             break;
         }
-        case Tello::Status::NO_RESPONSE_TIMEOUT: {
-            ui->connectBtn->setText("Disconnect \nStatus : No Response since 15s, Reboot \n(Enter)");
+        case TelloAlerts::TELLO_CONNECTION_FAILED:{
+            ui->connectBtn->setText("Disconnect \nStatus : Tello Connection Failed \n(Enter)");
             QPixmap image("./images_wifi/wifi0.png");
             QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
             ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
@@ -453,29 +457,21 @@ void MainWindow::updateConnectionStatus(){
             ui->batteryPercentage->setValue(0);
             break;
         }
-        case Tello::Status::CONNECTED:
+        case TelloAlerts::TELLO_CONNECTION_ESTABLISHED:
             ui->connectBtn->setText("Disconnect \nStatus : Connected \n(Enter)");
             ui->connectBtn->setStyleSheet("background-color: green;");
             break;
 
-        case Tello::Status::CLOSED:{
-            ui->connectBtn->setStyleSheet("background-color: white;");
-            QPixmap image("./images_wifi/wifi0.png");
-            QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
-            ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
-            break;
-        }
         default:
             ui->connectBtn->setText("Disconnect \nStatus : Error \n(Enter)");
             ui->connectBtn->setStyleSheet("background-color: red;");
             break;
     }
-
 }
-
-void MainWindow::updateCommandReponse(){
-    QString str = "Sending command : " + tello.getLastCommmandUsed() + "        Response : " + tello.getCommandResponseData();
+void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
+    //QString str = "Sending command : " + tello.getLastCommmandUsed() + "        Response : " + tello.getCommandResponseData();
     ui->lineEdit_cmd_reponse->setReadOnly(false);
-    ui->lineEdit_cmd_reponse->setText(str);
+    ui->lineEdit_cmd_reponse->setText(tello->tello_command->getLastCommandUsed() + " -> " + datagram);
     ui->lineEdit_cmd_reponse->setReadOnly(true);
 }
+

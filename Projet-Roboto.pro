@@ -9,12 +9,19 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    TelloCommand.cpp \
+    TelloState.cpp \
+    TelloStream.cpp \
     main.cpp \
     mainwindow.cpp \
     qcgaugewidget.cpp \
     tello.cpp
 
 HEADERS += \
+    TelloCommand.h \
+    TelloEnumTypes.h \
+    TelloState.h \
+    TelloStream.h \
     mainwindow.h \
     qcgaugewidget.h \
     tello.h

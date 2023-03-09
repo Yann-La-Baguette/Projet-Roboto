@@ -1,101 +1,47 @@
 #ifndef TELLO_H
 #define TELLO_H
 
-#include <opencv2\opencv.hpp>
-#include <QtNetwork/QUdpSocket>
-#include <QtNetwork/QHostAddress>
-#include <QTimer>
-#include <QDateTime>
+#include <QObject>
+#include <QDebug>
+#include <QThread>
 
-#define TIMER_SNR_UPDATE_RATE 5000
-#define TIMER_LINK_CHECK_UPDATE_RATE 1000
+#include <TelloEnumTypes.h>
+#include <TelloCommand.h>
+#include <TelloState.h>
+#include <TelloStream.h>
 
-class Tello: public QObject{
+class Tello: public QObject
+{
     Q_OBJECT
 
 public:
     Tello();
     ~Tello();
+    void start();
+    void stop();
+    void enableStream();
+    void disableStream();
+    bool isStarted(){ return started; };
 
-    // Enum for connection status
-    enum class Status {
-        CONNECTED,
-        CLOSED,
-        NO_RESPONSE,
-        NO_RESPONSE_TIMEOUT,
-        ERROR
-    };
-
-    void init(QHostAddress _ip, quint16 cmd, quint16 state, quint16 stream);
-    void close();
-
-    // Commands Methods
-    void sendCommand_generic(QByteArray cmd);
-    Status getStatus(){ return connectionStatus; };
-    int getWifiSNR(){ return snrValue; };
-    QString getCommandResponseData(){ return commandReponseData; };
-    QString getLastCommmandUsed(){ return lastCommandUsed; };
-    void enableCamera();
-    void disableCamera();
-    cv::VideoCapture cameraStream();
-    void move(QString pos, unsigned length);
-
-    // Getter functions for int variables
-    int getMid() { return mid; }
-    int getX() { return x; }
-    int getY() { return y; }
-    int getZ() { return z; }
-    int getPitch() { return pitch; }
-    int getRoll() { return roll; }
-    int getYaw() { return yaw; }
-    int getTempLowest() { return templ; }
-    int getTempHighest() { return temph; }
-    int getDistanceTof() { return tof; }
-    int getHeight() { return h; }
-    int getBattery() { return bat; }
-
-    // Getter functions for double variables
-    double *getMpry() { return mpry; }
-    double getVgx() { return vgx; }
-    double getVgy() { return vgy; }
-    double getVgz() { return vgz; }
-    double getBaro() { return baro; }
-    double getTime() { return time; }
-    double getAgx() { return agx; }
-    double getAgy() { return agy; }
-    double getAgz() { return agz; }
-
-signals:
-    void connectionStatusChanged();
-    void newCommandReponseAvailable();
-    void newStateDataAvailable();
-    void cameraStreamAvailable();
+    TelloCommand *tello_command;
+    TelloState *tello_state;
+    TelloStream *tello_stream;
 
 private:
-    int mid, x, y, z, pitch, roll, yaw, templ, temph, tof, h, bat, snrValue;
-    double mpry[3], vgx, vgy, vgz, baro, time, agx, agy, agz;
+    bool started, camera_enabled;
 
-    QUdpSocket *socket;
-    QUdpSocket *socketState;
-    QTimer *timerSNR, *timerLinkCheck;
-    Status connectionStatus;
-    bool waitingConnectionCheck, waitingCameraResponse = false, waitingSNRvalue;
+    QThread *thread_command;
+    QThread *thread_state;
+    QThread *thread_stream;
 
-    QString commandReponseData, lastCommandUsed;
-    quint64 timeOfLastSentCommand, timeOfLastReponse;
+    QString address_str = "192.168.10.1";
+    //QString address_str = "192.168.1.57";
+    quint16 port_command = 8889;
+    quint16 port_state = 8890;
+    quint16 port_stream = 11111;
 
-    QHostAddress ip;
-    quint16 udp_cmd_port;
-    quint16 udp_state_port;
-    quint16 udp_videostream_port;
-
-    void requestSNR();
-    void linkCheck();
-    void readCommandResponse();
-    void readStateResponse();
-    void parseStatus(QString data);
+private slots:
+    void cameraAvailable();
 };
-
-
 
 #endif // TELLO_H

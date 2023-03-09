@@ -497,19 +497,6 @@
 (Enter)</string>
     </property>
    </widget>
-   <widget class="QWidget" name="image" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>901</width>
-      <height>501</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -560,7 +547,7 @@ y : </string>
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="video">
     <property name="geometry">
      <rect>
       <x>990</x>
@@ -573,7 +560,61 @@ y : </string>
      <enum>QFrame::Box</enum>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>Video</string>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="streamOnBtn">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>20</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stream On</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="captureBtn">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>90</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Capture</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dronePicture">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>511</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="text">
+     <string>DronePic</string>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

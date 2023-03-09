@@ -3,9 +3,6 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
-#include <opencv2\core\core.hpp>
-#include <opencv2\highgui\highgui.hpp>
-#include <opencv2\opencv.hpp>
 
 #include "qlabel.h"
 #include "tello.h"
@@ -70,9 +67,11 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
+    bool showPic;
+    QPixmap savePixmap;
+    float aspectRatio;
 
-    Tello tello;
-    bool connectBtnClicked = false;
+    Tello *tello;
 
 private slots:
     /**
@@ -148,8 +147,12 @@ private slots:
 
     //GUI DATA
     void updateGUI();
-    void updateConnectionStatus();
-    void updateCommandReponse();
+    void updateConnectionStatus(TelloAlerts alertSignal);
+    void updateCommandReponse(TelloResponse response, QString datagram);
     void on_stopMoveBtn_clicked();
+
+    void displayStream(QPixmap video);
+    void on_streamOnBtn_clicked();
+    void on_captureBtn_clicked();
 };
 #endif // MAINWINDOW_H
