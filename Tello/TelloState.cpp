@@ -2,7 +2,8 @@
 
 TelloState::TelloState(QHostAddress a, quint16 p): ip(a), port(p)
 {
-    qDebug() << this << "Constructed on" << QThread::currentThread();
+    if(TELLO_STATE_DEBUG_OUTPUT)
+        qDebug() << this << "Constructed on" << QThread::currentThread();
     isRunning = false;
 
     socket = new QUdpSocket;
@@ -11,14 +12,16 @@ TelloState::TelloState(QHostAddress a, quint16 p): ip(a), port(p)
         qDebug() << socket->errorString();
     }
     else{
-        qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
+        if(TELLO_STATE_DEBUG_OUTPUT)
+            qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
         connect(socket, &QUdpSocket::readyRead, this, &TelloState::readResponse, Qt::DirectConnection);
     }
 }
 
 TelloState::~TelloState(){
     delete socket;
-    qDebug() << this << "Deconstructed on" << QThread::currentThread();
+    if(TELLO_STATE_DEBUG_OUTPUT)
+        qDebug() << this << "Deconstructed on" << QThread::currentThread();
 }
 
 void TelloState::run(){
@@ -36,7 +39,8 @@ void TelloState::readResponse(){
         QByteArray datagram;
         datagram.resize(socket->pendingDatagramSize());
         socket->readDatagram(datagram.data(),datagram.size(),&sender,&port);
-        //qDebug() << datagram;
+        if(TELLO_STATE_DEBUG_OUTPUT)
+            qDebug() << datagram;
         parseStatus(datagram);
     }
 }

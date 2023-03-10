@@ -6,7 +6,9 @@
 #include <QDebug>
 #include <QtNetwork/QUdpSocket>
 #include <QtNetwork/QHostAddress>
-#include <TelloEnumTypes.h>
+#include <Tello/TelloEnumTypes.h>
+
+#define TELLO_STATE_DEBUG_OUTPUT false
 
 class TelloState : public QObject
 {

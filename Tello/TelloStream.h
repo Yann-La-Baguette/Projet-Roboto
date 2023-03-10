@@ -7,6 +7,8 @@
 #include <QPixmap>
 #include <opencv2/opencv.hpp>
 
+#define TELLO_STREAM_DEBUG_OUTPUT false
+
 using namespace cv;
 
 class TelloStream : public QObject

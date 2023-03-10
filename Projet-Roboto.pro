@@ -9,22 +9,22 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    TelloCommand.cpp \
-    TelloState.cpp \
-    TelloStream.cpp \
+    Tello/Tello.cpp \
+    Tello/TelloCommand.cpp \
+    Tello/TelloState.cpp \
+    Tello/TelloStream.cpp \
     main.cpp \
     mainwindow.cpp \
     qcgaugewidget.cpp \
-    tello.cpp
 
 HEADERS += \
-    TelloCommand.h \
-    TelloEnumTypes.h \
-    TelloState.h \
-    TelloStream.h \
+    Tello/TelloCommand.h \
+    Tello/TelloEnumTypes.h \
+    Tello/TelloState.h \
+    Tello/TelloStream.h \
+    Tello/tello.h \
     mainwindow.h \
     qcgaugewidget.h \
-    tello.h
 
 FORMS += \
     mainwindow.ui
@@ -40,6 +40,7 @@ DISTFILES += \
     images_boutons/Stop.png \
     images_boutons/back.png \
     images_boutons/battery.png \
+    images_boutons/capture.png \
     images_boutons/connect.png \
     images_boutons/down.png \
     images_boutons/forward.png \

@@ -22,12 +22,14 @@ void TelloStream::stopStream(){
 void TelloStream::run(){
 
     while(!startVideoCapture()){
-        qDebug() << "Camera waiting";
+        if(TELLO_STREAM_DEBUG_OUTPUT)
+            qDebug() << "Camera waiting";
         camera_enabled = false;
         delete capture;
         QThread::sleep(5);
     }
-    qDebug() << "Camera ok";
+    if(TELLO_STREAM_DEBUG_OUTPUT)
+        qDebug() << "Camera ok";
     camera_enabled = true;
     Mat frame;
     while(camera_enabled){
@@ -37,7 +39,6 @@ void TelloStream::run(){
             camera_enabled = false;
             break;
         }
-
         size = size2qsize(frame.size());
         emit newFrame(mat2pixmap(frame));
     }
@@ -46,7 +47,6 @@ void TelloStream::run(){
 
 QPixmap TelloStream::mat2pixmap(Mat bgr_img){
     Mat rgb_img;
-    //resize(bgr_img, rgb_img, Size(400,400));
     cvtColor(bgr_img, rgb_img, cv::COLOR_BGR2RGB);
     return QPixmap::fromImage(QImage(rgb_img.data, rgb_img.cols, rgb_img.rows, QImage::Format_RGB888));
 }

@@ -4,10 +4,12 @@
 #include <QObject>
 #include <QThread>
 #include <QDebug>
-#include <QTimer>
+#include <QDateTime>
 #include <QtNetwork/QUdpSocket>
 #include <QtNetwork/QHostAddress>
-#include <TelloEnumTypes.h>
+#include <Tello/TelloEnumTypes.h>
+
+#define TELLO_COMMAND_DEBUG_OUTPUT false
 
 class TelloCommand: public QObject
 {
@@ -30,6 +32,7 @@ public:
     bool sdkModeEnabled(){ return sdk_mode_enabled; };
     bool isFlying(){ return flying; };
     QString getLastCommandUsed(){ return lastCommandUsed; };
+    int getSNR(){ return snr_value;};
 
 public slots:
     void running(bool r){ isRunning = r; };
@@ -39,11 +42,13 @@ private:
     QUdpSocket *socket;
     QHostAddress ip;
     quint16 port;
-    bool isRunning, flying, sdk_mode_enabled, snr_requested, generic_command_requested, wait_command_requested;
-    int timeout_counter;
+    bool isRunning, flying, streamEnabled, sdk_mode_enabled, snr_requested, generic_command_requested, wait_command_requested;
+    int snr_value;
+
+    qint64 lastTimeCommandSent, lastTimeResponseReceived;
     QString lastCommandUsed;
+
     void sendCommand_SNR();
-    //void waitResponse();
 
 private slots:
     void readResponse();
@@ -51,7 +56,6 @@ private slots:
 signals:
     void alertSignal(TelloAlerts);
     void responseSignal(TelloResponse, QString);
-    void wifiSnrSignal(int);
     void cameraEnabled();
 
 };

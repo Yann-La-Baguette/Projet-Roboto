@@ -1,7 +1,8 @@
 #include "TelloCommand.h"
 
 TelloCommand::TelloCommand(QHostAddress a, quint16 p): ip(a), port(p){
-    qDebug() << this << "Constructed on" << QThread::currentThread();
+    if(TELLO_COMMAND_DEBUG_OUTPUT)
+        qDebug() << this << "Constructed on" << QThread::currentThread();
     isRunning = false;
 
     socket = new QUdpSocket;
@@ -11,7 +12,8 @@ TelloCommand::TelloCommand(QHostAddress a, quint16 p): ip(a), port(p){
         emit alertSignal(TelloAlerts::SOCKET_CONNECTION_FAILED);
     }
     else{
-        qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
+        if(TELLO_COMMAND_DEBUG_OUTPUT)
+            qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
         connect(socket, &QUdpSocket::readyRead, this, &TelloCommand::readResponse, Qt::DirectConnection);
         sdk_mode_enabled = false;
     }
@@ -19,7 +21,8 @@ TelloCommand::TelloCommand(QHostAddress a, quint16 p): ip(a), port(p){
 
 TelloCommand::~TelloCommand(){
     delete socket;
-    qDebug() << this << "Deconstructed on" << QThread::currentThread();
+    if(TELLO_COMMAND_DEBUG_OUTPUT)
+        qDebug() << this << "Deconstructed on" << QThread::currentThread();
 }
 
 void TelloCommand::takeoff(){
@@ -37,9 +40,11 @@ void TelloCommand::land(){
 }
 
 void TelloCommand::emergency(){
-    qDebug() << "Sent: EMERGENCY on" << QThread::currentThread();
+    if(TELLO_COMMAND_DEBUG_OUTPUT)
+        qDebug() << "Sent: EMERGENCY on" << QThread::currentThread();
     lastCommandUsed = "emergency";
     socket->writeDatagram("emergency", ip, port);
+    lastTimeCommandSent = QDateTime::currentSecsSinceEpoch();
     generic_command_requested = true;
     flying = false;
 }
@@ -57,8 +62,10 @@ void TelloCommand::setSpeed(int speed){
 
 void TelloCommand::sendCommand_generic(QByteArray cmd){
     if(isRunning){
-        qDebug() << "Sent: " << cmd << "on" << QThread::currentThread();
+        if(TELLO_COMMAND_DEBUG_OUTPUT)
+            qDebug() << "Sent: " << cmd << "on" << QThread::currentThread();
         lastCommandUsed = cmd;
+        lastTimeCommandSent = QDateTime::currentSecsSinceEpoch();
         socket->writeDatagram(cmd, ip, port);
         generic_command_requested = true;
     }
@@ -66,42 +73,45 @@ void TelloCommand::sendCommand_generic(QByteArray cmd){
 
 void TelloCommand::sendCommand_SNR(){
     socket->writeDatagram("wifi?", ip, port);
+    lastTimeCommandSent = QDateTime::currentSecsSinceEpoch();
     snr_requested = true;
 }
 
-/*
-void TelloCommand::sendCommand_waitResponse(QByteArray cmd){
-    wait_command_requested = true;
-    sendCommand_generic(cmd);
-    QTimer::singleShot(200, this, &TelloCommand::waitResponse);
-}
-
-void TelloCommand::waitResponse(){
-    if(generic_command_requested){
-        qDebug() << "Pas repondu";
-        //sendCommand_waitResponse(lastCommandUsed);
-    }
-    else{
-        qDebug() << "Repondu";
-    }
-}
-*/
-
 void TelloCommand::run(){
     sdk_mode_enabled = false;
+    streamEnabled = false;
+    quint16 responseDelay;
     while(isRunning){
         if(sdk_mode_enabled){
+            if(!streamEnabled){
+                sendCommand_generic("streamon");
+            }
+            responseDelay = lastTimeCommandSent - lastTimeResponseReceived;
+            //qDebug() << "response delay: " << QString::number(responseDelay) << "s";
+            if(responseDelay >= 10){
+                emit alertSignal(TelloAlerts::TELLO_CONNECTION_TIMEOUT);
+                QThread::sleep(5);
+                sdk_mode_enabled = false;
+                streamEnabled = false;
+            }
+            else if(responseDelay >= 5){
+                emit alertSignal(TelloAlerts::TELLO_CONNECTION_NO_RESPONSE);
+            }
+            else{
+                emit alertSignal(TelloAlerts::TELLO_CONNECTION_ESTABLISHED);
+            }
+
             sendCommand_SNR();
         }
         else{
             sendCommand_generic("command");
+            emit alertSignal(TelloAlerts::TELLO_CONNECTION_WAITING);
         }
-        QThread::sleep(3);
+        QThread::sleep(2);
     }
 }
 
 void TelloCommand::readResponse(){
-
 
     while (socket->hasPendingDatagrams())
     {
@@ -111,17 +121,22 @@ void TelloCommand::readResponse(){
         datagram.resize(socket->pendingDatagramSize());
         socket->readDatagram(datagram.data(),datagram.size(),&sender,&port);
 
-        if(snr_requested){
-            qDebug() << "\"snr\"" << ":" << port << "->" << datagram;
-        }
-        else{
-            qDebug() << lastCommandUsed << ":" << port << "->" << datagram;
+        if(TELLO_COMMAND_DEBUG_OUTPUT){
+            if(snr_requested){
+                qDebug() << "\"snr\"" << ":" << port << "->" << datagram;
+            }
+            else{
+                qDebug() << lastCommandUsed << ":" << port << "->" << datagram;
+            }
         }
 
 
+
+        lastTimeResponseReceived = QDateTime::currentSecsSinceEpoch();
         if(generic_command_requested){
             generic_command_requested = false;
             if(lastCommandUsed == "streamon"){
+                streamEnabled = true;
                 emit cameraEnabled();
             }
         }
@@ -138,7 +153,7 @@ void TelloCommand::readResponse(){
         else if(datagram.contains("\r\n")){
             if(snr_requested){
                 snr_requested = false;
-                emit wifiSnrSignal(datagram.toInt());
+                snr_value = datagram.toInt();
             }
             else{
                 emit responseSignal(TelloResponse::VALUE, datagram);

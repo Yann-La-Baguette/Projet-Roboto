@@ -3,10 +3,12 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <QTimer>
 
 #include "qlabel.h"
-#include "tello.h"
+#include "Tello/tello.h"
 #include "qcgaugewidget.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -67,7 +69,7 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
-    bool showPic;
+    bool showPic = false;
     QPixmap savePixmap;
     float aspectRatio;
 
@@ -140,10 +142,6 @@ private slots:
      * @brief on_landBtn_clicked Land
      */
     void on_landBtn_clicked();
-    /**
-     * @brief on_connectBtn_clicked Connect to the drone
-     */
-    void on_connectBtn_clicked();
 
     //GUI DATA
     void updateGUI();
@@ -152,7 +150,6 @@ private slots:
     void on_stopMoveBtn_clicked();
 
     void displayStream(QPixmap video);
-    void on_streamOnBtn_clicked();
     void on_captureBtn_clicked();
 };
 #endif // MAINWINDOW_H
