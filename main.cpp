@@ -5,6 +5,11 @@
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
+
+    // Icone et nom d'application
+    w.setWindowTitle("Roboto Collaboratif");
+    w.setWindowIcon(QIcon("./icone"));
+    w.showMaximized();
+
     return a.exec();
 }
