@@ -142,13 +142,13 @@ void TelloCommand::readResponse(){
         }
 
 
-        if(datagram == "timeout"){ emit responseSignal(TelloResponse::TIMEOUT, datagram); }
-        else if(datagram == "error"){ emit responseSignal(TelloResponse::ERROR, datagram); }
+        if(datagram == "timeout"){ emit responseSignal(TelloResponse::TELLO_TIMEOUT, datagram); }
+        else if(datagram == "error"){ emit responseSignal(TelloResponse::TELLO_ERROR, datagram); }
         else if(datagram == "ok"){
             if(!sdk_mode_enabled){
                 sdk_mode_enabled = true;
             }
-            emit responseSignal(TelloResponse::OK, datagram);
+            emit responseSignal(TelloResponse::TELLO_OK, datagram);
         }
         else if(datagram.contains("\r\n")){
             if(snr_requested){
@@ -156,10 +156,10 @@ void TelloCommand::readResponse(){
                 snr_value = datagram.toInt();
             }
             else{
-                emit responseSignal(TelloResponse::VALUE, datagram);
+                emit responseSignal(TelloResponse::TELLO_VALUE, datagram);
             }
         }
-        else if(datagram == "out of range"){ emit responseSignal(TelloResponse::OUT_OF_RANGE, datagram); }
-        else{ emit responseSignal(TelloResponse::UNDEFINED, datagram); }
+        else if(datagram == "out of range"){ emit responseSignal(TelloResponse::TELLO_OUT_OF_RANGE, datagram); }
+        else{ emit responseSignal(TelloResponse::TELLO_UNDEFINED, datagram); }
     }
 }

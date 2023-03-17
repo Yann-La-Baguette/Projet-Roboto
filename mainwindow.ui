@@ -54,9 +54,9 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>730</y>
+      <y>740</y>
       <width>271</width>
-      <height>291</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -434,7 +434,7 @@
       <x>860</x>
       <y>10</y>
       <width>201</width>
-      <height>311</height>
+      <height>631</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -453,7 +453,8 @@
         </font>
        </property>
        <property name="text">
-        <string>Capture</string>
+        <string>Capture
+(C)</string>
        </property>
       </widget>
      </item>
@@ -491,7 +492,27 @@ Y : </string>
         </font>
        </property>
        <property name="text">
-        <string>Reset Waypoints</string>
+        <string>Reset Waypoints
+(R)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delLastWaypointBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial Black</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>Delete Last Waypoint
+(V)</string>
        </property>
       </widget>
      </item>
@@ -559,10 +580,10 @@ Y : </string>
    <widget class="QLabel" name="wifiLogo">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>740</x>
       <y>650</y>
-      <width>81</width>
-      <height>71</height>
+      <width>111</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -639,10 +660,10 @@ Y : </string>
    <widget class="QProgressBar" name="batteryPercentage">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>460</x>
       <y>650</y>
-      <width>301</width>
-      <height>71</height>
+      <width>271</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">

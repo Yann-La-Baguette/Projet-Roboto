@@ -13,6 +13,7 @@ SOURCES += \
     Tello/TelloCommand.cpp \
     Tello/TelloState.cpp \
     Tello/TelloStream.cpp \
+    gamepadmanager.cpp \
     main.cpp \
     mainwindow.cpp \
     qcgaugewidget.cpp \
@@ -23,8 +24,10 @@ HEADERS += \
     Tello/TelloState.h \
     Tello/TelloStream.h \
     Tello/tello.h \
+    gamepadmanager.h \
     mainwindow.h \
     qcgaugewidget.h \
+
 
 FORMS += \
     mainwindow.ui
@@ -57,7 +60,7 @@ DISTFILES += \
     images_wifi/wifi1.png \
     images_wifi/wifi2.png \
     images_wifi/wifi3.png \
-    images_wifi/wifi4.png
+    images_wifi/wifi4.png \
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -78,3 +81,5 @@ LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_stitching4
 LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_video470.dll
 LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_videoio470.dll
 LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\opencv_videoio_ffmpeg470_64.dll
+
+LIBS += -lXinput

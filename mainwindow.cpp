@@ -1,10 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
     tello = new Tello;
+    gamepad = new GamepadManager;
 
     // Connexion pour les données du drone
     connect(tello->tello_command,&TelloCommand::responseSignal,this,&MainWindow::updateCommandReponse);
@@ -24,15 +26,23 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //Affichage de logos pour les boutons du drone
     logosBoutons();
 
+    // Détection manette
+    connect(gamepad, &GamepadManager::gamepadButtonPressed, this, &MainWindow::onGamepadButtonPressed);
+    connect(gamepad, &GamepadManager::gamepadJoystickChanged, this, &MainWindow::onGamepadJoystickChanged);
+
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start((1/1000)*1000);
+
 }
 MainWindow::~MainWindow(){
     delete ui;
+    delete tello;
+    delete gamepad;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::affichageHeight(){
     mAirspeedGauge = new QcGaugeWidget;
@@ -187,9 +197,14 @@ void MainWindow::logosBoutons(){
     ui->captureBtn->setIcon(captureLogo);
     ui->captureBtn->setIconSize(QSize(50,50));
 
+    QIcon delLastWaypointLogo("./images_boutons/delete_last_waypoint.png");
+    ui->delLastWaypointBtn->setIcon(delLastWaypointLogo);
+    ui->delLastWaypointBtn->setIconSize(QSize(50,50));
+
     allMoveBtnWhite();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::on_upBtn_clicked(){
     tello->tello_command->setPosition(0,0,40,0);
@@ -265,6 +280,43 @@ void MainWindow::on_landBtn_clicked(){
     ui->takeOffBtn->setStyleSheet("background-color: white;");
     ui->landBtn->setStyleSheet("background-color: orange;");
 }
+
+void MainWindow::onGamepadButtonPressed(int gamepadButton){
+    qDebug() << "Button" << gamepadButton << "pressed!";
+    switch (gamepadButton) {
+    case 12:
+        ui->takeOffBtn->animateClick();
+        break;
+    case 13:
+        ui->landBtn->animateClick();
+        break;
+    case 15:
+        ui->emergencyButton->animateClick();
+        break;
+    case 1:
+        ui->captureBtn->animateClick();
+        break;
+    case 0:
+        ui->Reset->animateClick();
+        break;
+    case 2:
+        ui->delLastWaypointBtn->animateClick();
+        break;
+    default:
+        break;
+    }
+}
+void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger){
+    int highValue;
+    if(leftTrigger > 0){
+        highValue = -leftTrigger;
+    }
+    else{
+        highValue = rightTrigger;
+    }
+    tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
             case Qt::Key_Z:
@@ -303,49 +355,62 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_PageDown:
                 ui->landBtn->animateClick();
                 break;
+            case Qt::Key_C:
+                ui->captureBtn->animateClick();
+                break;
+            case Qt::Key_R:
+                ui->Reset->animateClick();
+                break;
+            case Qt::Key_V:
+                ui->delLastWaypointBtn->animateClick();
+                break;
             default:
                 QWidget::keyPressEvent(event);
                 break;
         }
 }
 void MainWindow::allMoveBtnWhite(){
-    ui->stopMoveBtn->setStyleSheet("background-color: white;");
-    ui->backBtn->setStyleSheet("background-color: white;");
-    ui->downBtn->setStyleSheet("background-color: white;");
-    ui->forwardBtn->setStyleSheet("background-color: white;");
-    ui->leftBtn->setStyleSheet("background-color: white;");
-    ui->tLeftBtn->setStyleSheet("background-color: white;");
-    ui->rightBtn->setStyleSheet("background-color: white;");
-    ui->tRightBtn->setStyleSheet("background-color: white;");
-    ui->upBtn->setStyleSheet("background-color: white;");
-    ui->stopMoveBtn->setStyleSheet("background-color: white;");
-    ui->captureBtn->setStyleSheet("background-color: white;");
-    ui->Reset->setStyleSheet("background-color: white;");
+    QString Stylesheet = "background-color: white;";
+
+    ui->stopMoveBtn->setStyleSheet(Stylesheet);
+    ui->backBtn->setStyleSheet(Stylesheet);
+    ui->downBtn->setStyleSheet(Stylesheet);
+    ui->forwardBtn->setStyleSheet(Stylesheet);
+    ui->leftBtn->setStyleSheet(Stylesheet);
+    ui->tLeftBtn->setStyleSheet(Stylesheet);
+    ui->rightBtn->setStyleSheet(Stylesheet);
+    ui->tRightBtn->setStyleSheet(Stylesheet);
+    ui->upBtn->setStyleSheet(Stylesheet);
+    ui->stopMoveBtn->setStyleSheet(Stylesheet);
+    ui->captureBtn->setStyleSheet(Stylesheet);
+    ui->Reset->setStyleSheet(Stylesheet);
+    ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::displayStream(QPixmap videoPix){
     ui->video->setFixedSize(840,630);
     ui->video->setPixmap(videoPix);
-    qDebug() << videoPix.size();
+    //qDebug() << videoPix.size();
 
     if(showPic == true){
         //ui->dronePicture->setFixedSize(tello->tello_stream->getCaptureSize());
         ui->dronePicture->setFixedSize(840, 630);
         savePixmap = videoPix;
 
-        qDebug() << "image size:" << savePixmap.size();
-        qDebug() << "label size:" << ui->dronePicture->size();
-        qDebug() << "label position:" << ui->dronePicture->pos();
-        qDebug() << "------------";
+        //qDebug() << "image size:" << savePixmap.size();
+        //qDebug() << "label size:" << ui->dronePicture->size();
+        //qDebug() << "label position:" << ui->dronePicture->pos();
+        //qDebug() << "------------";
 
         //ui->dronePicture->setFixedSize(savePixmap.size());
         ui->dronePicture->setPixmap(savePixmap);
 
-        qDebug() << "image size:" << savePixmap.size();
-        qDebug() << "label size:" << ui->dronePicture->size();
-        qDebug() << "label position:" << ui->dronePicture->pos();
-        qDebug() << "------------" ;
+        //qDebug() << "image size:" << savePixmap.size();
+        //qDebug() << "label size:" << ui->dronePicture->size();
+        //qDebug() << "label position:" << ui->dronePicture->pos();
+        //qDebug() << "------------" ;
 
         reset();
         showPic = false;
@@ -355,7 +420,29 @@ void MainWindow::on_captureBtn_clicked(){
     showPic = true;
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    //QSize img_size = savePixmap.size();
+    QPoint cursor = event->pos();
+    QPoint imgLabel_pos = ui->dronePicture->pos();
 
+    if (event->button() == Qt::LeftButton) {
+
+        if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
+            if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
+                QPoint relativePos;
+                qDebug() << "Click on image";
+                qDebug() << "Absolute:" << cursor;
+                relativePos.setX(cursor.x() - imgLabel_pos.x());
+                relativePos.setY(cursor.y() - imgLabel_pos.y());
+                qDebug() << "Relative:" << relativePos;
+
+                points.append(relativePos);
+
+                valeurDispo = true;
+            }
+        }
+    }
+}
 void MainWindow::loop(){
 
     if(valeurDispo==true){
@@ -374,6 +461,7 @@ void MainWindow::loop(){
             qDebug() << point;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
+            ui->cooSouris->setText("Last Waypoint Coordinates : \nX : " + QString::number(point.x()) + "\nY : " + QString::number(point.y()));
         }
 
         //painter.drawPoints(points);
@@ -385,35 +473,18 @@ void MainWindow::loop(){
         valeurDispo = false;
     }
 }
-void MainWindow::mousePressEvent(QMouseEvent *event){
-    //QSize img_size = savePixmap.size();
-    QPoint cursor = event->pos();
-    QPoint imgLabel_pos = ui->dronePicture->pos();
-
-    if (event->button() == Qt::LeftButton) {
-
-        if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
-            if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
-                QPoint relativePos;
-                qDebug() << "Click on image";
-                qDebug() << "Absolute:" << cursor;
-                relativePos.setX(cursor.x() - imgLabel_pos.x());
-                relativePos.setY(cursor.y() - imgLabel_pos.y());
-                qDebug() << "Relative:" << relativePos;
-
-                points.append(relativePos);
-                ui->cooSouris->setText("Last Waypoint Coordinates : \nX : " + QString::number(relativePos.x()) + "\nY : " + QString::number(relativePos.y()));
-                valeurDispo = true;
-            }
-        }
-    }
+void MainWindow::on_delLastWaypointBtn_clicked(){
+    points.removeLast();
+    valeurDispo = true;
+    ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
 }
 void MainWindow::reset(){
     points.clear();
     valeurDispo = true;
-    ui->cooSouris->setText("Waypoints Coordinates : \nX : \nY : ");
+    ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::updateGUI(){
     int wifiValue = 0;
