@@ -7,7 +7,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <QLabel>
-
+#include <QWebSocket>
 
 // Personnal classes
 #include "gamepadmanager.h"
@@ -24,11 +24,14 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+
+
 public:
     // Constructor & Destructor
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Showing gauges for drone datas
     /**
@@ -48,6 +51,7 @@ public:
      */
     void affichageWifi();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Showing logos for the buttons
     /**
@@ -55,21 +59,27 @@ public:
      */
     void logosBoutons();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Put all the move buttons to white
     /**
      * @brief Reset de touts les boutons
      */
-    void allMoveBtnWhite();
+    void UIStyle();
+
+
 
 private:
     Ui::MainWindow *ui;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Class definitions
     Tello *tello;
     GamepadManager *gamepad;
+    QWebSocket *alphabot;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Drone values
     QcGaugeWidget *mAirspeedGauge;
@@ -82,6 +92,9 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
+    bool useController = true;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Waypoints definition
     QVector<QPoint> points;
@@ -91,6 +104,10 @@ private:
     QPixmap savePixmap;
     float aspectRatio;
 
+    bool activeVector;
+    QPoint cursor;
+    QPoint release;
+
 private slots:
     // Waypoints placing
     /**
@@ -98,6 +115,11 @@ private slots:
      * @param event
      */
     void mousePressEvent(QMouseEvent *event);
+    /**
+     * @brief mouseReleaseEvent
+     * @param event
+     */
+    void mouseReleaseEvent(QMouseEvent *event);
     /**
      * @brief Drawing waypoints for the robot on the picture
      */
@@ -111,6 +133,7 @@ private slots:
      */
     void reset();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Control Buttons
     /**
@@ -166,6 +189,7 @@ private slots:
      */
     void on_captureBtn_clicked();
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Shortcuts for control
     /**
@@ -189,11 +213,19 @@ private slots:
      */
     void onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger);
 
+    /**
+     * @brief on_launchRobotBtn_clicked
+     */
+    void on_launchRobotBtn_clicked();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // GUI Data
     void displayStream(QPixmap video);
     void updateGUI();
     void updateConnectionStatus(TelloAlerts alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
+    void on_controlleCheckBox_stateChanged(int arg1);
+
 };
 #endif // MAINWINDOW_H

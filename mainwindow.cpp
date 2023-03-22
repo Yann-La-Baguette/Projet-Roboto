@@ -7,6 +7,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
     tello = new Tello;
     gamepad = new GamepadManager;
+    alphabot = new QWebSocket;
+
+    // Connexion au robot
+    QUrl url;
+    url.setUrl("ws://172.21.28.101");
+    url.setPort(8080);
+    alphabot->open(url);
 
     // Connexion pour les données du drone
     connect(tello->tello_command,&TelloCommand::responseSignal,this,&MainWindow::updateCommandReponse);
@@ -34,12 +41,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start((1/1000)*1000);
-
 }
 MainWindow::~MainWindow(){
+    alphabot->close();
     delete ui;
     delete tello;
     delete gamepad;
+    delete alphabot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,68 +209,62 @@ void MainWindow::logosBoutons(){
     ui->delLastWaypointBtn->setIcon(delLastWaypointLogo);
     ui->delLastWaypointBtn->setIconSize(QSize(50,50));
 
-    allMoveBtnWhite();
+    QIcon launchRobotLogo("./images_boutons/go.png");
+    ui->launchRobotBtn->setIcon(launchRobotLogo);
+    ui->launchRobotBtn->setIconSize(QSize(50,50));
+
+    UIStyle();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::on_upBtn_clicked(){
     tello->tello_command->setPosition(0,0,40,0);
-    //tello->tello_command->sendCommand_generic("rc 0 0 40 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->upBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_downBtn_clicked(){
     tello->tello_command->setPosition(0,0,-40,0);
-    //tello->tello_command->sendCommand_generic("rc 0 0 -40 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->downBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_rightBtn_clicked(){
     tello->tello_command->setPosition(50,0,0,0);
-    //tello->tello_command->sendCommand_generic("rc 50 0 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->rightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tRightBtn_clicked(){
     tello->tello_command->setPosition(0,0,0,70);
-    //tello->tello_command->sendCommand_generic("rc 0 0 0 70");
-    allMoveBtnWhite();
+    UIStyle();
     ui->tRightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_backBtn_clicked(){
     tello->tello_command->setPosition(0,-50,0,0);
-    //tello->tello_command->sendCommand_generic("rc 0 -50 0 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->backBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_forwardBtn_clicked(){
     tello->tello_command->setPosition(0,80,0,0);
-    //tello->tello_command->sendCommand_generic("rc 0 50 0 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->forwardBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_leftBtn_clicked(){
     tello->tello_command->setPosition(-50,0,0,0);
-    //tello->tello_command->sendCommand_generic("rc -50 0 0 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->leftBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tLeftBtn_clicked(){
     tello->tello_command->setPosition(0,0,0,-70);
-    //tello->tello_command->sendCommand_generic("rc 0 0 0 -70");
-    allMoveBtnWhite();
+    UIStyle();
     ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_stopMoveBtn_clicked(){
     tello->tello_command->setPosition(0,0,0,0);
-    //tello->tello_command->sendCommand_generic("rc 0 0 0 0");
-    allMoveBtnWhite();
+    UIStyle();
     ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_emergencyButton_clicked(){
     tello->tello_command->emergency();
-    //tello->tello_command->sendCommand_generic("emergency");
     ui->emergencyButton->setStyleSheet("background-color: red;");
     ui->landBtn->setStyleSheet("background-color: orange");
     ui->takeOffBtn->setStyleSheet("background-color: white");
@@ -281,40 +283,49 @@ void MainWindow::on_landBtn_clicked(){
     ui->landBtn->setStyleSheet("background-color: orange;");
 }
 
+void MainWindow::on_controlleCheckBox_stateChanged(int arg1){
+    useController = arg1;
+}
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
-    qDebug() << "Button" << gamepadButton << "pressed!";
-    switch (gamepadButton) {
-    case 12:
-        ui->takeOffBtn->animateClick();
-        break;
-    case 13:
-        ui->landBtn->animateClick();
-        break;
-    case 15:
-        ui->emergencyButton->animateClick();
-        break;
-    case 1:
-        ui->captureBtn->animateClick();
-        break;
-    case 0:
-        ui->Reset->animateClick();
-        break;
-    case 2:
-        ui->delLastWaypointBtn->animateClick();
-        break;
-    default:
-        break;
+    if(useController == true){
+        switch (gamepadButton) {
+        case 0: // Up
+            ui->Reset->animateClick();
+            break;
+        case 1: // Down
+            ui->captureBtn->animateClick();
+            break;
+        case 2: // Left
+            ui->delLastWaypointBtn->animateClick();
+            break;
+        case 3: // Right
+            ui->launchRobotBtn->animateClick();
+            break;
+        case 12: // A
+            ui->takeOffBtn->animateClick();
+            break;
+        case 13: // B
+            ui->landBtn->animateClick();
+            break;
+        case 15: // Y
+            ui->emergencyButton->animateClick();
+            break;
+        default:
+            break;
+        }
     }
 }
 void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger){
-    int highValue;
-    if(leftTrigger > 0){
-        highValue = -leftTrigger;
+    if(useController == true){
+        int highValue;
+        if(leftTrigger > 0){
+            highValue = -leftTrigger;
+        }
+        else{
+            highValue = rightTrigger;
+        }
+        tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
     }
-    else{
-        highValue = rightTrigger;
-    }
-    tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -364,12 +375,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_V:
                 ui->delLastWaypointBtn->animateClick();
                 break;
+            case Qt::Key_L:
+                ui->launchRobotBtn->animateClick();
+                break;
             default:
                 QWidget::keyPressEvent(event);
                 break;
         }
 }
-void MainWindow::allMoveBtnWhite(){
+void MainWindow::UIStyle(){
     QString Stylesheet = "background-color: white;";
 
     ui->stopMoveBtn->setStyleSheet(Stylesheet);
@@ -385,6 +399,10 @@ void MainWindow::allMoveBtnWhite(){
     ui->captureBtn->setStyleSheet(Stylesheet);
     ui->Reset->setStyleSheet(Stylesheet);
     ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
+    ui->launchRobotBtn->setStyleSheet(Stylesheet);
+
+    ui->dronePicture->setStyleSheet("QLabel { background-color : black; color : white; }");
+    ui->video->setStyleSheet("QLabel { background-color : black; color : white; }");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -392,25 +410,12 @@ void MainWindow::allMoveBtnWhite(){
 void MainWindow::displayStream(QPixmap videoPix){
     ui->video->setFixedSize(840,630);
     ui->video->setPixmap(videoPix);
-    //qDebug() << videoPix.size();
 
     if(showPic == true){
-        //ui->dronePicture->setFixedSize(tello->tello_stream->getCaptureSize());
         ui->dronePicture->setFixedSize(840, 630);
         savePixmap = videoPix;
 
-        //qDebug() << "image size:" << savePixmap.size();
-        //qDebug() << "label size:" << ui->dronePicture->size();
-        //qDebug() << "label position:" << ui->dronePicture->pos();
-        //qDebug() << "------------";
-
-        //ui->dronePicture->setFixedSize(savePixmap.size());
         ui->dronePicture->setPixmap(savePixmap);
-
-        //qDebug() << "image size:" << savePixmap.size();
-        //qDebug() << "label size:" << ui->dronePicture->size();
-        //qDebug() << "label position:" << ui->dronePicture->pos();
-        //qDebug() << "------------" ;
 
         reset();
         showPic = false;
@@ -421,27 +426,28 @@ void MainWindow::on_captureBtn_clicked(){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    //QSize img_size = savePixmap.size();
-    QPoint cursor = event->pos();
+    cursor = event->pos();
     QPoint imgLabel_pos = ui->dronePicture->pos();
 
     if (event->button() == Qt::LeftButton) {
+        if(activeVector == false){
+            if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
+                if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
+                    QPoint relativePos;
 
-        if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
-            if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
-                QPoint relativePos;
-                qDebug() << "Click on image";
-                qDebug() << "Absolute:" << cursor;
-                relativePos.setX(cursor.x() - imgLabel_pos.x());
-                relativePos.setY(cursor.y() - imgLabel_pos.y());
-                qDebug() << "Relative:" << relativePos;
+                    relativePos.setX(cursor.x() - imgLabel_pos.x());
+                    relativePos.setY(cursor.y() - imgLabel_pos.y());
 
-                points.append(relativePos);
+                    points.append(relativePos);
 
-                valeurDispo = true;
+                    valeurDispo = true;
+                }
             }
         }
     }
+}
+void MainWindow::mouseReleaseEvent(QMouseEvent *event){
+    release = event->pos();
 }
 void MainWindow::loop(){
 
@@ -458,15 +464,11 @@ void MainWindow::loop(){
 
         for(int i = 0 ; i<points.count() ; i++){
             QPoint point = points[i]*(2/1.75);
-            qDebug() << point;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
             ui->cooSouris->setText("Last Waypoint Coordinates : \nX : " + QString::number(point.x()) + "\nY : " + QString::number(point.y()));
         }
 
-        //painter.drawPoints(points);
-
-        qDebug() <<points;
         painter.end();
         ui->dronePicture->setPixmap(new_img);
 
@@ -474,9 +476,11 @@ void MainWindow::loop(){
     }
 }
 void MainWindow::on_delLastWaypointBtn_clicked(){
-    points.removeLast();
-    valeurDispo = true;
-    ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
+    if(points.isEmpty() == false){
+        valeurDispo = true;
+        points.removeLast();
+        ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
+    }
 }
 void MainWindow::reset(){
     points.clear();
@@ -484,12 +488,16 @@ void MainWindow::reset(){
     ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
 }
 
+void MainWindow::on_launchRobotBtn_clicked(){
+    alphabot->sendTextMessage("av");
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::updateGUI(){
     int wifiValue = 0;
     int SNR = 90;
-    //qDebug()<<SNR;
+
     if (SNR>=90){
         wifiValue = 4;
     } else if(SNR>=70){
@@ -605,7 +613,6 @@ void MainWindow::updateConnectionStatus(TelloAlerts alertSignal){
     }
 }
 void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
-    //QString str = "Sending command : " + tello.getLastCommmandUsed() + "        Response : " + tello.getCommandResponseData();
     ui->lineEdit_cmd_reponse->setReadOnly(false);
     ui->lineEdit_cmd_reponse->setText(tello->tello_command->getLastCommandUsed() + " -> " + datagram);
     ui->lineEdit_cmd_reponse->setReadOnly(true);

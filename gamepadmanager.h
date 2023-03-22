@@ -15,6 +15,7 @@ public:
 signals:
     void gamepadButtonPressed(int buttonId);
     void gamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short sThumbRY, short leftTrigger, short rightTrigger);
+
 private slots:
     void pollGamepads();
 
