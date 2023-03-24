@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     // Connexion pour les données du drone
     connect(tello->tello_command,&TelloCommand::responseSignal,this,&MainWindow::updateCommandReponse);
     connect(tello->tello_state,&TelloState::dataAvailable,this,&MainWindow::updateGUI);
-    connect(tello->tello_command,&TelloCommand::alertSignal,this,&MainWindow::updateConnectionStatus);
+    connect(tello->tello_state,&TelloState::status,this,&MainWindow::updateConnectionStatus);
     connect(tello->tello_stream,&TelloStream::newFrame,this,&MainWindow::displayStream);
 
     // Démarrage liaison avec le drone
@@ -150,15 +150,15 @@ void MainWindow::logosBoutons(){
     ui->emergencyButton->setIconSize(QSize(50,50));
     ui->emergencyButton->setStyleSheet("background-color: white;");
 
-    QIcon landLogo("./images_boutons/land.png");
-    ui->landBtn->setIcon(landLogo);
-    ui->landBtn->setIconSize(QSize(50,50));
-    ui->landBtn->setStyleSheet("background-color: orange;");
-
     QIcon takeOffLogo("./images_boutons/take_off.png");
     ui->takeOffBtn->setIcon(takeOffLogo);
     ui->takeOffBtn->setIconSize(QSize(50,50));
     ui->takeOffBtn->setStyleSheet("background-color: white;");
+
+    QIcon landLogo("./images_boutons/land.png");
+    ui->landBtn->setIcon(landLogo);
+    ui->landBtn->setIconSize(QSize(50,50));
+    ui->landBtn->setStyleSheet("background-color: orange;");
 
     QIcon upLogo("./images_boutons/up.png");
     ui->upBtn->setIcon(upLogo);
@@ -196,6 +196,8 @@ void MainWindow::logosBoutons(){
     ui->stopMoveBtn->setIcon(stopMoveLogo);
     ui->stopMoveBtn->setIconSize(QSize(50,50));
 
+
+
     QIcon resetWaypointsLogo("./images_boutons/reset_waypoints.png");
     ui->Reset->setIcon(resetWaypointsLogo);
     ui->Reset->setIconSize(QSize(50,50));
@@ -213,56 +215,15 @@ void MainWindow::logosBoutons(){
     ui->launchRobotBtn->setIcon(launchRobotLogo);
     ui->launchRobotBtn->setIconSize(QSize(50,50));
 
+    QIcon robotPosDefLogo("./images_boutons/robotPosition.png");
+    ui->robotPosDefBtn->setIcon(robotPosDefLogo);
+    ui->robotPosDefBtn->setIconSize(QSize(50,50));
+
     UIStyle();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::on_upBtn_clicked(){
-    tello->tello_command->setPosition(0,0,40,0);
-    UIStyle();
-    ui->upBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_downBtn_clicked(){
-    tello->tello_command->setPosition(0,0,-40,0);
-    UIStyle();
-    ui->downBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_rightBtn_clicked(){
-    tello->tello_command->setPosition(50,0,0,0);
-    UIStyle();
-    ui->rightBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_tRightBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,70);
-    UIStyle();
-    ui->tRightBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_backBtn_clicked(){
-    tello->tello_command->setPosition(0,-50,0,0);
-    UIStyle();
-    ui->backBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_forwardBtn_clicked(){
-    tello->tello_command->setPosition(0,80,0,0);
-    UIStyle();
-    ui->forwardBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_leftBtn_clicked(){
-    tello->tello_command->setPosition(-50,0,0,0);
-    UIStyle();
-    ui->leftBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_tLeftBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,-70);
-    UIStyle();
-    ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
-}
-void MainWindow::on_stopMoveBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,0);
-    UIStyle();
-    ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
-}
 void MainWindow::on_emergencyButton_clicked(){
     tello->tello_command->emergency();
     ui->emergencyButton->setStyleSheet("background-color: red;");
@@ -282,25 +243,61 @@ void MainWindow::on_landBtn_clicked(){
     ui->takeOffBtn->setStyleSheet("background-color: white;");
     ui->landBtn->setStyleSheet("background-color: orange;");
 }
+void MainWindow::on_upBtn_clicked(){
+    tello->tello_command->setPosition(0,0,40,0);
+    UIStyle();
+    ui->upBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_downBtn_clicked(){
+    tello->tello_command->setPosition(0,0,-40,0);
+    UIStyle();
+    ui->downBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_forwardBtn_clicked(){
+    tello->tello_command->setPosition(0,80,0,0);
+    UIStyle();
+    ui->forwardBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_backBtn_clicked(){
+    tello->tello_command->setPosition(0,-50,0,0);
+    UIStyle();
+    ui->backBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_rightBtn_clicked(){
+    tello->tello_command->setPosition(50,0,0,0);
+    UIStyle();
+    ui->rightBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_leftBtn_clicked(){
+    tello->tello_command->setPosition(-50,0,0,0);
+    UIStyle();
+    ui->leftBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_tRightBtn_clicked(){
+    tello->tello_command->setPosition(0,0,0,70);
+    UIStyle();
+    ui->tRightBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_tLeftBtn_clicked(){
+    tello->tello_command->setPosition(0,0,0,-70);
+    UIStyle();
+    ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
+}
+void MainWindow::on_stopMoveBtn_clicked(){
+    tello->tello_command->setPosition(0,0,0,0);
+    UIStyle();
+    ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
+}
 
-void MainWindow::on_controlleCheckBox_stateChanged(int arg1){
-    useController = arg1;
+void MainWindow::on_controllerCheckBox_stateChanged(int state){
+    useController = state;
 }
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
     if(useController == true){
         switch (gamepadButton) {
-        case 0: // Up
-            ui->Reset->animateClick();
-            break;
-        case 1: // Down
-            ui->captureBtn->animateClick();
-            break;
-        case 2: // Left
-            ui->delLastWaypointBtn->animateClick();
-            break;
-        case 3: // Right
-            ui->launchRobotBtn->animateClick();
-            break;
+
+
+        // Drone Control
         case 12: // A
             ui->takeOffBtn->animateClick();
             break;
@@ -310,6 +307,25 @@ void MainWindow::onGamepadButtonPressed(int gamepadButton){
         case 15: // Y
             ui->emergencyButton->animateClick();
             break;
+
+
+        // Camera & robot control
+        case 9: // Right click
+            ui->captureBtn->animateClick();
+            break;
+        case 1: // Down
+            ui->Reset->animateClick();
+            break;
+        case 3: // Right
+            ui->delLastWaypointBtn->animateClick();
+            break;
+        case 2: // Left
+            ui->robotPosDefBtn->animateClick();
+            break;
+        case 8: // Left click
+            ui->launchRobotBtn->animateClick();
+            break;
+
         default:
             break;
         }
@@ -330,14 +346,23 @@ void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short 
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
+            case Qt::Key_Escape:
+                ui->emergencyButton->animateClick();
+                break;
+            case Qt::Key_PageUp:
+                ui->takeOffBtn->animateClick();
+                break;
+            case Qt::Key_PageDown:
+                ui->landBtn->animateClick();
+                break;
             case Qt::Key_Z:
                 ui->forwardBtn->animateClick();
                 break;
-            case Qt::Key_S:
-                ui->backBtn->animateClick();
-                break;
             case Qt::Key_Q:
                 ui->leftBtn->animateClick();
+                break;
+            case Qt::Key_S:
+                ui->backBtn->animateClick();
                 break;
             case Qt::Key_D:
                 ui->rightBtn->animateClick();
@@ -357,27 +382,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_F:
                 ui->stopMoveBtn->animateClick();
                 break;
-            case Qt::Key_Escape:
-                ui->emergencyButton->animateClick();
-                break;
-            case Qt::Key_PageUp:
-                ui->takeOffBtn->animateClick();
-                break;
-            case Qt::Key_PageDown:
-                ui->landBtn->animateClick();
-                break;
+
             case Qt::Key_C:
                 ui->captureBtn->animateClick();
                 break;
             case Qt::Key_R:
                 ui->Reset->animateClick();
                 break;
-            case Qt::Key_V:
+            case Qt::Key_T:
                 ui->delLastWaypointBtn->animateClick();
                 break;
-            case Qt::Key_L:
+            case Qt::Key_Y:
+                ui->robotPosDefBtn->animateClick();
+                break;
+            case Qt::Key_U:
                 ui->launchRobotBtn->animateClick();
                 break;
+
             default:
                 QWidget::keyPressEvent(event);
                 break;
@@ -400,6 +421,7 @@ void MainWindow::UIStyle(){
     ui->Reset->setStyleSheet(Stylesheet);
     ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
     ui->launchRobotBtn->setStyleSheet(Stylesheet);
+    ui->robotPosDefBtn->setStyleSheet("background-color: green;");
 
     ui->dronePicture->setStyleSheet("QLabel { background-color : black; color : white; }");
     ui->video->setStyleSheet("QLabel { background-color : black; color : white; }");
@@ -426,7 +448,8 @@ void MainWindow::on_captureBtn_clicked(){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    cursor = event->pos();
+    QPoint cursor = event->pos();
+
     QPoint imgLabel_pos = ui->dronePicture->pos();
 
     if (event->button() == Qt::LeftButton) {
@@ -444,14 +467,37 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
                 }
             }
         }
+        else{
+            start = cursor;
+        }
     }
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
-    release = event->pos();
+    if(activeVector == true){
+        release = event->pos();
+
+        int directionVector[2] = {start.x()-release.x(), start.y()-release.y()};
+
+        valeurDispo = true;
+        activeVector = false;
+        ui->robotPosDefBtn->setStyleSheet("background-color: white;");
+    }
+}
+void MainWindow::on_robotPosDefBtn_clicked(){
+    if(activeVector == false){
+        activeVector = true;
+        ui->robotPosDefBtn->setStyleSheet("background-color: green;");
+    }
+    else{
+        activeVector = false;
+        ui->robotPosDefBtn->setStyleSheet("background-color: white;");
+    }
 }
 void MainWindow::loop(){
-
     if(valeurDispo==true){
+
+        double correction = 2/1.75;
+
         QPixmap new_img = savePixmap;
         ui->dronePicture->clear();
 
@@ -461,9 +507,11 @@ void MainWindow::loop(){
         pen.setColor(Qt::red);
         painter.setPen(pen);
 
+        painter.drawLine(start*correction, release*correction);
+
 
         for(int i = 0 ; i<points.count() ; i++){
-            QPoint point = points[i]*(2/1.75);
+            QPoint point = points[i]*correction;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
             ui->cooSouris->setText("Last Waypoint Coordinates : \nX : " + QString::number(point.x()) + "\nY : " + QString::number(point.y()));
@@ -489,7 +537,18 @@ void MainWindow::reset(){
 }
 
 void MainWindow::on_launchRobotBtn_clicked(){
+
     alphabot->sendTextMessage("av");
+    qDebug()<<"1";
+
+    QTimer::singleShot(5000, [=]() {
+        alphabot->sendTextMessage("ar");
+        qDebug()<<"2";
+    });
+    QTimer::singleShot(1000+500, [=]() {
+        alphabot->sendTextMessage("stop");
+        qDebug()<<"3";
+    });
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -530,65 +589,17 @@ void MainWindow::updateGUI(){
 
     mAirspeedNeedle->setCurrentValue(tello->tello_state->getHeight());
 }
-void MainWindow::updateConnectionStatus(TelloAlerts alertSignal){
+void MainWindow::updateConnectionStatus(TelloStatus alertSignal){
     QPixmap image("./images_wifi/wifi0.png");
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     switch(alertSignal){
-        case TelloAlerts::SOCKET_CONNECTION_FAILED:{
-            ui->statusLabel->setText("Status : Socket Connection Failed");
-            ui->statusLabel->setStyleSheet("background-color: red;");
-
-            ui->batteryPercentage->setValue(0);
-            ui->wifiLogo->setPixmap(scaledImage);
-            mAttMeter->setCurrentPitch(100);
-            mAttMeter->setCurrentRoll(100);
-            mCompassNeedle->setCurrentValue(90);
-            mAirspeedNeedle->setCurrentValue(0);
-            break;
-        }
-        case TelloAlerts::TELLO_CONNECTION_FAILED:{
-            ui->statusLabel->setText("Status : Tello Connection Failed");
-            ui->statusLabel->setStyleSheet("background-color: red;");
-
-            ui->batteryPercentage->setValue(0);
-            ui->wifiLogo->setPixmap(scaledImage);
-            mAttMeter->setCurrentPitch(0);
-            mAttMeter->setCurrentRoll(0);
-            mCompassNeedle->setCurrentValue(90);
-            mAirspeedNeedle->setCurrentValue(0);
-            break;
-        }
-        case TelloAlerts::TELLO_CONNECTION_ESTABLISHED:{
+        case TelloStatus::TELLO_CONNECTED:{
             ui->statusLabel->setText("Status : Connected");
             ui->statusLabel->setStyleSheet("background-color: green;");
             break;
         }
-        case TelloAlerts::TELLO_CONNECTION_WAITING:{
-            ui->statusLabel->setText("Status : Waiting for connection");
-            ui->statusLabel->setStyleSheet("background-color: yellow;");
-
-            ui->batteryPercentage->setValue(0);
-            ui->wifiLogo->setPixmap(scaledImage);
-            mAttMeter->setCurrentPitch(0);
-            mAttMeter->setCurrentRoll(0);
-            mCompassNeedle->setCurrentValue(90);
-            mAirspeedNeedle->setCurrentValue(0);
-            break;
-        }
-        case TelloAlerts::TELLO_CONNECTION_NO_RESPONSE:{
-            ui->statusLabel->setText("Status : No response");
-            ui->statusLabel->setStyleSheet("background-color: red;");
-
-            ui->batteryPercentage->setValue(0);
-            ui->wifiLogo->setPixmap(scaledImage);
-            mAttMeter->setCurrentPitch(0);
-            mAttMeter->setCurrentRoll(0);
-            mCompassNeedle->setCurrentValue(90);
-            mAirspeedNeedle->setCurrentValue(0);
-            break;
-        }
-        case TelloAlerts::TELLO_CONNECTION_TIMEOUT:{
-            ui->statusLabel->setText("Status : Time out");
+        case TelloStatus::TELLO_DISCONNECTED:{
+            ui->statusLabel->setText("Status : Disconnected");
             ui->statusLabel->setStyleSheet("background-color: red;");
 
             ui->batteryPercentage->setValue(0);

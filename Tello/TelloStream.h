@@ -2,12 +2,12 @@
 #define TELLOSTREAM_H
 
 #include <QObject>
-#include <QThread>
+#include <QtConcurrent/QtConcurrent>
 #include <QDebug>
 #include <QPixmap>
 #include <opencv2/opencv.hpp>
 
-#define TELLO_STREAM_DEBUG_OUTPUT false
+#define TELLO_STREAM_DEBUG_OUTPUT true
 
 using namespace cv;
 
@@ -18,24 +18,24 @@ class TelloStream : public QObject
 public:
     TelloStream(QString a, quint16 p);
     ~TelloStream();
-    void run();
-    bool isCameraEnabled(){ return camera_enabled; };
-    void stopStream();
-
-    static QPixmap mat2pixmap(Mat);
-    QSize getCaptureSize(){ return size; };
+    bool isCameraEnabled(){ return capture->isOpened(); };
+    QPixmap mat2pixmap(Mat);
     QSize size2qsize(cv::Size);
 
 private:
-    bool startVideoCapture();
-
     VideoCapture *capture;
     String url;
     QString address;
     quint16 port;
     QSize size;
-    bool camera_enabled;
+    bool openRequest, releaseRequest;
 
+    QFuture<void> future;
+    bool runConcurrent;
+
+public slots:
+    void enableStream();
+    void disableStream();
 
 signals:
     void newFrame(QPixmap);

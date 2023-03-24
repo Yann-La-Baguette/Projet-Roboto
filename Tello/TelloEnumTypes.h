@@ -9,16 +9,12 @@ enum class TelloResponse {
     TELLO_ERROR_NO_VALID_IMU, // Maybe had some changes on room light
     TELLO_OUT_OF_RANGE,       // If the range is like 20-500 and you give a number out of the range
     TELLO_UNDEFINED,          // Used while I don't discover all of error types
-    TELLO_TIMEOUT            // When the drone doesn't respond
+    TELLO_TIMEOUT             // When the drone doesn't respond
 };
 
-enum class TelloAlerts {
-    TELLO_CONNECTION_ESTABLISHED,
-    TELLO_CONNECTION_WAITING,
-    TELLO_CONNECTION_NO_RESPONSE,
-    TELLO_CONNECTION_TIMEOUT,
-    TELLO_CONNECTION_FAILED,
-    SOCKET_CONNECTION_FAILED
+enum class TelloStatus {
+    TELLO_CONNECTED,
+    TELLO_DISCONNECTED,
 };
 
 #endif // TELLOENUMTYPES_H

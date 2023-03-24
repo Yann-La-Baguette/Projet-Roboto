@@ -104,8 +104,8 @@ private:
     QPixmap savePixmap;
     float aspectRatio;
 
-    bool activeVector;
-    QPoint cursor;
+    bool activeVector = true;
+    QPoint start;
     QPoint release;
 
 private slots:
@@ -223,9 +223,9 @@ private slots:
     // GUI Data
     void displayStream(QPixmap video);
     void updateGUI();
-    void updateConnectionStatus(TelloAlerts alertSignal);
+    void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
-    void on_controlleCheckBox_stateChanged(int arg1);
-
+    void on_controllerCheckBox_stateChanged(int arg1);
+    void on_robotPosDefBtn_clicked();
 };
 #endif // MAINWINDOW_H
