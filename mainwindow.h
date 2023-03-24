@@ -1,12 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
+// Libraries
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QTimer>
+#include <QLabel>
+#include <QWebSocket>
 
-#include "qlabel.h"
-#include "Tello/tello.h"
+// Personnal classes
+#include "gamepadmanager.h"
+#include "Tello/Tello.h"
 #include "qcgaugewidget.h"
 
 
@@ -14,15 +19,21 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+
+
 public:
+    // Constructor & Destructor
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    //Showing gauges for drone datas
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Showing gauges for drone datas
     /**
      * @brief Affichage de la boussole
      */
@@ -40,25 +51,37 @@ public:
      */
     void affichageWifi();
 
-    //Showing logos for the buttons
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Showing logos for the buttons
     /**
      * @brief Affichage de logos pour les boutons
      */
     void logosBoutons();
 
-    //Put all the move buttons to white
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Put all the move buttons to white
     /**
      * @brief Reset de touts les boutons
      */
-    void allMoveBtnWhite();
+    void UIStyle();
+
+
 
 private:
     Ui::MainWindow *ui;
-    QVector<QPoint> points;
-    bool valeurDispo = true;
-    QLabel *pointsLabel;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Class definitions
+    Tello *tello;
+    GamepadManager *gamepad;
+    QWebSocket *alphabot;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Drone values
     QcGaugeWidget *mAirspeedGauge;
     QcNeedleItem *mAirspeedNeedle;
 
@@ -69,35 +92,50 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
+    bool useController = true;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Waypoints definition
+    QVector<QPoint> points;
+    bool valeurDispo = false;
+    QLabel *pointsLabel;
     bool showPic = false;
     QPixmap savePixmap;
     float aspectRatio;
 
-    Tello *tello;
+    bool activeVector = true;
+    QPoint start;
+    QPoint release;
 
 private slots:
-    /**
-     * @brief Drawing waypoints for the robot on the picture
-     */
-    void loop();
+    // Waypoints placing
     /**
      * @brief Get coordinates of points when left clic
      * @param event
      */
     void mousePressEvent(QMouseEvent *event);
     /**
+     * @brief mouseReleaseEvent
+     * @param event
+     */
+    void mouseReleaseEvent(QMouseEvent *event);
+    /**
+     * @brief Drawing waypoints for the robot on the picture
+     */
+    void loop();
+    /**
+     * @brief Delete the last waypoint
+     */
+    void on_delLastWaypointBtn_clicked();
+    /**
      * @brief Reset waypoints
      */
     void reset();
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @brief Get keyboard pressed keys
-     * @param event
-     */
-    void keyPressEvent(QKeyEvent *event);
-
-    //Drone Control Buttons
+    // Control Buttons
     /**
      * @brief on_upBtn_clicked Go up
      */
@@ -142,14 +180,52 @@ private slots:
      * @brief on_landBtn_clicked Land
      */
     void on_landBtn_clicked();
-
-    //GUI DATA
-    void updateGUI();
-    void updateConnectionStatus(TelloAlerts alertSignal);
-    void updateCommandReponse(TelloResponse response, QString datagram);
+    /**
+     * @brief When the stpo move button is clicked
+     */
     void on_stopMoveBtn_clicked();
-
-    void displayStream(QPixmap video);
+    /**
+     * @brief When the capture button is clicked
+     */
     void on_captureBtn_clicked();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Shortcuts for control
+    /**
+     * @brief Get keyboard pressed keys
+     * @param event
+     */
+    void keyPressEvent(QKeyEvent *event);
+    /**
+     * @brief When a button is pressed on the gamepad
+     * @param gamepadButton
+     */
+    void onGamepadButtonPressed(int gamepadButton);
+    /**
+     * @brief When a value is changed on the joystick or on RT/LT
+     * @param sThumbLX
+     * @param sThumbLY
+     * @param sThumbRX
+     * @param sThumbRY
+     * @param leftTrigger
+     * @param rightTrigger
+     */
+    void onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger);
+
+    /**
+     * @brief on_launchRobotBtn_clicked
+     */
+    void on_launchRobotBtn_clicked();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // GUI Data
+    void displayStream(QPixmap video);
+    void updateGUI();
+    void updateConnectionStatus(TelloStatus alertSignal);
+    void updateCommandReponse(TelloResponse response, QString datagram);
+    void on_controllerCheckBox_stateChanged(int arg1);
+    void on_robotPosDefBtn_clicked();
 };
 #endif // MAINWINDOW_H

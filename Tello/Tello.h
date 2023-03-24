@@ -3,14 +3,13 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QThread>
 
 #include <Tello/TelloEnumTypes.h>
 #include <Tello/TelloCommand.h>
 #include <Tello/TelloState.h>
 #include <Tello/TelloStream.h>
 
-#define TELLO_DEBUG_OUTPUT false
+#define TELLO_DEBUG_OUTPUT true
 
 class Tello: public QObject
 {
@@ -28,22 +27,12 @@ public:
     TelloStream *tello_stream;
 
 private:
-    bool started, camera_enabled;
-
-    void enableStream();
-    void disableStream();
-
-    QThread *thread_command;
-    QThread *thread_state;
-    QThread *thread_stream;
+    bool started = false;
 
     QString address_str = "192.168.10.1";
     quint16 port_command = 8889;
     quint16 port_state = 8890;
     quint16 port_stream = 11111;
-
-private slots:
-    void cameraAvailable();
 };
 
 #endif // TELLO_H

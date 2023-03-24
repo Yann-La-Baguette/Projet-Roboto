@@ -2,8 +2,8 @@
 
 TelloState::TelloState(QHostAddress a, quint16 p): ip(a), port(p)
 {
-    if(TELLO_STATE_DEBUG_OUTPUT)
-        qDebug() << this << "Constructed on" << QThread::currentThread();
+    resetVariables();
+
     isRunning = false;
 
     socket = new QUdpSocket;
@@ -15,19 +15,47 @@ TelloState::TelloState(QHostAddress a, quint16 p): ip(a), port(p)
         if(TELLO_STATE_DEBUG_OUTPUT)
             qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
         connect(socket, &QUdpSocket::readyRead, this, &TelloState::readResponse, Qt::DirectConnection);
+
+        timer = new QTimer;
+        lastTimeResponseReceived = 0;
+        connect(timer, &QTimer::timeout, this, &TelloState::timeoutCheck);
+        timer->start(100);
     }
 }
 
 TelloState::~TelloState(){
     delete socket;
-    if(TELLO_STATE_DEBUG_OUTPUT)
-        qDebug() << this << "Deconstructed on" << QThread::currentThread();
 }
 
-void TelloState::run(){
-    while(isRunning){
-        QThread::sleep(3);
-    }
+void TelloState::resetVariables()
+{
+    mid=0;
+    x=0;
+    y=0;
+    z=0;
+    pitch=0;
+    roll=0;
+    yaw=0;
+    templ=0;
+    temph=0;
+    tof=0;
+    h=0;
+    bat=0;
+    snrValue=0;
+
+    mpry[0] = 0;
+    mpry[1] = 0;
+    mpry[2] = 0;
+
+    vgx=0;
+    vgy=0;
+    vgz=0;
+    baro=0;
+    time=0;
+    agx=0;
+    agy=0;
+    agz=0;
+
 }
 
 void TelloState::readResponse(){
@@ -127,5 +155,15 @@ void TelloState::parseStatus(QString str){
         }
     }
 
+    lastTimeResponseReceived = QDateTime::currentSecsSinceEpoch();
     emit dataAvailable();
+}
+
+void TelloState::timeoutCheck(){
+    if(QDateTime::currentSecsSinceEpoch() > (lastTimeResponseReceived + 1)){
+        emit status(TelloStatus::TELLO_DISCONNECTED);
+    }
+    else{
+        emit status(TelloStatus::TELLO_CONNECTED);
+    }
 }

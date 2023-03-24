@@ -54,9 +54,9 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>730</y>
+      <y>740</y>
       <width>271</width>
-      <height>291</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -433,8 +433,8 @@
      <rect>
       <x>860</x>
       <y>10</y>
-      <width>201</width>
-      <height>311</height>
+      <width>205</width>
+      <height>631</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -453,7 +453,8 @@
         </font>
        </property>
        <property name="text">
-        <string>Capture</string>
+        <string>Capture
+(C)</string>
        </property>
       </widget>
      </item>
@@ -468,6 +469,7 @@
        <property name="font">
         <font>
          <family>Arial Black</family>
+         <pointsize>10</pointsize>
         </font>
        </property>
        <property name="text">
@@ -488,10 +490,72 @@ Y : </string>
        <property name="font">
         <font>
          <family>Arial Black</family>
+         <pointsize>10</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Reset Waypoints</string>
+        <string>Reset Waypoints
+(R)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delLastWaypointBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial Black</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Delete Last Waypoint
+(T)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="robotPosDefBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial Black</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Def Robot Position
+(Y)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="launchRobotBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial Black</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Launch Roboto
+(U)</string>
        </property>
       </widget>
      </item>
@@ -559,10 +623,10 @@ Y : </string>
    <widget class="QLabel" name="wifiLogo">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>740</x>
       <y>650</y>
-      <width>81</width>
-      <height>71</height>
+      <width>111</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -639,10 +703,10 @@ Y : </string>
    <widget class="QProgressBar" name="batteryPercentage">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>460</x>
       <y>650</y>
-      <width>301</width>
-      <height>71</height>
+      <width>271</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -682,10 +746,38 @@ Y : </string>
       <height>24</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="controlleCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>811</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Use Controller</string>
+    </property>
+    <property name="checked">
      <bool>true</bool>
     </property>
    </widget>

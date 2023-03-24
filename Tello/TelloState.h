@@ -2,8 +2,9 @@
 #define TELLOSTATE_H
 
 #include <QObject>
-#include <QThread>
 #include <QDebug>
+#include <QTimer>
+#include <QDateTime>
 #include <QtNetwork/QUdpSocket>
 #include <QtNetwork/QHostAddress>
 #include <Tello/TelloEnumTypes.h>
@@ -42,9 +43,7 @@ public:
     double getAgy() { return agy; }
     double getAgz() { return agz; }
 
-public slots:
-    void run();
-
+    void resetVariables();
 private:
     QUdpSocket *socket;
     QHostAddress ip;
@@ -54,11 +53,16 @@ private:
     int mid, x, y, z, pitch, roll, yaw, templ, temph, tof, h, bat, snrValue;
     double mpry[3], vgx, vgy, vgz, baro, time, agx, agy, agz;
 
+    QTimer *timer;
+    qint64 lastTimeResponseReceived;
+    void timeoutCheck();
+
     void readResponse();
     void parseStatus(QString str);
 
 signals:
     void dataAvailable();
+    void status(TelloStatus);
 
 };
 
