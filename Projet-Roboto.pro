@@ -40,19 +40,21 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    Image_satellite_test.png \
     icone.ico \
     images_boutons/Stop.png \
     images_boutons/back.png \
     images_boutons/battery.png \
     images_boutons/capture.png \
     images_boutons/connect.png \
+    images_boutons/delete_last_waypoint.png \
     images_boutons/down.png \
     images_boutons/forward.png \
+    images_boutons/go.png \
     images_boutons/land.png \
     images_boutons/left.png \
     images_boutons/reset_waypoints.png \
     images_boutons/right.png \
+    images_boutons/robotoPosition.png \
     images_boutons/stopMove.png \
     images_boutons/tLeft.png \
     images_boutons/tRight.png \
