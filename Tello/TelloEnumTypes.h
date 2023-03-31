@@ -1,6 +1,9 @@
 #ifndef TELLOENUMTYPES_H
 #define TELLOENUMTYPES_H
 
+#define TELLO_DEBUG_OUTPUT true
+#define TELLO_STATE_OUTPUT false
+
 enum class TelloResponse {
     TELLO_OK,                 // Positive answear
     TELLO_ERROR,              // Negative Answear

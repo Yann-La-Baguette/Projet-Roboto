@@ -6,8 +6,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <opencv2/opencv.hpp>
-
-#define TELLO_STREAM_DEBUG_OUTPUT true
+#include <Tello/TelloEnumTypes.h>
 
 using namespace cv;
 

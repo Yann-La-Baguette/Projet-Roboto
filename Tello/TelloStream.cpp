@@ -3,7 +3,6 @@
 TelloStream::TelloStream(QString a, quint16 p): address(a),port(p){
     capture = new VideoCapture;
     url = "udp://" + address.toStdString() + ":" + QString::number(port).toStdString() + "?overrun_nonfatal=1&fifo_size=50000000";
-    qDebug() << "Tello Stream constructed";
 
     openRequest = false;
     releaseRequest = false;
@@ -11,14 +10,16 @@ TelloStream::TelloStream(QString a, quint16 p): address(a),port(p){
 
     future = QtConcurrent::run([this]() {
         Mat frame;
-        qDebug() << "getStream" << QThread::currentThread();
+        if(TELLO_DEBUG_OUTPUT){
+            qDebug() << "StreamThread" << QThread::currentThread();
+        }
         while(runConcurrent){
 
             if(openRequest){
                 openRequest = false;
                 capture->open(url);
                 //capture->open(0);
-                qDebug() << "Stream opened on " << QString::fromStdString(url) << QThread::currentThread();
+                qDebug() << "Stream opened on " << QString::fromStdString(url);
             }
 
             while(capture->isOpened() && runConcurrent){
@@ -28,7 +29,8 @@ TelloStream::TelloStream(QString a, quint16 p): address(a),port(p){
                 if(releaseRequest){
                     releaseRequest = false;
                     capture->release();
-                    qDebug() << "Stream released";
+                    if(TELLO_DEBUG_OUTPUT)
+                        qDebug() << "Stream released";
                 }
                 emit newFrame(mat2pixmap(frame));
             }
@@ -40,13 +42,13 @@ TelloStream::~TelloStream(){
     runConcurrent = false;
     future.waitForFinished();
     delete capture;
-    qDebug() << "Tello Stream deleted";
 }
 
 void TelloStream::enableStream(){
     if(!capture->isOpened()){
         openRequest = true;
-        qDebug() << "Stream open requested";
+        if(TELLO_DEBUG_OUTPUT)
+            qDebug() << "Stream open requested";
     }
     else{
         qDebug() << "Stream already opened";
@@ -57,7 +59,8 @@ void TelloStream::enableStream(){
 void TelloStream::disableStream(){
     if(capture->isOpened()){
         releaseRequest = true;
-        qDebug() << "Stream release requested";
+        if(TELLO_DEBUG_OUTPUT)
+            qDebug() << "Stream release requested";
     }
     else{
         qDebug() << "Stream not opened";

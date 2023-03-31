@@ -92,8 +92,6 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcNeedleItem *mCompassNeedle;
 
-    bool useController = true;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Waypoints definition
@@ -107,6 +105,9 @@ private:
     bool activeVector = true;
     QPoint start;
     QPoint release;
+
+    short SavesThumbLX, SavesThumbLY, SavesThumbRX, SavesThumbRY, SavehighValue;
+    bool sameDatas;
 
 private slots:
     // Waypoints placing
@@ -188,7 +189,10 @@ private slots:
      * @brief When the capture button is clicked
      */
     void on_captureBtn_clicked();
-
+    /**
+     * @brief on_flipBtn_clicked
+     */
+    void on_flipBtn_clicked();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Shortcuts for control
@@ -212,7 +216,6 @@ private slots:
      * @param rightTrigger
      */
     void onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger);
-
     /**
      * @brief on_launchRobotBtn_clicked
      */
@@ -225,7 +228,6 @@ private slots:
     void updateGUI();
     void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
-    void on_controllerCheckBox_stateChanged(int arg1);
     void on_robotPosDefBtn_clicked();
 };
 #endif // MAINWINDOW_H

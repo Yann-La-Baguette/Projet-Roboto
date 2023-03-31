@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     //Affichage de logos pour les boutons du drone
     logosBoutons();
+    ui->robotPosDefBtn->setStyleSheet("background-color: green;");
 
     // Détection manette
     connect(gamepad, &GamepadManager::gamepadButtonPressed, this, &MainWindow::onGamepadButtonPressed);
@@ -196,6 +197,9 @@ void MainWindow::logosBoutons(){
     ui->stopMoveBtn->setIcon(stopMoveLogo);
     ui->stopMoveBtn->setIconSize(QSize(50,50));
 
+    QIcon flipLogo("./images_boutons/Flip.png");
+    ui->flipBtn->setIcon(flipLogo);
+    ui->flipBtn->setIconSize(QSize(50,50));
 
 
     QIcon resetWaypointsLogo("./images_boutons/reset_waypoints.png");
@@ -283,65 +287,82 @@ void MainWindow::on_tLeftBtn_clicked(){
     UIStyle();
     ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
+void MainWindow::on_flipBtn_clicked(){
+    tello->tello_command->flip();
+}
 void MainWindow::on_stopMoveBtn_clicked(){
     tello->tello_command->setPosition(0,0,0,0);
     UIStyle();
     ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
 }
 
-void MainWindow::on_controllerCheckBox_stateChanged(int state){
-    useController = state;
-}
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
-    if(useController == true){
-        switch (gamepadButton) {
+    qDebug()<<gamepadButton;
+    switch (gamepadButton) {
 
 
-        // Drone Control
-        case 12: // A
-            ui->takeOffBtn->animateClick();
-            break;
-        case 13: // B
-            ui->landBtn->animateClick();
-            break;
-        case 15: // Y
-            ui->emergencyButton->animateClick();
-            break;
+    // Drone Control
+    case 12: // A
+        ui->takeOffBtn->animateClick();
+        break;
+    case 13: // B
+        ui->landBtn->animateClick();
+        break;
+    case 14: // X
+        ui->flipBtn->animateClick();
+        break;
+    case 15: // Y
+        ui->emergencyButton->animateClick();
+        break;
 
 
-        // Camera & robot control
-        case 9: // Right click
-            ui->captureBtn->animateClick();
-            break;
-        case 1: // Down
-            ui->Reset->animateClick();
-            break;
-        case 3: // Right
-            ui->delLastWaypointBtn->animateClick();
-            break;
-        case 2: // Left
-            ui->robotPosDefBtn->animateClick();
-            break;
-        case 8: // Left click
-            ui->launchRobotBtn->animateClick();
-            break;
+    // Camera & robot control
+    case 9: // Right click
+        ui->captureBtn->animateClick();
+        break;
+    case 1: // Down
+        ui->Reset->animateClick();
+        break;
+    case 3: // Right
+        ui->delLastWaypointBtn->animateClick();
+        break;
+    case 2: // Left
+        ui->robotPosDefBtn->animateClick();
+        break;
+    case 8: // Left click
+        ui->launchRobotBtn->animateClick();
+        break;
 
-        default:
-            break;
-        }
+    default:
+        break;
     }
 }
 void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short sThumbRX, short  sThumbRY, short leftTrigger, short rightTrigger){
-    if(useController == true){
         int highValue;
+
         if(leftTrigger > 0){
             highValue = -leftTrigger;
         }
         else{
             highValue = rightTrigger;
         }
-        tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
-    }
+
+        if(SavesThumbLX != sThumbLX || SavesThumbLY != sThumbLY || SavesThumbRX != sThumbRX || SavesThumbRY != sThumbRY || SavehighValue != highValue){
+            sameDatas = false;
+        }
+        else{
+            sameDatas = true;
+        }
+
+        if(sameDatas == false){
+            tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
+            qDebug()<<"oui";
+        }
+        SavesThumbLX = sThumbLX;
+        SavesThumbLY = sThumbLY;
+        SavesThumbRX = sThumbRX;
+        SavesThumbRY = sThumbRY;
+        SavehighValue = highValue;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -378,6 +399,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 break;
             case Qt::Key_X:
                 ui->downBtn->animateClick();
+                break;
+            case Qt::Key_B:
+                ui->flipBtn->animateClick();
                 break;
             case Qt::Key_F:
                 ui->stopMoveBtn->animateClick();
@@ -421,7 +445,7 @@ void MainWindow::UIStyle(){
     ui->Reset->setStyleSheet(Stylesheet);
     ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
     ui->launchRobotBtn->setStyleSheet(Stylesheet);
-    ui->robotPosDefBtn->setStyleSheet("background-color: green;");
+    ui->flipBtn->setStyleSheet(Stylesheet);
 
     ui->dronePicture->setStyleSheet("QLabel { background-color : black; color : white; }");
     ui->video->setStyleSheet("QLabel { background-color : black; color : white; }");
@@ -448,39 +472,47 @@ void MainWindow::on_captureBtn_clicked(){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    QPoint cursor = event->pos();
+    if(ui->dronePicture->pixmap().isNull() == 0){
+        if (event->button() == Qt::LeftButton) {
+            QPoint cursor = event->pos();
+            QPoint imgLabel_pos = ui->dronePicture->pos();
+            if(activeVector == false){
+                if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
+                    if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
+                        QPoint relativePos;
 
-    QPoint imgLabel_pos = ui->dronePicture->pos();
+                        relativePos.setX(cursor.x() - imgLabel_pos.x());
+                        relativePos.setY(cursor.y() - imgLabel_pos.y());
 
-    if (event->button() == Qt::LeftButton) {
-        if(activeVector == false){
-            if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
-                if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
-                    QPoint relativePos;
+                        points.append(relativePos);
 
-                    relativePos.setX(cursor.x() - imgLabel_pos.x());
-                    relativePos.setY(cursor.y() - imgLabel_pos.y());
-
-                    points.append(relativePos);
-
-                    valeurDispo = true;
+                        valeurDispo = true;
+                    }
                 }
             }
-        }
-        else{
-            start = cursor;
+            else{
+                start = cursor;
+            }
         }
     }
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *event){
-    if(activeVector == true){
-        release = event->pos();
+    if(ui->dronePicture->pixmap().isNull() == 0){
+        QPoint cursor = event->pos();
+        QPoint imgLabel_pos = ui->dronePicture->pos();
+        if( cursor.x() >= imgLabel_pos.x() && cursor.x() <= (imgLabel_pos.x() + ui->dronePicture->width()) ){
+            if( cursor.y() >= imgLabel_pos.y() && cursor.y() <= (imgLabel_pos.y() + ui->dronePicture->height()) ){
+                if(activeVector == true){
+                    release = event->pos();
 
-        int directionVector[2] = {start.x()-release.x(), start.y()-release.y()};
+                    int directionVector[2] = {start.x()-release.x(), start.y()-release.y()};
 
-        valeurDispo = true;
-        activeVector = false;
-        ui->robotPosDefBtn->setStyleSheet("background-color: white;");
+                    valeurDispo = true;
+                    activeVector = false;
+                    ui->robotPosDefBtn->setStyleSheet("background-color: white;");
+                }
+            }
+        }
     }
 }
 void MainWindow::on_robotPosDefBtn_clicked(){
@@ -497,6 +529,9 @@ void MainWindow::loop(){
     if(valeurDispo==true){
 
         double correction = 2/1.75;
+        QPointF startCorrected = start*correction;
+        QPointF releaseCorrected = release*correction;
+
 
         QPixmap new_img = savePixmap;
         ui->dronePicture->clear();
@@ -507,8 +542,14 @@ void MainWindow::loop(){
         pen.setColor(Qt::red);
         painter.setPen(pen);
 
-        painter.drawLine(start*correction, release*correction);
+        painter.drawLine(startCorrected, releaseCorrected);
+        QPolygonF arrow;
+        arrow << releaseCorrected
+              << releaseCorrected + QPointF(-10, -10)
+              << releaseCorrected + QPointF(0, -20)
+              << releaseCorrected + QPointF(10, -10);
 
+        painter.drawPolygon(arrow);
 
         for(int i = 0 ; i<points.count() ; i++){
             QPoint point = points[i]*correction;

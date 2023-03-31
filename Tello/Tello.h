@@ -4,12 +4,10 @@
 #include <QObject>
 #include <QDebug>
 
-#include <Tello/TelloEnumTypes.h>
 #include <Tello/TelloCommand.h>
 #include <Tello/TelloState.h>
 #include <Tello/TelloStream.h>
-
-#define TELLO_DEBUG_OUTPUT true
+#include <Tello/TelloEnumTypes.h>
 
 class Tello: public QObject
 {

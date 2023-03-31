@@ -9,8 +9,6 @@
 #include <QtNetwork/QHostAddress>
 #include <Tello/TelloEnumTypes.h>
 
-#define TELLO_STATE_DEBUG_OUTPUT false
-
 class TelloState : public QObject
 {
     Q_OBJECT

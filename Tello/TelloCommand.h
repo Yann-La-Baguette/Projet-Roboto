@@ -2,16 +2,12 @@
 #define TELLOCOMMAND_H
 
 #include <QObject>
-#include <QThread>
 #include <QDebug>
 #include <QTimer>
 #include <QDateTime>
 #include <QtNetwork/QUdpSocket>
 #include <QtNetwork/QHostAddress>
 #include <Tello/TelloEnumTypes.h>
-#include <Tello/TelloLogger.h>
-
-#define TELLO_COMMAND_DEBUG_OUTPUT true
 
 class TelloCommand: public QObject
 {
@@ -27,6 +23,7 @@ public:
     void emergency();
     void setPosition(int, int, int, int);
     void setSpeed(int);
+    void flip();
 
     /*####### Network #######*/
     void sendCommand_generic(QByteArray cmd);

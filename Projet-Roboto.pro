@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     Tello/Tello.cpp \
     Tello/TelloCommand.cpp \
-    Tello/TelloLogger.cpp \
     Tello/TelloState.cpp \
     Tello/TelloStream.cpp \
     gamepadmanager.cpp \
@@ -22,7 +21,6 @@ SOURCES += \
 HEADERS += \
     Tello/TelloCommand.h \
     Tello/TelloEnumTypes.h \
-    Tello/TelloLogger.h \
     Tello/TelloState.h \
     Tello/TelloStream.h \
     Tello/tello.h \

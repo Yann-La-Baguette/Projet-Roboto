@@ -18,7 +18,8 @@ TelloCommand::TelloCommand(QHostAddress a, quint16 p): ip(a), port(p){
         qDebug() << "Tello Command bind error" << socket->errorString();
     }
     else{
-        qDebug() << "Tello Command bind ready on " << socket->localAddress() << ":" << socket->localPort();
+        if(TELLO_DEBUG_OUTPUT)
+            qDebug() << "Tello Command bind ready on " << socket->localAddress() << ":" << socket->localPort();
         connect(socket, &QUdpSocket::readyRead, this, &TelloCommand::readResponse, Qt::DirectConnection);
 
         timer = new QTimer;
@@ -66,16 +67,22 @@ void TelloCommand::setSpeed(int speed){
     }
 }
 
+void TelloCommand::flip(){
+    sendCommand_generic("flip f");
+}
+
 /*####### Network #######*/
 void TelloCommand::sendCommand_generic(QByteArray cmd){
     if(isRunning){
+        if(TELLO_DEBUG_OUTPUT)
+            qDebug() << "Sent command:" << cmd;
         lastCommandUsed = cmd;
         lastTimeCommandSent = QDateTime::currentMSecsSinceEpoch();
         socket->writeDatagram(cmd, ip, port);
         generic_command_requested = true;
     }
     else{
-        TelloLogger::write2log("Tello Command Try to send command but was not running");
+        qDebug() << "Tello Command Try to send command but was not running";
     }
 }
 
@@ -95,6 +102,21 @@ void TelloCommand::readResponse(){
         QByteArray datagram;
         datagram.resize(socket->pendingDatagramSize());
         socket->readDatagram(datagram.data(),datagram.size(),&sender,&port);
+
+        //Print debug
+        if(TELLO_DEBUG_OUTPUT){
+            quint16 responseDelay;
+            if(snr_requested == true && generic_command_requested == false){
+                responseDelay = abs(QDateTime::currentMSecsSinceEpoch() - lastTimeSnrSent);
+                qDebug() << "Response from \"snr\" ->" << QString(datagram).trimmed() << "in" << QString::number(responseDelay) + "ms";
+            }
+            else{
+                responseDelay = abs(QDateTime::currentMSecsSinceEpoch() - lastTimeCommandSent);
+                qDebug() << "Response from" << lastCommandUsed <<  "->" << QString(datagram).trimmed() << "in" << QString::number(responseDelay) + "ms";
+            }
+        }
+
+
 
         if(generic_command_requested){
             generic_command_requested = false;
@@ -136,7 +158,7 @@ void TelloCommand::timerLoop(){
 
     if(!sdk_mode_enabled){
         sendCommand_generic("command");
-        TelloLogger::write2log("Tello Command Waiting connection");
+        //qDebug() << "Tello Command Waiting connection";
         return;
     }
 
@@ -149,7 +171,7 @@ void TelloCommand::timerLoop(){
 
     if(!streamEnabled){
         sendCommand_generic("streamon");
-        TelloLogger::write2log("Tello Command Waiting Video Stream");
+        qDebug() << "Tello Command Waiting Video Stream";
     }
 
     sendCommand_SNR();

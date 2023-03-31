@@ -12,7 +12,7 @@ TelloState::TelloState(QHostAddress a, quint16 p): ip(a), port(p)
         qDebug() << socket->errorString();
     }
     else{
-        if(TELLO_STATE_DEBUG_OUTPUT)
+        if(TELLO_DEBUG_OUTPUT)
             qDebug() << "Local bind ready on " << socket->localAddress() << ":" << socket->localPort();
         connect(socket, &QUdpSocket::readyRead, this, &TelloState::readResponse, Qt::DirectConnection);
 
@@ -67,7 +67,7 @@ void TelloState::readResponse(){
         QByteArray datagram;
         datagram.resize(socket->pendingDatagramSize());
         socket->readDatagram(datagram.data(),datagram.size(),&sender,&port);
-        if(TELLO_STATE_DEBUG_OUTPUT)
+        if(TELLO_STATE_OUTPUT)
             qDebug() << datagram;
         parseStatus(datagram);
     }

@@ -1,8 +1,6 @@
 #include "Tello.h"
 
 Tello::Tello(){
-    TelloLogger::write2log("##################### Tello Main Thread Started #####################");
-
     //Init Tello Command Object
     tello_command = new TelloCommand(QHostAddress(address_str), port_command);
 
@@ -28,6 +26,7 @@ void Tello::start(){
         return;
     }
     started = true;
+    qDebug() << "Tello Started";
     tello_command->running(true);
 }
 
@@ -37,6 +36,7 @@ void Tello::stop(){
         return;
     }
     started = false;
+    qDebug() << "Tello Stopped";
     tello_command->running(false);
     tello_stream->disableStream();
 }
