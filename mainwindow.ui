@@ -779,6 +779,25 @@ Y : </string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="changeCameraBtn">
+    <property name="geometry">
+     <rect>
+      <x>1400</x>
+      <y>650</y>
+      <width>231</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Change to Down cam</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -223,6 +223,10 @@ void MainWindow::logosBoutons(){
     ui->robotPosDefBtn->setIcon(robotPosDefLogo);
     ui->robotPosDefBtn->setIconSize(QSize(50,50));
 
+    QIcon cameraChangeLogo("./images_boutons/cameraChange.png");
+    ui->changeCameraBtn->setIcon(cameraChangeLogo);
+    ui->changeCameraBtn->setIconSize(QSize(50,50));
+
     UIStyle();
 }
 
@@ -446,6 +450,7 @@ void MainWindow::UIStyle(){
     ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
     ui->launchRobotBtn->setStyleSheet(Stylesheet);
     ui->flipBtn->setStyleSheet(Stylesheet);
+    ui->changeCameraBtn->setStyleSheet(Stylesheet);
 
     ui->dronePicture->setStyleSheet("QLabel { background-color : black; color : white; }");
     ui->video->setStyleSheet("QLabel { background-color : black; color : white; }");
@@ -469,6 +474,21 @@ void MainWindow::displayStream(QPixmap videoPix){
 }
 void MainWindow::on_captureBtn_clicked(){
     showPic = true;
+}
+
+void MainWindow::on_changeCameraBtn_clicked(){
+    if(camChoice == true){
+        tello->tello_command->sendCommand_generic("downvision 1");
+
+        ui->changeCameraBtn->setText("Change to Up cam");
+        camChoice = false;
+    }
+    else{
+        tello->tello_command->sendCommand_generic("downvision 0");
+
+        ui->changeCameraBtn->setText("Change to Down cam");
+        camChoice = true;
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -526,11 +546,11 @@ void MainWindow::on_robotPosDefBtn_clicked(){
     }
 }
 void MainWindow::loop(){
-    if(valeurDispo==true){
+    if(valeurDispo==true && ui->dronePicture->pixmap().isNull() == 0){
 
         double correction = 2/1.75;
-        QPointF startCorrected = start*correction;
-        QPointF releaseCorrected = release*correction;
+        QPoint startCorrected = start*correction;
+        QPoint releaseCorrected = release*correction;
 
 
         QPixmap new_img = savePixmap;
@@ -542,14 +562,42 @@ void MainWindow::loop(){
         pen.setColor(Qt::red);
         painter.setPen(pen);
 
-        painter.drawLine(startCorrected, releaseCorrected);
-        QPolygonF arrow;
-        arrow << releaseCorrected
-              << releaseCorrected + QPointF(-10, -10)
-              << releaseCorrected + QPointF(0, -20)
-              << releaseCorrected + QPointF(10, -10);
 
-        painter.drawPolygon(arrow);
+
+
+
+        QPoint direction = releaseCorrected - startCorrected;
+        double length = QLineF(startCorrected, releaseCorrected).length();
+
+        double arrowSize = 10.0;
+
+        // Calculez l'angle de rotation de la direction du segment
+        double angle = std::atan2(-direction.y(), direction.x()) * 180 / M_PI;
+
+        // Tournez la direction du segment de 180 degrés
+        direction = direction * -1;
+
+        // Calculez la position de l'extrémité de la flèche
+        QPoint arrowP1 = releaseCorrected - direction * arrowSize;
+
+        // Calculez les positions des deux autres points de la flèche
+        QPoint arrowP2 = arrowP1 + QPoint( sin((M_PI/3) + angle) * arrowSize,
+                                            cos((M_PI/3) + angle) * arrowSize);
+        QPoint arrowP3 = arrowP1 + QPoint( sin((M_PI - M_PI/3) + angle) * arrowSize,
+                                            cos((M_PI - M_PI/3) + angle) * arrowSize);
+
+        // Draw the arrowhead
+        QPolygon arrowHead;
+        arrowHead << arrowP1 << arrowP2 << arrowP3;
+        painter.drawLine(startCorrected, releaseCorrected);
+        painter.drawPolygon(arrowHead);
+
+
+
+
+
+
+
 
         for(int i = 0 ; i<points.count() ; i++){
             QPoint point = points[i]*correction;
@@ -582,7 +630,7 @@ void MainWindow::on_launchRobotBtn_clicked(){
     alphabot->sendTextMessage("av");
     qDebug()<<"1";
 
-    QTimer::singleShot(5000, [=]() {
+    QTimer::singleShot(1000, [=]() {
         alphabot->sendTextMessage("ar");
         qDebug()<<"2";
     });
@@ -669,3 +717,6 @@ void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
     ui->lineEdit_cmd_reponse->setText(tello->tello_command->getLastCommandUsed() + " -> " + datagram);
     ui->lineEdit_cmd_reponse->setReadOnly(true);
 }
+
+
+

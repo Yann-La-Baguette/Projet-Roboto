@@ -109,6 +109,8 @@ private:
     short SavesThumbLX, SavesThumbLY, SavesThumbRX, SavesThumbRY, SavehighValue;
     bool sameDatas;
 
+    bool camChoice = true;
+
 private slots:
     // Waypoints placing
     /**
@@ -133,6 +135,10 @@ private slots:
      * @brief Reset waypoints
      */
     void reset();
+    /**
+     * @brief on_robotPosDefBtn_clicked
+     */
+    void on_robotPosDefBtn_clicked();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -228,6 +234,6 @@ private slots:
     void updateGUI();
     void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
-    void on_robotPosDefBtn_clicked();
+    void on_changeCameraBtn_clicked();
 };
 #endif // MAINWINDOW_H
