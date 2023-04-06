@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QLabel>
 #include <QWebSocket>
+#include <QtMath>
 
 // Personnal classes
 #include "gamepadmanager.h"
@@ -110,6 +111,8 @@ private:
     bool sameDatas;
 
     bool camChoice = true;
+
+    int robotDirectionVector[2];
 
 private slots:
     // Waypoints placing

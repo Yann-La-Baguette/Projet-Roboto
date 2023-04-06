@@ -525,7 +525,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
                 if(activeVector == true){
                     release = event->pos();
 
-                    int directionVector[2] = {start.x()-release.x(), start.y()-release.y()};
+                    robotDirectionVector[0] = release.x() - start.x();
+                    robotDirectionVector[1] = release.y() - start.y();
 
                     valeurDispo = true;
                     activeVector = false;
@@ -600,6 +601,7 @@ void MainWindow::loop(){
 
 
         for(int i = 0 ; i<points.count() ; i++){
+            qDebug()<<points[i];
             QPoint point = points[i]*correction;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
@@ -627,7 +629,8 @@ void MainWindow::reset(){
 
 void MainWindow::on_launchRobotBtn_clicked(){
 
-    alphabot->sendTextMessage("av");
+
+    /*alphabot->sendTextMessage("av");
     qDebug()<<"1";
 
     QTimer::singleShot(1000, [=]() {
@@ -637,7 +640,20 @@ void MainWindow::on_launchRobotBtn_clicked(){
     QTimer::singleShot(1000+500, [=]() {
         alphabot->sendTextMessage("stop");
         qDebug()<<"3";
-    });
+    });*/
+
+    int goalVector[2];
+    goalVector[0] = points[0].x() - start.x();
+    goalVector[1] = points[0].y() - start.y();
+
+    double numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
+    double denominateur = qSqrt(robotDirectionVector[0]*robotDirectionVector[0] + robotDirectionVector[1] * robotDirectionVector[1]) * qSqrt(goalVector[0]*goalVector[0] + goalVector[1] * goalVector[1]);
+
+    double Angle = qAcos(numerateur / denominateur);
+    qDebug() << Angle;
+
+    //Distance fictive = 960 (image) ou 840 (label)
+    //Distance réelle = 2(tan(41.3)*h)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -717,6 +733,5 @@ void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
     ui->lineEdit_cmd_reponse->setText(tello->tello_command->getLastCommandUsed() + " -> " + datagram);
     ui->lineEdit_cmd_reponse->setReadOnly(true);
 }
-
 
 
