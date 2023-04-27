@@ -5,15 +5,11 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
-    tello = new Tello;
-    gamepad = new GamepadManager;
-    alphabot = new QWebSocket;
 
-    // Connexion au robot
-    QUrl url;
-    url.setUrl("ws://172.21.28.101");
-    url.setPort(8080);
-    alphabot->open(url);
+
+    // Gestion drone Tello
+
+    tello = new Tello;
 
     // Connexion pour les données du drone
     connect(tello->tello_command,&TelloCommand::responseSignal,this,&MainWindow::updateCommandReponse);
@@ -30,18 +26,40 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     affichageHeight();
     affichageWifi();
 
-    //Affichage de logos pour les boutons du drone
-    logosBoutons();
-    ui->robotPosDefBtn->setStyleSheet("background-color: green;");
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Gestion Manette
+
+    gamepad = new GamepadManager;
 
     // Détection manette
     connect(gamepad, &GamepadManager::gamepadButtonPressed, this, &MainWindow::onGamepadButtonPressed);
     connect(gamepad, &GamepadManager::gamepadJoystickChanged, this, &MainWindow::onGamepadJoystickChanged);
+    connect(gamepad, &GamepadManager::gamepadConnected, this, &MainWindow::gamepadStatus);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Gestion du robot Alphabot
+
+    alphabot = new QWebSocket;
+
+    // Connexion a l'alphabot
+    QUrl url;
+    url.setUrl("ws://172.21.28.78");
+    url.setPort(8080);
+    alphabot->open(url);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Gestion de l'interface
 
     // Affichage waypoints robot
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     timer->start((1/1000)*1000);
+
+    ui->gamepadStatusLabel->setVisible(false);
 }
 MainWindow::~MainWindow(){
     alphabot->close();
@@ -144,90 +162,6 @@ void MainWindow::affichageWifi(){
     QPixmap image(imageName); // Chargement de l'image
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
-}
-void MainWindow::logosBoutons(){
-    QIcon ermergencyLogo("./images_boutons/Stop.png");
-    ui->emergencyButton->setIcon(ermergencyLogo);
-    ui->emergencyButton->setIconSize(QSize(50,50));
-    ui->emergencyButton->setStyleSheet("background-color: white;");
-
-    QIcon takeOffLogo("./images_boutons/take_off.png");
-    ui->takeOffBtn->setIcon(takeOffLogo);
-    ui->takeOffBtn->setIconSize(QSize(50,50));
-    ui->takeOffBtn->setStyleSheet("background-color: white;");
-
-    QIcon landLogo("./images_boutons/land.png");
-    ui->landBtn->setIcon(landLogo);
-    ui->landBtn->setIconSize(QSize(50,50));
-    ui->landBtn->setStyleSheet("background-color: orange;");
-
-    QIcon upLogo("./images_boutons/up.png");
-    ui->upBtn->setIcon(upLogo);
-    ui->upBtn->setIconSize(QSize(50,50));
-
-    QIcon downLogo("./images_boutons/down.png");
-    ui->downBtn->setIcon(downLogo);
-    ui->downBtn->setIconSize(QSize(50,50));
-
-    QIcon forwardLogo("./images_boutons/forward.png");
-    ui->forwardBtn->setIcon(forwardLogo);
-    ui->forwardBtn->setIconSize(QSize(50,50));
-
-    QIcon backLogo("./images_boutons/back.png");
-    ui->backBtn->setIcon(backLogo);
-    ui->backBtn->setIconSize(QSize(50,50));
-
-    QIcon rightLogo("./images_boutons/right.png");
-    ui->rightBtn->setIcon(rightLogo);
-    ui->rightBtn->setIconSize(QSize(50,50));
-
-    QIcon leftLogo("./images_boutons/left.png");
-    ui->leftBtn->setIcon(leftLogo);
-    ui->leftBtn->setIconSize(QSize(50,50));
-
-    QIcon tRightLogo("./images_boutons/tRight.png");
-    ui->tRightBtn->setIcon(tRightLogo);
-    ui->tRightBtn->setIconSize(QSize(50,50));
-
-    QIcon tLeftLogo("./images_boutons/tLeft.png");
-    ui->tLeftBtn->setIcon(tLeftLogo);
-    ui->tLeftBtn->setIconSize(QSize(50,50));
-
-    QIcon stopMoveLogo("./images_boutons/stopMove.png");
-    ui->stopMoveBtn->setIcon(stopMoveLogo);
-    ui->stopMoveBtn->setIconSize(QSize(50,50));
-
-    QIcon flipLogo("./images_boutons/Flip.png");
-    ui->flipBtn->setIcon(flipLogo);
-    ui->flipBtn->setIconSize(QSize(50,50));
-
-
-    QIcon resetWaypointsLogo("./images_boutons/reset_waypoints.png");
-    ui->Reset->setIcon(resetWaypointsLogo);
-    ui->Reset->setIconSize(QSize(50,50));
-    ui->Reset->setStyleSheet("background-color: white;");
-
-    QIcon captureLogo("./images_boutons/capture.png");
-    ui->captureBtn->setIcon(captureLogo);
-    ui->captureBtn->setIconSize(QSize(50,50));
-
-    QIcon delLastWaypointLogo("./images_boutons/delete_last_waypoint.png");
-    ui->delLastWaypointBtn->setIcon(delLastWaypointLogo);
-    ui->delLastWaypointBtn->setIconSize(QSize(50,50));
-
-    QIcon launchRobotLogo("./images_boutons/go.png");
-    ui->launchRobotBtn->setIcon(launchRobotLogo);
-    ui->launchRobotBtn->setIconSize(QSize(50,50));
-
-    QIcon robotPosDefLogo("./images_boutons/robotPosition.png");
-    ui->robotPosDefBtn->setIcon(robotPosDefLogo);
-    ui->robotPosDefBtn->setIconSize(QSize(50,50));
-
-    QIcon cameraChangeLogo("./images_boutons/cameraChange.png");
-    ui->changeCameraBtn->setIcon(cameraChangeLogo);
-    ui->changeCameraBtn->setIconSize(QSize(50,50));
-
-    UIStyle();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -444,16 +378,6 @@ void MainWindow::UIStyle(){
     ui->rightBtn->setStyleSheet(Stylesheet);
     ui->tRightBtn->setStyleSheet(Stylesheet);
     ui->upBtn->setStyleSheet(Stylesheet);
-    ui->stopMoveBtn->setStyleSheet(Stylesheet);
-    ui->captureBtn->setStyleSheet(Stylesheet);
-    ui->Reset->setStyleSheet(Stylesheet);
-    ui->delLastWaypointBtn->setStyleSheet(Stylesheet);
-    ui->launchRobotBtn->setStyleSheet(Stylesheet);
-    ui->flipBtn->setStyleSheet(Stylesheet);
-    ui->changeCameraBtn->setStyleSheet(Stylesheet);
-
-    ui->dronePicture->setStyleSheet("QLabel { background-color : black; color : white; }");
-    ui->video->setStyleSheet("QLabel { background-color : black; color : white; }");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -468,27 +392,27 @@ void MainWindow::displayStream(QPixmap videoPix){
 
         ui->dronePicture->setPixmap(savePixmap);
 
+
+
+        QString path = "./dronePictures";
+        QDir dir(path);
+        dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
+        int increment = dir.count() + 1;
+
+        QFile file("./dronePictures/image" + QString::number(increment) + ".png");
+        file.open(QIODevice::WriteOnly);
+        savePixmap.save(&file, "PNG");
+
+
+
+
         reset();
         showPic = false;
     }
 }
 void MainWindow::on_captureBtn_clicked(){
     showPic = true;
-}
-
-void MainWindow::on_changeCameraBtn_clicked(){
-    if(camChoice == true){
-        tello->tello_command->sendCommand_generic("downvision 1");
-
-        ui->changeCameraBtn->setText("Change to Up cam");
-        camChoice = false;
-    }
-    else{
-        tello->tello_command->sendCommand_generic("downvision 0");
-
-        ui->changeCameraBtn->setText("Change to Down cam");
-        camChoice = true;
-    }
+    captureHeight = tello->tello_state->getHeight();
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -529,8 +453,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
                     robotDirectionVector[1] = release.y() - start.y();
 
                     valeurDispo = true;
-                    activeVector = false;
-                    ui->robotPosDefBtn->setStyleSheet("background-color: white;");
+                    on_robotPosDefBtn_clicked();
                 }
             }
         }
@@ -548,7 +471,6 @@ void MainWindow::on_robotPosDefBtn_clicked(){
 }
 void MainWindow::loop(){
     if(valeurDispo==true && ui->dronePicture->pixmap().isNull() == 0){
-
         double correction = 2/1.75;
         QPoint startCorrected = start*correction;
         QPoint releaseCorrected = release*correction;
@@ -563,41 +485,7 @@ void MainWindow::loop(){
         pen.setColor(Qt::red);
         painter.setPen(pen);
 
-
-
-
-
-        QPoint direction = releaseCorrected - startCorrected;
-        double length = QLineF(startCorrected, releaseCorrected).length();
-
-        double arrowSize = 10.0;
-
-        // Calculez l'angle de rotation de la direction du segment
-        double angle = std::atan2(-direction.y(), direction.x()) * 180 / M_PI;
-
-        // Tournez la direction du segment de 180 degrés
-        direction = direction * -1;
-
-        // Calculez la position de l'extrémité de la flèche
-        QPoint arrowP1 = releaseCorrected - direction * arrowSize;
-
-        // Calculez les positions des deux autres points de la flèche
-        QPoint arrowP2 = arrowP1 + QPoint( sin((M_PI/3) + angle) * arrowSize,
-                                            cos((M_PI/3) + angle) * arrowSize);
-        QPoint arrowP3 = arrowP1 + QPoint( sin((M_PI - M_PI/3) + angle) * arrowSize,
-                                            cos((M_PI - M_PI/3) + angle) * arrowSize);
-
-        // Draw the arrowhead
-        QPolygon arrowHead;
-        arrowHead << arrowP1 << arrowP2 << arrowP3;
         painter.drawLine(startCorrected, releaseCorrected);
-        painter.drawPolygon(arrowHead);
-
-
-
-
-
-
 
 
         for(int i = 0 ; i<points.count() ; i++){
@@ -628,37 +516,80 @@ void MainWindow::reset(){
 }
 
 void MainWindow::on_launchRobotBtn_clicked(){
+    double correction = 2/1.75;
+    int goalVector[2] = {0,0};
+
+    double numerateur = 0;
+    double denominateur = 0;
+
+    double Angle = 0;
+
+    double ScreenDistance = 0;
+    double ObjectiveDistance = 0;
+
+    double Ratio_distance = 3.636363636;
+    double Ratio_angle = 0.008722222222;
+
+    for(int i = 0 ; i<points.count() ; i++){
+        if(i==0){
+            goalVector[0] = abs(points[0].x()*correction - start.x()*correction);
+            goalVector[1] = abs(points[0].y()*correction - start.y()*correction);
+
+            numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
+            denominateur = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
+
+            Angle = qAcos(numerateur / denominateur);
+            qDebug() << "Angle" << Angle;
 
 
-    /*alphabot->sendTextMessage("av");
-    qDebug()<<"1";
 
-    QTimer::singleShot(1000, [=]() {
-        alphabot->sendTextMessage("ar");
-        qDebug()<<"2";
-    });
-    QTimer::singleShot(1000+500, [=]() {
-        alphabot->sendTextMessage("stop");
-        qDebug()<<"3";
-    });*/
 
-    int goalVector[2];
-    goalVector[0] = points[0].x() - start.x();
-    goalVector[1] = points[0].y() - start.y();
+            ScreenDistance = sqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
+            ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
+            qDebug() << "ObjectiveDistance" << ObjectiveDistance;
 
-    double numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
-    double denominateur = qSqrt(robotDirectionVector[0]*robotDirectionVector[0] + robotDirectionVector[1] * robotDirectionVector[1]) * qSqrt(goalVector[0]*goalVector[0] + goalVector[1] * goalVector[1]);
+            //ratio = 960/(2(tan(41.3)*h))
+            //Distance fictive = 960 (image) ou 840 (label)
+            //Distance réelle = 2*(tan(41.3)*h)
+        }
+        else{
+            goalVector[0] = abs(points[i].x()*correction - points[i-1].x()*correction);
+            goalVector[1] = abs(points[i].y()*correction - points[i-1].y()*correction);
 
-    double Angle = qAcos(numerateur / denominateur);
-    qDebug() << Angle;
+            numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
+            denominateur = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
 
-    //Distance fictive = 960 (image) ou 840 (label)
-    //Distance réelle = 2(tan(41.3)*h)
+            Angle = qAcos(numerateur / denominateur);
+            qDebug() << "Angle" << Angle;
+
+            ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
+            ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
+            qDebug() << "ObjectiveDistance" << ObjectiveDistance;
+        }
+
+        alphabot->sendTextMessage("av");
+        qDebug()<<"1";
+
+        QTimer::singleShot(Ratio_angle*Angle, [=]() {
+            alphabot->sendTextMessage("ga");
+            qDebug()<<"2";
+        });
+        QTimer::singleShot(Ratio_angle*Angle+Ratio_distance*ObjectiveDistance, [=]() {
+            alphabot->sendTextMessage("stop");
+            qDebug()<<"3";
+        });
+
+        robotDirectionVector[0] = goalVector[0];
+        robotDirectionVector[1] = goalVector[1];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::updateGUI(){
+
+    // Wifi
+
     int wifiValue = 0;
     int SNR = 90;
 
@@ -679,10 +610,16 @@ void MainWindow::updateGUI(){
     QPixmap scaledImage = image.scaled(ui->wifiLogo->size());
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 
+    // Battery
+
     ui->batteryPercentage->setValue(tello->tello_state->getBattery());
+
+    // Pitch and roll
 
     mAttMeter->setCurrentPitch(tello->tello_state->getPitch());
     mAttMeter->setCurrentRoll(tello->tello_state->getRoll());
+
+    // Compass
 
     int valueCompass;
     if(tello->tello_state->getYaw() + 270 >= 360){
@@ -691,6 +628,8 @@ void MainWindow::updateGUI(){
         valueCompass = tello->tello_state->getYaw()+270;
     }
     mCompassNeedle->setCurrentValue(valueCompass);
+
+    // Height
 
     mAirspeedNeedle->setCurrentValue(tello->tello_state->getHeight());
 }
@@ -734,4 +673,7 @@ void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
     ui->lineEdit_cmd_reponse->setReadOnly(true);
 }
 
+void MainWindow::gamepadStatus(bool gamepadConnectionStatus){
+    ui->gamepadStatusLabel->setVisible(gamepadConnectionStatus);
+}
 

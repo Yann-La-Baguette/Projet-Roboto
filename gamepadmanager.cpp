@@ -1,7 +1,6 @@
 #include "gamepadmanager.h"
 
-#include <QDebug>
-#include <QThread>
+
 
 GamepadManager::GamepadManager(QObject *parent) : QObject(parent), m_running(true)
 {
@@ -12,6 +11,10 @@ GamepadManager::GamepadManager(QObject *parent) : QObject(parent), m_running(tru
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     thread->start();
+
+    for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
+        m_gamepadConnected[i] = false;
+    }
 }
 
 void GamepadManager::pollGamepads()
@@ -29,6 +32,11 @@ void GamepadManager::pollGamepads()
 
             if (result == ERROR_SUCCESS)
             {
+                if (!m_gamepadConnected[i]) {
+                    m_gamepadConnected[i] = true;
+                    emit gamepadConnected(true);
+                }
+                emit gamepadConnected(true);
                 processStateButton(state, i);
                 if(joystickIncrement>15){
                     processStateJoystick(state, i);
@@ -37,6 +45,10 @@ void GamepadManager::pollGamepads()
             }
             else if (result == ERROR_DEVICE_NOT_CONNECTED)
             {
+                if (m_gamepadConnected[i]) {
+                    m_gamepadConnected[i] = false;
+                    emit gamepadConnected(false);
+                }
                 // Gamepad is not connected
             }
         }

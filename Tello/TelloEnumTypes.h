@@ -1,7 +1,7 @@
 #ifndef TELLOENUMTYPES_H
 #define TELLOENUMTYPES_H
 
-#define TELLO_DEBUG_OUTPUT true
+#define TELLO_DEBUG_OUTPUT false
 #define TELLO_STATE_OUTPUT false
 
 enum class TelloResponse {

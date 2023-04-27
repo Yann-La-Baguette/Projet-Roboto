@@ -74,9 +74,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Flip
 (B)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Flip.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Flip.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -100,9 +113,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Take Off 
 (Page Up)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/take_off.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/take_off.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -126,9 +152,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: orange;</string>
+       </property>
        <property name="text">
         <string>Land 
 (Page Down)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/land.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/land.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -146,9 +185,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Emergency Stop 
 (Escape)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Stop.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Stop.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -184,9 +236,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Up 
 (W)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/up.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/up.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -214,9 +279,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Turn Left 
 (A)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tLeft.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tLeft.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -240,9 +318,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Left 
 (Q)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/left.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/left.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -286,9 +377,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Forward 
 (Z)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/forward.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/forward.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -312,9 +416,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Stabilize 
 (F)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/stopMove.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/stopMove.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -338,9 +455,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Backward 
 (S)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/back.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/back.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -368,9 +498,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Turn Right 
 (E)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tRight.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tRight.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -394,9 +537,22 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: white;</string>
+           </property>
            <property name="text">
             <string>Right 
 (D)</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/right.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/right.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -440,9 +596,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Down 
 (X)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/down.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/down.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -451,9 +620,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>850</x>
       <y>10</y>
-      <width>205</width>
+      <width>218</width>
       <height>631</height>
      </rect>
     </property>
@@ -472,9 +641,22 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Capture
 (C)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/capture.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/capture.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -513,9 +695,22 @@ Y : </string>
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Reset Waypoints
 (R)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/reset_waypoints.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/reset_waypoints.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -533,9 +728,22 @@ Y : </string>
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Delete Last Waypoint
 (T)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/delete_last_waypoint.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/delete_last_waypoint.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -553,9 +761,22 @@ Y : </string>
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: green;</string>
+       </property>
        <property name="text">
         <string>Def Robot Position
 (Y)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/robotPosition.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/robotPosition.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -573,9 +794,22 @@ Y : </string>
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;</string>
+       </property>
        <property name="text">
         <string>Launch Roboto
 (U)</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/go.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/go.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -595,6 +829,9 @@ Y : </string>
       <family>Arial Black</family>
       <pointsize>40</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { background-color : black; color : white; }</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -626,6 +863,9 @@ Y : </string>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel { background-color : black; color : white; }</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -779,12 +1019,12 @@ Y : </string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="changeCameraBtn">
+   <widget class="QLabel" name="gamepadStatusLabel">
     <property name="geometry">
      <rect>
-      <x>1400</x>
+      <x>1040</x>
       <y>650</y>
-      <width>231</width>
+      <width>281</width>
       <height>101</height>
      </rect>
     </property>
@@ -794,8 +1034,11 @@ Y : </string>
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="text">
-     <string>Change to Down cam</string>
+     <string>Gamepad Connected</string>
     </property>
    </widget>
   </widget>

@@ -54,14 +54,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Showing logos for the buttons
-    /**
-     * @brief Affichage de logos pour les boutons
-     */
-    void logosBoutons();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     // Put all the move buttons to white
     /**
      * @brief Reset de touts les boutons
@@ -110,9 +102,9 @@ private:
     short SavesThumbLX, SavesThumbLY, SavesThumbRX, SavesThumbRY, SavehighValue;
     bool sameDatas;
 
-    bool camChoice = true;
-
     int robotDirectionVector[2];
+
+    int captureHeight;
 
 private slots:
     // Waypoints placing
@@ -237,6 +229,6 @@ private slots:
     void updateGUI();
     void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
-    void on_changeCameraBtn_clicked();
+    void gamepadStatus(bool gamepadConnectionStatus);
 };
 #endif // MAINWINDOW_H

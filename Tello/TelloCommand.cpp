@@ -68,7 +68,9 @@ void TelloCommand::setSpeed(int speed){
 }
 
 void TelloCommand::flip(){
-    sendCommand_generic("flip f");
+    if(isRunning && flying){
+        sendCommand_generic("flip f");
+    }
 }
 
 /*####### Network #######*/
