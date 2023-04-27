@@ -517,67 +517,49 @@ void MainWindow::reset(){
 
 void MainWindow::on_launchRobotBtn_clicked(){
     double correction = 2/1.75;
+    double Ratio_distance = 3.636363636;
+    double Ratio_angle = 0.008722222222;
     int goalVector[2] = {0,0};
 
-    double numerateur = 0;
-    double denominateur = 0;
-
+    double numerator = 0;
+    double denominator = 0;
     double Angle = 0;
 
     double ScreenDistance = 0;
     double ObjectiveDistance = 0;
 
-    double Ratio_distance = 3.636363636;
-    double Ratio_angle = 0.008722222222;
-
     for(int i = 0 ; i<points.count() ; i++){
         if(i==0){
             goalVector[0] = abs(points[0].x()*correction - start.x()*correction);
             goalVector[1] = abs(points[0].y()*correction - start.y()*correction);
-
-            numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
-            denominateur = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
-
-            Angle = qAcos(numerateur / denominateur);
-            qDebug() << "Angle" << Angle;
-
-
-
-
-            ScreenDistance = sqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
-            ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
-            qDebug() << "ObjectiveDistance" << ObjectiveDistance;
-
-            //ratio = 960/(2(tan(41.3)*h))
-            //Distance fictive = 960 (image) ou 840 (label)
-            //Distance réelle = 2*(tan(41.3)*h)
         }
         else{
             goalVector[0] = abs(points[i].x()*correction - points[i-1].x()*correction);
             goalVector[1] = abs(points[i].y()*correction - points[i-1].y()*correction);
-
-            numerateur = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
-            denominateur = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
-
-            Angle = qAcos(numerateur / denominateur);
-            qDebug() << "Angle" << Angle;
-
-            ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
-            ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
-            qDebug() << "ObjectiveDistance" << ObjectiveDistance;
         }
 
-        alphabot->sendTextMessage("av");
-        qDebug()<<"1";
+        numerator = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
+        denominator = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
+        Angle = qAcos(numerator / denominator);
+        Angle = qRadiansToDegrees(Angle);
 
-        QTimer::singleShot(Ratio_angle*Angle, [=]() {
+
+        ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
+        ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
+
+        if (Angle >180){
             alphabot->sendTextMessage("ga");
-            qDebug()<<"2";
+        }
+        else{
+            alphabot->sendTextMessage("dr");
+        }
+        QTimer::singleShot(Ratio_angle*Angle, [=]() {
+            alphabot->sendTextMessage("av");
         });
         QTimer::singleShot(Ratio_angle*Angle+Ratio_distance*ObjectiveDistance, [=]() {
             alphabot->sendTextMessage("stop");
-            qDebug()<<"3";
         });
+
 
         robotDirectionVector[0] = goalVector[0];
         robotDirectionVector[1] = goalVector[1];
