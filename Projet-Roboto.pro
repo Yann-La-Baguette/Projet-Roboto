@@ -41,9 +41,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     icone.ico \
+    images_boutons/Flip.png \
     images_boutons/Stop.png \
     images_boutons/back.png \
     images_boutons/battery.png \
+    images_boutons/cameraChange.png \
     images_boutons/capture.png \
     images_boutons/connect.png \
     images_boutons/delete_last_waypoint.png \
@@ -54,6 +56,7 @@ DISTFILES += \
     images_boutons/left.png \
     images_boutons/reset_waypoints.png \
     images_boutons/right.png \
+    images_boutons/robotPosition.png \
     images_boutons/robotoPosition.png \
     images_boutons/stopMove.png \
     images_boutons/tLeft.png \

@@ -53,7 +53,7 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>490</x>
       <y>650</y>
       <width>271</width>
       <height>371</height>
@@ -1038,7 +1038,7 @@ Y : </string>
    <widget class="QSlider" name="speedSlider">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>460</x>
       <y>650</y>
       <width>21</width>
       <height>371</height>

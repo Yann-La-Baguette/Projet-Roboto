@@ -234,6 +234,11 @@ void MainWindow::on_stopMoveBtn_clicked(){
     ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
 }
 
+void MainWindow::on_speedSlider_valueChanged(int value)
+{
+    telloSpeed = value;
+}
+
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
     qDebug()<<gamepadButton;
     switch (gamepadButton) {
@@ -669,10 +674,4 @@ void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
 
 void MainWindow::gamepadStatus(bool gamepadConnectionStatus){
     ui->gamepadStatusLabel->setVisible(gamepadConnectionStatus);
-}
-
-
-void MainWindow::on_speedSlider_valueChanged(int value)
-{
-    telloSpeed = value;
 }
