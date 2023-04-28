@@ -186,42 +186,42 @@ void MainWindow::on_landBtn_clicked(){
     ui->landBtn->setStyleSheet("background-color: orange;");
 }
 void MainWindow::on_upBtn_clicked(){
-    tello->tello_command->setPosition(0,0,40,0);
+    tello->tello_command->setPosition(0,0,telloSpeed,0);
     UIStyle();
     ui->upBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_downBtn_clicked(){
-    tello->tello_command->setPosition(0,0,-40,0);
+    tello->tello_command->setPosition(0,0,-telloSpeed,0);
     UIStyle();
     ui->downBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_forwardBtn_clicked(){
-    tello->tello_command->setPosition(0,80,0,0);
+    tello->tello_command->setPosition(0,telloSpeed,0,0);
     UIStyle();
     ui->forwardBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_backBtn_clicked(){
-    tello->tello_command->setPosition(0,-50,0,0);
+    tello->tello_command->setPosition(0,-telloSpeed,0,0);
     UIStyle();
     ui->backBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_rightBtn_clicked(){
-    tello->tello_command->setPosition(50,0,0,0);
+    tello->tello_command->setPosition(telloSpeed,0,0,0);
     UIStyle();
     ui->rightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_leftBtn_clicked(){
-    tello->tello_command->setPosition(-50,0,0,0);
+    tello->tello_command->setPosition(-telloSpeed,0,0,0);
     UIStyle();
     ui->leftBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tRightBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,70);
+    tello->tello_command->setPosition(0,0,0,telloSpeed);
     UIStyle();
     ui->tRightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tLeftBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,-70);
+    tello->tello_command->setPosition(0,0,0,-telloSpeed);
     UIStyle();
     ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
@@ -305,66 +305,73 @@ void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short 
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
-            case Qt::Key_Escape:
-                ui->emergencyButton->animateClick();
-                break;
-            case Qt::Key_PageUp:
-                ui->takeOffBtn->animateClick();
-                break;
-            case Qt::Key_PageDown:
-                ui->landBtn->animateClick();
-                break;
-            case Qt::Key_Z:
-                ui->forwardBtn->animateClick();
-                break;
-            case Qt::Key_Q:
-                ui->leftBtn->animateClick();
-                break;
-            case Qt::Key_S:
-                ui->backBtn->animateClick();
-                break;
-            case Qt::Key_D:
-                ui->rightBtn->animateClick();
-                break;
-            case Qt::Key_A:
-                ui->tLeftBtn->animateClick();
-                break;
-            case Qt::Key_E:
-                ui->tRightBtn->animateClick();
-                break;
-            case Qt::Key_W:
-                ui->upBtn->animateClick();
-                break;
-            case Qt::Key_X:
-                ui->downBtn->animateClick();
-                break;
-            case Qt::Key_B:
-                ui->flipBtn->animateClick();
-                break;
-            case Qt::Key_F:
-                ui->stopMoveBtn->animateClick();
-                break;
+        case Qt::Key_Escape:
+            ui->emergencyButton->animateClick();
+            break;
+        case Qt::Key_PageUp:
+            ui->takeOffBtn->animateClick();
+            break;
+        case Qt::Key_PageDown:
+            ui->landBtn->animateClick();
+            break;
+        case Qt::Key_Z:
+            ui->forwardBtn->animateClick();
+            break;
+        case Qt::Key_Q:
+            ui->leftBtn->animateClick();
+            break;
+        case Qt::Key_S:
+            ui->backBtn->animateClick();
+            break;
+        case Qt::Key_D:
+            ui->rightBtn->animateClick();
+            break;
+        case Qt::Key_A:
+            ui->tLeftBtn->animateClick();
+            break;
+        case Qt::Key_E:
+            ui->tRightBtn->animateClick();
+            break;
+        case Qt::Key_W:
+            ui->upBtn->animateClick();
+            break;
+        case Qt::Key_X:
+            ui->downBtn->animateClick();
+            break;
+        case Qt::Key_B:
+            ui->flipBtn->animateClick();
+            break;
+        case Qt::Key_F:
+            ui->stopMoveBtn->animateClick();
+            break;
 
-            case Qt::Key_C:
-                ui->captureBtn->animateClick();
-                break;
-            case Qt::Key_R:
-                ui->Reset->animateClick();
-                break;
-            case Qt::Key_T:
-                ui->delLastWaypointBtn->animateClick();
-                break;
-            case Qt::Key_Y:
-                ui->robotPosDefBtn->animateClick();
-                break;
-            case Qt::Key_U:
-                ui->launchRobotBtn->animateClick();
-                break;
+        case Qt::Key_C:
+            ui->captureBtn->animateClick();
+            break;
+        case Qt::Key_R:
+            ui->Reset->animateClick();
+            break;
+        case Qt::Key_T:
+            ui->delLastWaypointBtn->animateClick();
+            break;
+        case Qt::Key_Y:
+            ui->robotPosDefBtn->animateClick();
+            break;
+        case Qt::Key_U:
+            ui->launchRobotBtn->animateClick();
+            break;
 
-            default:
-                QWidget::keyPressEvent(event);
-                break;
-        }
+        case Qt::Key_M:
+            ui->speedSlider->setValue(ui->speedSlider->value()-2);
+            break;
+        case Qt::Key_P:
+            ui->speedSlider->setValue(ui->speedSlider->value()+2);
+            break;
+
+        default:
+            QWidget::keyPressEvent(event);
+            break;
+    }
 }
 void MainWindow::UIStyle(){
     QString Stylesheet = "background-color: white;";
@@ -518,7 +525,7 @@ void MainWindow::reset(){
 void MainWindow::on_launchRobotBtn_clicked(){
     double correction = 2/1.75;
     double Ratio_distance = 3.636363636;
-    double Ratio_angle = 0.008722222222;
+    double Ratio_angle = 0.00875;
     int goalVector[2] = {0,0};
 
     double numerator = 0;
@@ -547,16 +554,21 @@ void MainWindow::on_launchRobotBtn_clicked(){
         ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
         ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
 
-        if (Angle >180){
-            alphabot->sendTextMessage("ga");
+
+
+        if (Angle <180){
+            alphabot->sendTextMessage("stop");
         }
         else{
-            alphabot->sendTextMessage("dr");
+            Angle = 360 - Angle;
+            alphabot->sendTextMessage("stop");
         }
-        QTimer::singleShot(Ratio_angle*Angle, [=]() {
+        qDebug() << "Angle " << Angle;
+        qDebug() << "Temps angle " << Ratio_angle*Angle;
+        /*QTimer::singleShot(Ratio_angle*Angle, [=]() {
             alphabot->sendTextMessage("av");
-        });
-        QTimer::singleShot(Ratio_angle*Angle+Ratio_distance*ObjectiveDistance, [=]() {
+        });*/
+        QTimer::singleShot(Ratio_angle*Angle/*+Ratio_distance*ObjectiveDistance*/, [=]() {
             alphabot->sendTextMessage("stop");
         });
 
@@ -659,3 +671,8 @@ void MainWindow::gamepadStatus(bool gamepadConnectionStatus){
     ui->gamepadStatusLabel->setVisible(gamepadConnectionStatus);
 }
 
+
+void MainWindow::on_speedSlider_valueChanged(int value)
+{
+    telloSpeed = value;
+}

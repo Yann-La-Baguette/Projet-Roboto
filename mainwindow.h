@@ -106,6 +106,8 @@ private:
 
     int captureHeight;
 
+    int telloSpeed;
+
 private slots:
     // Waypoints placing
     /**
@@ -230,5 +232,6 @@ private slots:
     void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
     void gamepadStatus(bool gamepadConnectionStatus);
+    void on_speedSlider_valueChanged(int value);
 };
 #endif // MAINWINDOW_H
