@@ -237,6 +237,7 @@ void MainWindow::on_stopMoveBtn_clicked(){
 void MainWindow::on_speedSlider_valueChanged(int value)
 {
     telloSpeed = value;
+    ui->speedLabel->setText(QString::number(value));
 }
 
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
@@ -246,34 +247,38 @@ void MainWindow::onGamepadButtonPressed(int gamepadButton){
 
     // Drone Control
     case 12: // A
-        ui->takeOffBtn->animateClick();
+        ui->launchRobotBtn->animateClick();
         break;
     case 13: // B
-        ui->landBtn->animateClick();
-        break;
-    case 14: // X
-        ui->flipBtn->animateClick();
-        break;
-    case 15: // Y
-        ui->emergencyButton->animateClick();
-        break;
-
-
-    // Camera & robot control
-    case 9: // Right click
         ui->captureBtn->animateClick();
         break;
-    case 1: // Down
+    case 14: // X
         ui->Reset->animateClick();
         break;
-    case 3: // Right
+    case 15: // Y
         ui->delLastWaypointBtn->animateClick();
         break;
-    case 2: // Left
-        ui->robotPosDefBtn->animateClick();
+
+    case 9: // Right click
+        ui->takeOffBtn->animateClick();
         break;
     case 8: // Left click
-        ui->launchRobotBtn->animateClick();
+        ui->landBtn->animateClick();
+        break;
+
+    case 1: // Down
+        ui->robotPosDefBtn->animateClick();
+        break;
+    case 3: // Right
+        break;
+    case 2: // Left
+        break;
+
+    case 4: // Start
+        ui->emergencyButton->animateClick();
+        break;
+    case 5: // Select
+        ui->flipBtn->animateClick();
         break;
 
     default:
@@ -529,13 +534,14 @@ void MainWindow::reset(){
 
 void MainWindow::on_launchRobotBtn_clicked(){
     double correction = 2/1.75;
-    double Ratio_distance = 3.636363636;
-    double Ratio_angle = 0.00875;
+    double Ratio_distance = 3.636363636; // m/s
+    double Ratio_angle = 0.00875; // °/s
     int goalVector[2] = {0,0};
 
     double numerator = 0;
     double denominator = 0;
     double Angle = 0;
+    double AngleDirect = 0;
 
     double ScreenDistance = 0;
     double ObjectiveDistance = 0;
@@ -554,26 +560,34 @@ void MainWindow::on_launchRobotBtn_clicked(){
         denominator = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
         Angle = qAcos(numerator / denominator);
         Angle = qRadiansToDegrees(Angle);
-
+        qDebug() << "Angle : " << Angle;
 
         ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
-        ObjectiveDistance = ScreenDistance * ((960/(2*(tan(41.3)*75)))/100);
+        ObjectiveDistance = (ScreenDistance * ((960/(2*(tan(41.3)*captureHeight)))/100))/100;
+        qDebug() << "Screen Distance : " << ScreenDistance;
+        qDebug() << "Objective Distance : " << ObjectiveDistance;
 
+        /*Angle = 270;
+        ObjectiveDistance = 1;
 
+        qDebug() << "Angle : " << Angle;
+        qDebug() << "Objective Distance : " << ObjectiveDistance;
+
+        qDebug() << "DistanceRatio : " << Ratio_distance*ObjectiveDistance*100;
+        qDebug() << "AngleRatio : " << Ratio_angle*Angle;*/
 
         if (Angle <180){
-            alphabot->sendTextMessage("stop");
+            alphabot->sendTextMessage("dr");
+            AngleDirect = Angle;
         }
         else{
-            Angle = 360 - Angle;
-            alphabot->sendTextMessage("stop");
+            AngleDirect = 360 - Angle;
+            alphabot->sendTextMessage("ga");
         }
-        qDebug() << "Angle " << Angle;
-        qDebug() << "Temps angle " << Ratio_angle*Angle;
-        /*QTimer::singleShot(Ratio_angle*Angle, [=]() {
+        QTimer::singleShot(int(Ratio_angle*AngleDirect*1000), [=]() {
             alphabot->sendTextMessage("av");
-        });*/
-        QTimer::singleShot(Ratio_angle*Angle/*+Ratio_distance*ObjectiveDistance*/, [=]() {
+        });
+        QTimer::singleShot(int((Ratio_angle*AngleDirect+Ratio_distance*ObjectiveDistance)*1000), [=]() {
             alphabot->sendTextMessage("stop");
         });
 
