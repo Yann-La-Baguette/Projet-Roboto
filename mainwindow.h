@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QWebSocket>
 #include <QtMath>
+#include <QDateTime>
 
 // Personnal classes
 #include "gamepadmanager.h"
@@ -233,5 +234,6 @@ private slots:
     void updateCommandReponse(TelloResponse response, QString datagram);
     void gamepadStatus(bool gamepadConnectionStatus);
     void on_speedSlider_valueChanged(int value);
+    void on_adminButton_clicked(bool checked);
 };
 #endif // MAINWINDOW_H

@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     affichageHeight();
     affichageWifi();
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Gestion Manette
@@ -60,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     timer->start((1/1000)*1000);
 
     ui->gamepadStatusLabel->setVisible(false);
+    ui->lineEdit_cmd_reponse->setVisible(false);
+    ui->adminMathsLabel->setVisible(false);
 }
 MainWindow::~MainWindow(){
     alphabot->close();
@@ -401,22 +402,31 @@ void MainWindow::UIStyle(){
 
 void MainWindow::displayStream(QPixmap videoPix){
     ui->video->setFixedSize(840,630);
-    ui->video->setPixmap(videoPix);
+    ui->video->setPixmap(videoPix.transformed(QTransform().scale(-1, 1)));
 
     if(showPic == true){
         ui->dronePicture->setFixedSize(840, 630);
-        savePixmap = videoPix;
+        savePixmap = videoPix.transformed(QTransform().scale(-1, 1));
 
         ui->dronePicture->setPixmap(savePixmap);
 
 
 
-        QString path = "./dronePictures";
+        QDateTime date = QDateTime::currentDateTime();
+        QString formattedTime = date.toString("dd-MM-yyyy");
+        QByteArray formattedTimeMsg = formattedTime.toLocal8Bit();
+
+        QString path = "./dronePictures/" + formattedTimeMsg;
         QDir dir(path);
+
+        //dir.mkdir(formattedTimeMsg);
+
         dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
         int increment = dir.count() + 1;
 
-        QFile file("./dronePictures/image" + QString::number(increment) + ".png");
+
+
+        QFile file("./dronePictures/" + formattedTime + "/image" + QString::number(increment) + ".png");
         file.open(QIODevice::WriteOnly);
         savePixmap.save(&file, "PNG");
 
@@ -560,21 +570,10 @@ void MainWindow::on_launchRobotBtn_clicked(){
         denominator = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
         Angle = qAcos(numerator / denominator);
         Angle = qRadiansToDegrees(Angle);
-        qDebug() << "Angle : " << Angle;
 
         ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
         ObjectiveDistance = (ScreenDistance * ((960/(2*(tan(41.3)*captureHeight)))/100))/100;
-        qDebug() << "Screen Distance : " << ScreenDistance;
-        qDebug() << "Objective Distance : " << ObjectiveDistance;
-
-        /*Angle = 270;
-        ObjectiveDistance = 1;
-
-        qDebug() << "Angle : " << Angle;
-        qDebug() << "Objective Distance : " << ObjectiveDistance;
-
-        qDebug() << "DistanceRatio : " << Ratio_distance*ObjectiveDistance*100;
-        qDebug() << "AngleRatio : " << Ratio_angle*Angle;*/
+        ui->adminMathsLabel->setText("Screen distance : " + QString::number(ScreenDistance) + "\t\t\tObjective Distance : " + QString::number(ObjectiveDistance) + " m\nAngle : " + QString::number(Angle) + "°");
 
         if (Angle <180){
             alphabot->sendTextMessage("dr");
@@ -687,5 +686,19 @@ void MainWindow::updateCommandReponse(TelloResponse response, QString datagram){
 }
 
 void MainWindow::gamepadStatus(bool gamepadConnectionStatus){
+    if(gamepadConnectionStatus == false && ui->gamepadStatusLabel->isVisible() == true){
+        ui->stopMoveBtn->click();
+        ui->landBtn->click();
+        QTimer::singleShot(15000, [=]() {
+            ui->emergencyButton->click();
+        });
+    }
+
     ui->gamepadStatusLabel->setVisible(gamepadConnectionStatus);
 }
+
+void MainWindow::on_adminButton_clicked(bool checked){
+    ui->lineEdit_cmd_reponse->setVisible(checked);
+    ui->adminMathsLabel->setVisible(checked);
+}
+

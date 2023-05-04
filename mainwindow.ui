@@ -884,7 +884,7 @@ Y : </string>
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>650</y>
+      <y>660</y>
       <width>141</width>
       <height>111</height>
      </rect>
@@ -921,7 +921,7 @@ Y : </string>
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>770</y>
+      <y>790</y>
       <width>241</width>
       <height>81</height>
      </rect>
@@ -957,10 +957,10 @@ Y : </string>
    <widget class="QLineEdit" name="lineEdit_cmd_reponse">
     <property name="geometry">
      <rect>
-      <x>778</x>
-      <y>860</y>
-      <width>241</width>
-      <height>24</height>
+      <x>1070</x>
+      <y>650</y>
+      <width>831</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -972,6 +972,9 @@ Y : </string>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
@@ -980,7 +983,7 @@ Y : </string>
     <property name="geometry">
      <rect>
       <x>910</x>
-      <y>650</y>
+      <y>660</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -1091,16 +1094,44 @@ Y : </string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1920</width>
-     <height>21</height>
-    </rect>
-   </property>
+   <widget class="QLabel" name="adminMathsLabel">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>680</y>
+      <width>831</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="adminButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>1020</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Admin Mode</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

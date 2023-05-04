@@ -13,6 +13,7 @@ class GamepadManager : public QObject
     Q_OBJECT
 public:
     explicit GamepadManager(QObject *parent = nullptr);
+    //~GamepadManager();
 
 signals:
     void gamepadConnected(bool connectionStatus);

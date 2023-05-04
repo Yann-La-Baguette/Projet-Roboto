@@ -41,6 +41,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     Controller.png \
+    classDiagram.qmodel \
     icone.ico \
     images_boutons/Flip.png \
     images_boutons/Stop.png \
@@ -69,6 +70,8 @@ DISTFILES += \
     images_wifi/wifi2.png \
     images_wifi/wifi3.png \
     images_wifi/wifi4.png \
+    sequencediagram.qmodel \
+    usecasediagram.qmodel
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
