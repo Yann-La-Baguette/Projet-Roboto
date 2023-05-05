@@ -1,5 +1,10 @@
+/// @file mainwindow.cpp
+/// @author Yann Di Padova
+/// @class MainWindow
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     affichageCompass();
     affichageAttitude();
     affichageHeight();
-    affichageWifi();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     // Connexion a l'alphabot
     QUrl url;
-    url.setUrl("ws://172.21.28.78");
+    url.setUrl("ws://" + RobotIPAdress);
     url.setPort(8080);
     alphabot->open(url);
 
@@ -158,12 +162,6 @@ void MainWindow::affichageCompass(){
     ui->compass->addWidget(mCompassGauge);
     mCompassNeedle->setCurrentValue(90);
 }
-void MainWindow::affichageWifi(){
-    QString imageName = "./images_wifi/wifi0.png"; // Nom de l'image à charger
-    QPixmap image(imageName); // Chargement de l'image
-    QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
-    ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -197,32 +195,62 @@ void MainWindow::on_downBtn_clicked(){
     ui->downBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_forwardBtn_clicked(){
-    tello->tello_command->setPosition(0,telloSpeed,0,0);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(0,telloSpeed,0,0);
+    }
+    else{
+        alphabot->sendTextMessage("av");
+    }
     UIStyle();
     ui->forwardBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_backBtn_clicked(){
-    tello->tello_command->setPosition(0,-telloSpeed,0,0);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(0,-telloSpeed,0,0);
+    }
+    else{
+        alphabot->sendTextMessage("ar");
+    }
     UIStyle();
     ui->backBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_rightBtn_clicked(){
-    tello->tello_command->setPosition(telloSpeed,0,0,0);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(telloSpeed,0,0,0);
+    }
+    else{
+        alphabot->sendTextMessage("dr");
+    }
     UIStyle();
     ui->rightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_leftBtn_clicked(){
-    tello->tello_command->setPosition(-telloSpeed,0,0,0);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(-telloSpeed,0,0,0);
+    }
+    else{
+        alphabot->sendTextMessage("ga");
+    }
     UIStyle();
     ui->leftBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tRightBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,telloSpeed);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(0,0,0,telloSpeed);
+    }
+    else{
+        alphabot->sendTextMessage("avd");
+    }
     UIStyle();
     ui->tRightBtn->setStyleSheet("background-color: lightblue;");
 }
 void MainWindow::on_tLeftBtn_clicked(){
-    tello->tello_command->setPosition(0,0,0,-telloSpeed);
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(0,0,0,-telloSpeed);
+    }
+    else{
+        alphabot->sendTextMessage("avg");
+    }
     UIStyle();
     ui->tLeftBtn->setStyleSheet("background-color: lightblue;");
 }
@@ -230,6 +258,12 @@ void MainWindow::on_flipBtn_clicked(){
     tello->tello_command->flip();
 }
 void MainWindow::on_stopMoveBtn_clicked(){
+    if(controlDroneMode == true){
+        tello->tello_command->setPosition(0,0,0,0);
+    }
+    else{
+        alphabot->sendTextMessage("stop");
+    }
     tello->tello_command->setPosition(0,0,0,0);
     UIStyle();
     ui->stopMoveBtn->setStyleSheet("background-color: lightblue;");
@@ -402,7 +436,12 @@ void MainWindow::UIStyle(){
 
 void MainWindow::displayStream(QPixmap videoPix){
     ui->video->setFixedSize(840,630);
-    ui->video->setPixmap(videoPix.transformed(QTransform().scale(-1, 1)));
+    if(MirrorMode == true){
+        ui->video->setPixmap(videoPix.transformed(QTransform().scale(-1, -1)));
+    }
+    else{
+        ui->video->setPixmap(videoPix);
+    }
 
     if(showPic == true){
         ui->dronePicture->setFixedSize(840, 630);
@@ -700,5 +739,38 @@ void MainWindow::gamepadStatus(bool gamepadConnectionStatus){
 void MainWindow::on_adminButton_clicked(bool checked){
     ui->lineEdit_cmd_reponse->setVisible(checked);
     ui->adminMathsLabel->setVisible(checked);
+}
+
+void MainWindow::on_mirrorModeBtn_clicked(){
+    if(MirrorMode == true){
+        MirrorMode = false;
+        ui->mirrorModeBtn->setStyleSheet("background-color: white;");
+    }
+    else{
+        MirrorMode = true;
+        ui->mirrorModeBtn->setStyleSheet("background-color: green;");
+    }
+}
+
+
+void MainWindow::on_changeControlBtn_clicked(){
+    if(controlDroneMode == true){
+        controlDroneMode = false;
+        ui->changeControlBtn->setText("Control Robot");
+    }
+    else{
+        controlDroneMode = true;
+        ui->changeControlBtn->setText("Control Drone");
+    }
+}
+
+
+void MainWindow::on_robotIPBtn_clicked(){
+    RobotIPAdress = QInputDialog::getText();
+    alphabot->close();
+    QUrl url;
+    url.setUrl("ws://" + RobotIPAdress);
+    url.setPort(8080);
+    alphabot->open(url);
 }
 

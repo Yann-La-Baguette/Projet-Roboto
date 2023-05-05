@@ -1,3 +1,6 @@
+/// @file main.cpp
+/// @author Yann Di Padova
+
 #include "mainwindow.h"
 
 #include <QApplication>

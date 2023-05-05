@@ -50,12 +50,14 @@ DISTFILES += \
     images_boutons/cameraChange.png \
     images_boutons/capture.png \
     images_boutons/connect.png \
+    images_boutons/control.png \
     images_boutons/delete_last_waypoint.png \
     images_boutons/down.png \
     images_boutons/forward.png \
     images_boutons/go.png \
     images_boutons/land.png \
     images_boutons/left.png \
+    images_boutons/mirror.png \
     images_boutons/reset_waypoints.png \
     images_boutons/right.png \
     images_boutons/robotPosition.png \

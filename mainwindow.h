@@ -1,3 +1,6 @@
+/// @file mainwindow.h
+/// @author Yann Di Padova
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -10,6 +13,7 @@
 #include <QWebSocket>
 #include <QtMath>
 #include <QDateTime>
+#include <QInputDialog>
 
 // Personnal classes
 #include "gamepadmanager.h"
@@ -48,10 +52,6 @@ public:
      * @brief Affichage de la hauteur
      */
     void affichageHeight();
-    /**
-     * @brief Affichage de la qualite du signal Wi-Fi
-     */
-    void affichageWifi();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,6 +108,10 @@ private:
     int captureHeight;
 
     int telloSpeed;
+
+    bool MirrorMode = false;
+    bool controlDroneMode = true;
+    QString RobotIPAdress = "172.21.28.78";
 
 private slots:
     // Waypoints placing
@@ -235,5 +239,9 @@ private slots:
     void gamepadStatus(bool gamepadConnectionStatus);
     void on_speedSlider_valueChanged(int value);
     void on_adminButton_clicked(bool checked);
+    void on_mirrorModeBtn_clicked();
+    void on_changeControlBtn_clicked();
+
+    void on_robotIPBtn_clicked();
 };
 #endif // MAINWINDOW_H

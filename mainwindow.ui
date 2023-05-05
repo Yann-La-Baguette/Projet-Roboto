@@ -883,8 +883,8 @@ Y : </string>
    <widget class="QLabel" name="wifiLogo">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>660</y>
+      <x>770</x>
+      <y>650</y>
       <width>141</width>
       <height>111</height>
      </rect>
@@ -911,7 +911,10 @@ Y : </string>
      <enum>QFrame::NoFrame</enum>
     </property>
     <property name="text">
-     <string>Logo Wi-Fi</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>images_wifi/wifi0.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -920,9 +923,9 @@ Y : </string>
    <widget class="QProgressBar" name="batteryPercentage">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>790</y>
-      <width>241</width>
+      <x>770</x>
+      <y>770</y>
+      <width>261</width>
       <height>81</height>
      </rect>
     </property>
@@ -957,9 +960,9 @@ Y : </string>
    <widget class="QLineEdit" name="lineEdit_cmd_reponse">
     <property name="geometry">
      <rect>
-      <x>1070</x>
+      <x>1040</x>
       <y>650</y>
-      <width>831</width>
+      <width>451</width>
       <height>21</height>
      </rect>
     </property>
@@ -983,7 +986,7 @@ Y : </string>
     <property name="geometry">
      <rect>
       <x>910</x>
-      <y>660</y>
+      <y>650</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -1010,10 +1013,10 @@ Y : </string>
    <widget class="QLabel" name="statusLabel">
     <property name="geometry">
      <rect>
-      <x>778</x>
-      <y>890</y>
-      <width>241</width>
-      <height>129</height>
+      <x>770</x>
+      <y>860</y>
+      <width>261</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1097,9 +1100,9 @@ Y : </string>
    <widget class="QLabel" name="adminMathsLabel">
     <property name="geometry">
      <rect>
-      <x>1070</x>
+      <x>1040</x>
       <y>680</y>
-      <width>831</width>
+      <width>451</width>
       <height>71</height>
      </rect>
     </property>
@@ -1130,6 +1133,89 @@ Y : </string>
     </property>
     <property name="text">
      <string>Admin Mode</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mirrorModeBtn">
+    <property name="geometry">
+     <rect>
+      <x>1710</x>
+      <y>650</y>
+      <width>201</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="text">
+     <string>Mirror Mode</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images_boutons/mirror.png</normaloff>images_boutons/mirror.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="changeControlBtn">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>950</y>
+      <width>261</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;</string>
+    </property>
+    <property name="text">
+     <string>Control Drone</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images_boutons/control.png</normaloff>images_boutons/control.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="robotIPBtn">
+    <property name="geometry">
+     <rect>
+      <x>1500</x>
+      <y>650</y>
+      <width>201</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial Black</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Change Robot IP</string>
     </property>
    </widget>
   </widget>

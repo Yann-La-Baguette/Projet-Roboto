@@ -1,3 +1,6 @@
+/// @file gamepadmanager.h
+/// @author Yann Di Padova
+
 #ifndef GAMEPADMANAGER_H
 #define GAMEPADMANAGER_H
 

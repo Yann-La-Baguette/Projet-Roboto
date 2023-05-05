@@ -1,3 +1,7 @@
+/// @file gamepadmanager.cpp
+/// @author Yann Di Padova
+/// @class GamepadManager
+
 #include "gamepadmanager.h"
 
 
