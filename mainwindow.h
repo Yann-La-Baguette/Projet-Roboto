@@ -19,6 +19,7 @@
 #include "gamepadmanager.h"
 #include "Tello/Tello.h"
 #include "qcgaugewidget.h"
+#include "database.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -41,17 +42,17 @@ public:
 
     // Showing gauges for drone datas
     /**
-     * @brief Affichage de la boussole
+     * @brief Affichage de la hauteur
      */
-    void affichageCompass();
+    void affichageHeight();
     /**
      * @brief Affichage des valeurs de Pitch et Roll
      */
     void affichageAttitude();
     /**
-     * @brief Affichage de la hauteur
+     * @brief Affichage de la boussole
      */
-    void affichageHeight();
+    void affichageCompass();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -72,6 +73,7 @@ private:
     Tello *tello;
     GamepadManager *gamepad;
     QWebSocket *alphabot;
+    database *db;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -88,63 +90,51 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Waypoints definition
+    // Waypoints and video definition
     QVector<QPoint> points;
     bool valeurDispo = false;
     QLabel *pointsLabel;
     bool showPic = false;
     QPixmap savePixmap;
     float aspectRatio;
-
-    bool activeVector = true;
-    QPoint start;
-    QPoint release;
-
-    short SavesThumbLX, SavesThumbLY, SavesThumbRX, SavesThumbRY, SavehighValue;
-    bool sameDatas;
-
-    int robotDirectionVector[2];
-
-    int captureHeight;
-
-    int telloSpeed;
-
     bool MirrorMode = false;
-    bool controlDroneMode = true;
-    QString RobotIPAdress = "172.21.28.78";
-
-private slots:
-    // Waypoints placing
-    /**
-     * @brief Get coordinates of points when left clic
-     * @param event
-     */
-    void mousePressEvent(QMouseEvent *event);
-    /**
-     * @brief mouseReleaseEvent
-     * @param event
-     */
-    void mouseReleaseEvent(QMouseEvent *event);
-    /**
-     * @brief Drawing waypoints for the robot on the picture
-     */
-    void loop();
-    /**
-     * @brief Delete the last waypoint
-     */
-    void on_delLastWaypointBtn_clicked();
-    /**
-     * @brief Reset waypoints
-     */
-    void reset();
-    /**
-     * @brief on_robotPosDefBtn_clicked
-     */
-    void on_robotPosDefBtn_clicked();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Vectors calculations
+    bool activeVector = true;
+    QPoint start;
+    QPoint release;
+    int robotDirectionVector[2];
+    int captureHeight;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Gamepad controls
+    short SavesThumbLX, SavesThumbLY, SavesThumbRX, SavesThumbRY, SavehighValue;
+    bool sameDatas;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Drone and robot controls
+    bool controlDroneMode = true;
+    QString RobotIPAdress = "172.21.28.78";
+    int telloSpeed;
+
+
+    int BatteryPercentage;
+    double Pitch;
+    double Roll;
+    double Yaw;
+    int Height;
+
+private slots:
+
     // Control Buttons
+    /**
+     * @brief on_changeControlBtn_clicked Change the controls from drone to Robot
+     */
+    void on_changeControlBtn_clicked();
     /**
      * @brief on_upBtn_clicked Go up
      */
@@ -201,7 +191,14 @@ private slots:
      * @brief on_flipBtn_clicked
      */
     void on_flipBtn_clicked();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @brief on_speedSlider_valueChanged Change Tello Speed
+     * @param value
+     */
+    void on_speedSlider_valueChanged(int value);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Shortcuts for control
     /**
@@ -231,17 +228,49 @@ private slots:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Waypoints placing
+    /**
+     * @brief Get coordinates of points when left clic
+     * @param event
+     */
+    void mousePressEvent(QMouseEvent *event);
+    /**
+     * @brief mouseReleaseEvent
+     * @param event
+     */
+    void mouseReleaseEvent(QMouseEvent *event);
+    /**
+     * @brief Drawing waypoints for the robot on the picture
+     */
+    void loop();
+    /**
+     * @brief Delete the last waypoint
+     */
+    void on_delLastWaypointBtn_clicked();
+    /**
+     * @brief Reset waypoints
+     */
+    void reset();
+    /**
+     * @brief on_robotPosDefBtn_clicked
+     */
+    void on_robotPosDefBtn_clicked();
+    /**
+     * @brief on_mirrorModeBtn_clicked Mirror the video for drone mirror
+     */
+    void on_mirrorModeBtn_clicked();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // GUI Data
     void displayStream(QPixmap video);
     void updateGUI();
     void updateConnectionStatus(TelloStatus alertSignal);
     void updateCommandReponse(TelloResponse response, QString datagram);
     void gamepadStatus(bool gamepadConnectionStatus);
-    void on_speedSlider_valueChanged(int value);
     void on_adminButton_clicked(bool checked);
-    void on_mirrorModeBtn_clicked();
-    void on_changeControlBtn_clicked();
-
     void on_robotIPBtn_clicked();
+
+    void dataBaseSave();
 };
 #endif // MAINWINDOW_H

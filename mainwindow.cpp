@@ -65,6 +65,18 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->gamepadStatusLabel->setVisible(false);
     ui->lineEdit_cmd_reponse->setVisible(false);
     ui->adminMathsLabel->setVisible(false);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    db = new database;
+    // Sauvegarde BDD
+    QTimer *timer2 = new QTimer(this);
+    connect(timer2, SIGNAL(timeout()), this, SLOT(dataBaseSave()));
+    timer->start(30000);
+
+    ui->gamepadStatusLabel->setVisible(false);
+    ui->lineEdit_cmd_reponse->setVisible(false);
+    ui->adminMathsLabel->setVisible(false);
 }
 MainWindow::~MainWindow(){
     alphabot->close();
@@ -72,6 +84,7 @@ MainWindow::~MainWindow(){
     delete tello;
     delete gamepad;
     delete alphabot;
+    delete db;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +289,6 @@ void MainWindow::on_speedSlider_valueChanged(int value)
 }
 
 void MainWindow::onGamepadButtonPressed(int gamepadButton){
-    qDebug()<<gamepadButton;
     switch (gamepadButton) {
 
 
@@ -339,7 +351,6 @@ void MainWindow::onGamepadJoystickChanged(short sThumbLX, short sThumbLY, short 
 
         if(sameDatas == false){
             tello->tello_command->setPosition((sThumbLX*100/32768),(sThumbLY*100/32768),(highValue*100/255),(sThumbRX*100/32768));
-            qDebug()<<"oui";
         }
         SavesThumbLX = sThumbLX;
         SavesThumbLY = sThumbLY;
@@ -437,15 +448,21 @@ void MainWindow::UIStyle(){
 void MainWindow::displayStream(QPixmap videoPix){
     ui->video->setFixedSize(840,630);
     if(MirrorMode == true){
-        ui->video->setPixmap(videoPix.transformed(QTransform().scale(-1, -1)));
+        ui->video->setPixmap(videoPix.transformed(QTransform().scale(1, -1)));
     }
     else{
         ui->video->setPixmap(videoPix);
     }
 
     if(showPic == true){
+
         ui->dronePicture->setFixedSize(840, 630);
-        savePixmap = videoPix.transformed(QTransform().scale(-1, 1));
+        if(MirrorMode == true){
+            savePixmap = videoPix.transformed(QTransform().scale(1, -1));
+        }
+        else{
+            savePixmap = videoPix;
+        }
 
         ui->dronePicture->setPixmap(savePixmap);
 
@@ -458,8 +475,6 @@ void MainWindow::displayStream(QPixmap videoPix){
         QString path = "./dronePictures/" + formattedTimeMsg;
         QDir dir(path);
 
-        //dir.mkdir(formattedTimeMsg);
-
         dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
         int increment = dir.count() + 1;
 
@@ -470,7 +485,8 @@ void MainWindow::displayStream(QPixmap videoPix){
         savePixmap.save(&file, "PNG");
 
 
-
+        dataBaseSave();
+        db->insertPicture(file.fileName());
 
         reset();
         showPic = false;
@@ -479,6 +495,7 @@ void MainWindow::displayStream(QPixmap videoPix){
 void MainWindow::on_captureBtn_clicked(){
     showPic = true;
     captureHeight = tello->tello_state->getHeight();
+
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -555,7 +572,6 @@ void MainWindow::loop(){
 
 
         for(int i = 0 ; i<points.count() ; i++){
-            qDebug()<<points[i];
             QPoint point = points[i]*correction;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
@@ -640,7 +656,6 @@ void MainWindow::on_launchRobotBtn_clicked(){
 void MainWindow::updateGUI(){
 
     // Wifi
-
     int wifiValue = 0;
     int SNR = 90;
 
@@ -662,27 +677,28 @@ void MainWindow::updateGUI(){
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
 
     // Battery
-
-    ui->batteryPercentage->setValue(tello->tello_state->getBattery());
+    BatteryPercentage = tello->tello_state->getBattery();
+    ui->batteryPercentage->setValue(BatteryPercentage);
 
     // Pitch and roll
-
-    mAttMeter->setCurrentPitch(tello->tello_state->getPitch());
-    mAttMeter->setCurrentRoll(tello->tello_state->getRoll());
+    Pitch = tello->tello_state->getPitch();
+    Roll = tello->tello_state->getRoll();
+    mAttMeter->setCurrentPitch(Pitch);
+    mAttMeter->setCurrentRoll(Roll);
 
     // Compass
-
     int valueCompass;
-    if(tello->tello_state->getYaw() + 270 >= 360){
-        valueCompass = tello->tello_state->getYaw()-90;
+    Yaw = tello->tello_state->getYaw();
+    if(Yaw + 270 >= 360){
+        valueCompass = Yaw-90;
     } else{
-        valueCompass = tello->tello_state->getYaw()+270;
+        valueCompass = Yaw+270;
     }
     mCompassNeedle->setCurrentValue(valueCompass);
 
     // Height
-
-    mAirspeedNeedle->setCurrentValue(tello->tello_state->getHeight());
+    Height = tello->tello_state->getHeight();
+    mAirspeedNeedle->setCurrentValue(Height);
 }
 void MainWindow::updateConnectionStatus(TelloStatus alertSignal){
     QPixmap image("./images_wifi/wifi0.png");
@@ -766,7 +782,7 @@ void MainWindow::on_changeControlBtn_clicked(){
 
 
 void MainWindow::on_robotIPBtn_clicked(){
-    RobotIPAdress = QInputDialog::getText();
+    RobotIPAdress = QInputDialog::getText(this, "Alphabot IP", "Enter Alphabot IP");
     alphabot->close();
     QUrl url;
     url.setUrl("ws://" + RobotIPAdress);
@@ -774,3 +790,6 @@ void MainWindow::on_robotIPBtn_clicked(){
     alphabot->open(url);
 }
 
+void MainWindow::dataBaseSave(){
+    db->insertData(Height,Pitch,Roll,Yaw,BatteryPercentage);
+}

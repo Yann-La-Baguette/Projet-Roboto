@@ -1,4 +1,4 @@
-QT       += core gui network websockets
+QT       += core gui network websockets sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,6 +14,7 @@ SOURCES += \
     Tello/TelloLogger.cpp \
     Tello/TelloState.cpp \
     Tello/TelloStream.cpp \
+    database.cpp \
     gamepadmanager.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     Tello/TelloState.h \
     Tello/TelloStream.h \
     Tello/tello.h \
+    database.h \
     gamepadmanager.h \
     mainwindow.h \
     qcgaugewidget.h \
@@ -44,6 +46,7 @@ DISTFILES += \
     classDiagram.qmodel \
     icone.ico \
     images_boutons/Flip.png \
+    images_boutons/IP.png \
     images_boutons/Stop.png \
     images_boutons/back.png \
     images_boutons/battery.png \
