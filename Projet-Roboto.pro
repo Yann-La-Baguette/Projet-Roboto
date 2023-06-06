@@ -46,6 +46,7 @@ DISTFILES += \
     classDiagram.qmodel \
     icone.ico \
     images_boutons/Flip.png \
+    images_boutons/Folder.png \
     images_boutons/IP.png \
     images_boutons/Stop.png \
     images_boutons/back.png \

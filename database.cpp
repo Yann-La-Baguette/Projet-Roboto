@@ -12,7 +12,7 @@ database::database(){
     }
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE robot_project_data (id INTEGER PRIMARY KEY AUTOINCREMENT, Height INTEGER, Pitch REAL, Roll REAL, Yaw REAL, Battery INTEGER, FOREIGN KEY (id) REFERENCES robot_project(id))");
+    query.prepare("CREATE TABLE robot_project_data (id INTEGER PRIMARY KEY AUTOINCREMENT, Height INTEGER, Pitch REAL, Roll REAL, Yaw REAL, Battery INTEGER, Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Picture_id INTEGER, FOREIGN KEY (Picture_id) REFERENCES robot_project_pictures(id))");
     if (!query.exec()) {
         QString error = QString("Erreur lors de la création de la table robot_project_data: %1").arg(query.lastError().text());
         qDebug() << error;
@@ -32,20 +32,27 @@ database::~database(){
 
 void database::insertData(int height, double pitch, double roll, double yaw, int battery){
     QSqlQuery query;
-    query.prepare("INSERT INTO robot_project_data (Height, Pitch, Roll, Yaw, Battery) VALUES (:height, :pitch, :roll, :yaw, :battery, :picture)");
+
+
+    query.prepare("INSERT INTO robot_project_data (Height, Pitch, Roll, Yaw, Battery, Picture_id) VALUES (:height, :pitch, :roll, :yaw, :battery, :pictureId)");
     query.bindValue(":height", height);
     query.bindValue(":pitch", pitch);
     query.bindValue(":roll", roll);
     query.bindValue(":yaw", yaw);
     query.bindValue(":battery", battery);
+    query.bindValue(":pictureId", pictureID);
 
-    if(!query.exec()){
-        qDebug() << "Erreur lors de l'insertion : " << query.lastError().text();
-    }
+    query.exec();
+
+
 }
 
 void database::insertPicture(QString picturePath){
     QSqlQuery query;
-    query.prepare("INSERT INTO robot_project_pictures (:picture)");
+    query.prepare("INSERT INTO robot_project_pictures (Picture) VALUES (:picture)");
     query.bindValue(":picture", picturePath);
+
+    query.exec();
+
+    pictureID = query.lastInsertId().toInt();
 }

@@ -17,6 +17,8 @@ public:
     void insertPicture(QString picturePath);
 private:
     QSqlDatabase db;
+
+    int pictureID;
 };
 
 #endif // DATABASE_H

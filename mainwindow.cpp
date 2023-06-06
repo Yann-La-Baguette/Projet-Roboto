@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     // Sauvegarde BDD
     QTimer *timer2 = new QTimer(this);
     connect(timer2, SIGNAL(timeout()), this, SLOT(dataBaseSave()));
-    timer->start(30000);
+    timer2->start(10000);
 
     ui->gamepadStatusLabel->setVisible(false);
     ui->lineEdit_cmd_reponse->setVisible(false);
@@ -468,25 +468,24 @@ void MainWindow::displayStream(QPixmap videoPix){
 
 
 
-        QDateTime date = QDateTime::currentDateTime();
-        QString formattedTime = date.toString("dd-MM-yyyy");
-        QByteArray formattedTimeMsg = formattedTime.toLocal8Bit();
+        QString date = QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss");
 
-        QString path = "./dronePictures/" + formattedTimeMsg;
+        QString path = "./dronePictures";
         QDir dir(path);
 
+        if (!dir.exists()) {
+            dir.mkpath("./");
+        }
+
         dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
-        int increment = dir.count() + 1;
 
-
-
-        QFile file("./dronePictures/" + formattedTime + "/image" + QString::number(increment) + ".png");
+        QFile file(path + "/" + date + ".png");
         file.open(QIODevice::WriteOnly);
         savePixmap.save(&file, "PNG");
 
 
-        dataBaseSave();
         db->insertPicture(file.fileName());
+        dataBaseSave();
 
         reset();
         showPic = false;
@@ -575,7 +574,6 @@ void MainWindow::loop(){
             QPoint point = points[i]*correction;
             painter.drawLine(point.x()-5, point.y(), point.x()+5, point.y());
             painter.drawLine(point.x(), point.y()-5, point.x(), point.y()+5);
-            ui->cooSouris->setText("Last Waypoint Coordinates : \nX : " + QString::number(point.x()) + "\nY : " + QString::number(point.y()));
         }
 
         painter.end();
@@ -588,13 +586,11 @@ void MainWindow::on_delLastWaypointBtn_clicked(){
     if(points.isEmpty() == false){
         valeurDispo = true;
         points.removeLast();
-        ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
     }
 }
 void MainWindow::reset(){
     points.clear();
     valeurDispo = true;
-    ui->cooSouris->setText("Last Waypoint Coordinates : \nX : \nY : ");
 }
 
 void MainWindow::on_launchRobotBtn_clicked(){
@@ -793,3 +789,10 @@ void MainWindow::on_robotIPBtn_clicked(){
 void MainWindow::dataBaseSave(){
     db->insertData(Height,Pitch,Roll,Yaw,BatteryPercentage);
 }
+
+
+void MainWindow::on_captureDirBtn_clicked(){
+    QString folderPath = "./dronePictures";
+    QDesktopServices::openUrl(QUrl::fromLocalFile(folderPath));
+}
+
