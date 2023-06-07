@@ -15,6 +15,9 @@
 #include <QDateTime>
 #include <QInputDialog>
 #include <QDesktopServices>
+#include <QtConcurrent>
+#include <unistd.h>
+#include <QFuture>
 
 // Personnal classes
 #include "gamepadmanager.h"
@@ -274,5 +277,8 @@ private slots:
 
     void dataBaseSave();
     void on_captureDirBtn_clicked();
+
+
+    void launchRobot(double Angle, double ObjectiveDistance);
 };
 #endif // MAINWINDOW_H

@@ -594,57 +594,81 @@ void MainWindow::reset(){
 }
 
 void MainWindow::on_launchRobotBtn_clicked(){
-    double correction = 2/1.75;
-    double Ratio_distance = 3.636363636; // m/s
-    double Ratio_angle = 0.00875; // °/s
-    int goalVector[2] = {0,0};
+    QFuture<void> f = QtConcurrent::run([=, this]{
+        double correction = 2/1.75;
 
-    double numerator = 0;
-    double denominator = 0;
-    double Angle = 0;
-    double AngleDirect = 0;
+        int goalVector[2] = {0,0};
 
-    double ScreenDistance = 0;
-    double ObjectiveDistance = 0;
+        double numerator = 0;
+        double denominator = 0;
+        double Angle = 0;
 
-    for(int i = 0 ; i<points.count() ; i++){
-        if(i==0){
-            goalVector[0] = abs(points[0].x()*correction - start.x()*correction);
-            goalVector[1] = abs(points[0].y()*correction - start.y()*correction);
-        }
-        else{
-            goalVector[0] = abs(points[i].x()*correction - points[i-1].x()*correction);
-            goalVector[1] = abs(points[i].y()*correction - points[i-1].y()*correction);
-        }
+        double AngleDirect = 0;
+        double Ratio_distance = 3.636363636; // m/s
+        double Ratio_angle = 0.00875; // °/s
 
-        numerator = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
-        denominator = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
-        Angle = qAcos(numerator / denominator);
-        Angle = qRadiansToDegrees(Angle);
+        double ScreenDistance = 0;
+        double ObjectiveDistance = 0;
 
-        ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
-        ObjectiveDistance = (ScreenDistance * ((960/(2*(tan(41.3)*captureHeight)))/100))/100;
-        ui->adminMathsLabel->setText("Screen distance : " + QString::number(ScreenDistance) + "\t\t\tObjective Distance : " + QString::number(ObjectiveDistance) + " m\nAngle : " + QString::number(Angle) + "°");
+        bool droite;
 
-        if (Angle <180){
-            alphabot->sendTextMessage("dr");
-            AngleDirect = Angle;
-        }
-        else{
-            AngleDirect = 360 - Angle;
-            alphabot->sendTextMessage("ga");
-        }
-        QTimer::singleShot(int(Ratio_angle*AngleDirect*1000), [=]() {
+        for(int i = 0 ; i<points.count() ; i++){
+            if(i==0){
+                goalVector[0] = abs(points[0].x()*correction - start.x()*correction);
+                goalVector[1] = abs(points[0].y()*correction - start.y()*correction);
+            }
+            else{
+                goalVector[0] = abs(points[i].x()*correction - points[i-1].x()*correction);
+                goalVector[1] = abs(points[i].y()*correction - points[i-1].y()*correction);
+            }
+
+            numerator = robotDirectionVector[0]*goalVector[0] + robotDirectionVector[1]*goalVector[1];
+            denominator = qSqrt(pow(robotDirectionVector[0], 2) + pow(robotDirectionVector[1], 2)) * qSqrt(pow(goalVector[0], 2) + pow(goalVector[1], 2));
+            Angle = qAcos(numerator / denominator);
+            Angle = qRadiansToDegrees(Angle);
+
+            ScreenDistance = qSqrt(pow(goalVector[0], 2)+ pow(goalVector[1], 2));
+            ObjectiveDistance = (ScreenDistance * ((960/(2*(tan(41.3)*captureHeight)))/100))/100;
+            ui->adminMathsLabel->setText("Screen distance : " + QString::number(ScreenDistance) + "\t\t\tObjective Distance : " + QString::number(ObjectiveDistance) + " m\nAngle : " + QString::number(Angle) + "°");
+
+            //QFuture<void> f = QtConcurrent::run(launchRobot, Angle, ObjectiveDistance);
+            //f.waitForFinished();
+            if (Angle <180){
+                AngleDirect = Angle;
+                droite = true;
+            }
+            else{
+                AngleDirect = 360 - Angle;
+                droite = false;
+            }
+
+            qDebug() << "CC DEBUT";
+            if (droite == true){
+                alphabot->sendTextMessage("dr");
+            }
+            else{
+                alphabot->sendTextMessage("ga");
+            }
+            qDebug()<<"1";
+
+            QThread::sleep(Ratio_angle*AngleDirect);
             alphabot->sendTextMessage("av");
-        });
-        QTimer::singleShot(int((Ratio_angle*AngleDirect+Ratio_distance*ObjectiveDistance)*1000), [=]() {
+            qDebug()<<"2";
+
+            QThread::sleep(Ratio_distance*ObjectiveDistance);
             alphabot->sendTextMessage("stop");
-        });
+            qDebug()<<"3";
+
+            robotDirectionVector[0] = goalVector[0];
+            robotDirectionVector[1] = goalVector[1];
+        }
+    });
+}
+
+void MainWindow::launchRobot(double Angle, double ObjectiveDistance){
 
 
-        robotDirectionVector[0] = goalVector[0];
-        robotDirectionVector[1] = goalVector[1];
-    }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
