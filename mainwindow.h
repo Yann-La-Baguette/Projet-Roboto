@@ -277,8 +277,5 @@ private slots:
 
     void dataBaseSave();
     void on_captureDirBtn_clicked();
-
-
-    void launchRobot(double Angle, double ObjectiveDistance);
 };
 #endif // MAINWINDOW_H

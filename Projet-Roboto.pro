@@ -32,7 +32,6 @@ HEADERS += \
     mainwindow.h \
     qcgaugewidget.h \
 
-
 FORMS += \
     mainwindow.ui
 
@@ -100,3 +99,5 @@ LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\libopencv_videoio470
 LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\opencv_videoio_ffmpeg470_64.dll
 
 LIBS += -lXinput
+
+RESOURCES +=

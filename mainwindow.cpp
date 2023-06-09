@@ -651,11 +651,11 @@ void MainWindow::on_launchRobotBtn_clicked(){
             }
             qDebug()<<"1";
 
-            QThread::sleep(Ratio_angle*AngleDirect);
+            QThread::usleep(Ratio_angle*AngleDirect*1000000);
             alphabot->sendTextMessage("av");
             qDebug()<<"2";
 
-            QThread::sleep(Ratio_distance*ObjectiveDistance);
+            QThread::usleep(Ratio_distance*ObjectiveDistance*1000000);
             alphabot->sendTextMessage("stop");
             qDebug()<<"3";
 
@@ -663,12 +663,6 @@ void MainWindow::on_launchRobotBtn_clicked(){
             robotDirectionVector[1] = goalVector[1];
         }
     });
-}
-
-void MainWindow::launchRobot(double Angle, double ObjectiveDistance){
-
-
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
