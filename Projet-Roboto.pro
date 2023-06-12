@@ -100,4 +100,5 @@ LIBS += C:\Users\ydipadova\Documents\opencv\buildcustom\bin\opencv_videoio_ffmpe
 
 LIBS += -lXinput
 
-RESOURCES +=
+RESOURCES += \
+    images.qrc

@@ -685,7 +685,7 @@ void MainWindow::updateGUI(){
         wifiValue = 0;
     }
 
-    QString imageName = "./images_wifi/wifi" + QString::number(wifiValue) + ".png"; // Nom de l'image à charger
+    QString imageName = ":/img_wifi/wifi" + QString::number(wifiValue) + ".png"; // Nom de l'image à charger
     QPixmap image(imageName); // Chargement de l'image
     QPixmap scaledImage = image.scaled(ui->wifiLogo->size());
     ui->wifiLogo->setPixmap(scaledImage); // Affichage de l'image dans le label
@@ -715,7 +715,7 @@ void MainWindow::updateGUI(){
     mAirspeedNeedle->setCurrentValue(Height);
 }
 void MainWindow::updateConnectionStatus(TelloStatus alertSignal){
-    QPixmap image("./images_wifi/wifi0.png");
+    QPixmap image(":/img_wifi/wifi0.png");
     QPixmap scaledImage = image.scaled(QSize(300, 382), Qt::KeepAspectRatio);
     switch(alertSignal){
         case TelloStatus::TELLO_CONNECTED:{
@@ -813,4 +813,3 @@ void MainWindow::on_captureDirBtn_clicked(){
     QString folderPath = "./dronePictures";
     QDesktopServices::openUrl(QUrl::fromLocalFile(folderPath));
 }
-

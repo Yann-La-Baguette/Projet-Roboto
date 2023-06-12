@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/img_btn">
+        <file>images_boutons/back.png</file>
+        <file>images_boutons/cameraChange.png</file>
+        <file>images_boutons/capture.png</file>
+        <file>images_boutons/control.png</file>
+        <file>images_boutons/delete_last_waypoint.png</file>
+        <file>images_boutons/down.png</file>
+        <file>images_boutons/Flip.png</file>
+        <file>images_boutons/Folder.png</file>
+        <file>images_boutons/forward.png</file>
+        <file>images_boutons/go.png</file>
+        <file>images_boutons/IP.png</file>
+        <file>images_boutons/land.png</file>
+        <file>images_boutons/left.png</file>
+        <file>images_boutons/mirror.png</file>
+        <file>images_boutons/reset_waypoints.png</file>
+        <file>images_boutons/right.png</file>
+        <file>images_boutons/robotoPosition.png</file>
+        <file>images_boutons/robotPosition.png</file>
+        <file>images_boutons/Stop.png</file>
+        <file>images_boutons/stopMove.png</file>
+        <file>images_boutons/take_off.png</file>
+        <file>images_boutons/tLeft.png</file>
+        <file>images_boutons/tRight.png</file>
+        <file>images_boutons/up.png</file>
+    </qresource>
+    <qresource prefix="/img_wifi">
+        <file>images_wifi/wifi0.png</file>
+        <file>images_wifi/wifi1.png</file>
+        <file>images_wifi/wifi2.png</file>
+        <file>images_wifi/wifi3.png</file>
+        <file>images_wifi/wifi4.png</file>
+    </qresource>
+    <qresource prefix="/icon">
+        <file>icone.ico</file>
+    </qresource>
+    <qresource prefix="/img_controller">
+        <file>Controller.png</file>
+    </qresource>
+</RCC>

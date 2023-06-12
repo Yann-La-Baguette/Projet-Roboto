@@ -82,8 +82,8 @@
 (B)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Flip.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Flip.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/Flip.png</normaloff>:/img_btn/images_boutons/Flip.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -121,8 +121,8 @@
 (Page Up)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/take_off.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/take_off.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/take_off.png</normaloff>:/img_btn/images_boutons/take_off.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -160,8 +160,8 @@
 (Page Down)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/land.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/land.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/land.png</normaloff>:/img_btn/images_boutons/land.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -193,8 +193,8 @@
 (Escape)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Stop.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/Stop.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/Stop.png</normaloff>:/img_btn/images_boutons/Stop.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -244,8 +244,8 @@
 (W)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/up.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/up.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/up.png</normaloff>:/img_btn/images_boutons/up.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -287,8 +287,8 @@
 (A)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tLeft.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tLeft.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/tLeft.png</normaloff>:/img_btn/images_boutons/tLeft.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -326,8 +326,8 @@
 (Q)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/left.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/left.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/left.png</normaloff>:/img_btn/images_boutons/left.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -385,8 +385,8 @@
 (Z)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/forward.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/forward.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/forward.png</normaloff>:/img_btn/images_boutons/forward.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -424,8 +424,8 @@
 (F)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/stopMove.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/stopMove.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/stopMove.png</normaloff>:/img_btn/images_boutons/stopMove.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -463,8 +463,8 @@
 (S)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/back.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/back.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/back.png</normaloff>:/img_btn/images_boutons/back.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -506,8 +506,8 @@
 (E)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tRight.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/tRight.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/tRight.png</normaloff>:/img_btn/images_boutons/tRight.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -545,8 +545,8 @@
 (D)</string>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/right.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/right.png</iconset>
+            <iconset resource="images.qrc">
+             <normaloff>:/img_btn/images_boutons/right.png</normaloff>:/img_btn/images_boutons/right.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -604,8 +604,8 @@
 (X)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/down.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/down.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/down.png</normaloff>:/img_btn/images_boutons/down.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -649,8 +649,8 @@
 (C)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/capture.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/capture.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/capture.png</normaloff>:/img_btn/images_boutons/capture.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -682,8 +682,8 @@
 directory</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>images_boutons/Folder.png</normaloff>images_boutons/Folder.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/Folder.png</normaloff>:/img_btn/images_boutons/Folder.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -715,8 +715,8 @@ directory</string>
 (R)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/reset_waypoints.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/reset_waypoints.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/reset_waypoints.png</normaloff>:/img_btn/images_boutons/reset_waypoints.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -748,8 +748,8 @@ directory</string>
 (T)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/delete_last_waypoint.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/delete_last_waypoint.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/delete_last_waypoint.png</normaloff>:/img_btn/images_boutons/delete_last_waypoint.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -781,8 +781,8 @@ directory</string>
 (Y)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/robotPosition.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/robotPosition.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/robotPosition.png</normaloff>:/img_btn/images_boutons/robotPosition.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -814,8 +814,8 @@ directory</string>
 (U)</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/go.png</normaloff>../build-Projet-Roboto-Desktop_Qt_6_2_4_MinGW_64_bit-Debug/images_boutons/go.png</iconset>
+        <iconset resource="images.qrc">
+         <normaloff>:/img_btn/images_boutons/go.png</normaloff>:/img_btn/images_boutons/go.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -1016,7 +1016,7 @@ directory</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Controller.png</pixmap>
+     <pixmap resource="images.qrc">:/img_controller/Controller.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -1169,8 +1169,8 @@ directory</string>
      <string>Mirror Mode</string>
     </property>
     <property name="icon">
-     <iconset>
-      <normaloff>images_boutons/mirror.png</normaloff>images_boutons/mirror.png</iconset>
+     <iconset resource="images.qrc">
+      <normaloff>:/img_btn/images_boutons/mirror.png</normaloff>:/img_btn/images_boutons/mirror.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -1201,8 +1201,8 @@ directory</string>
      <string>Control Drone</string>
     </property>
     <property name="icon">
-     <iconset>
-      <normaloff>images_boutons/control.png</normaloff>images_boutons/control.png</iconset>
+     <iconset resource="images.qrc">
+      <normaloff>:/img_btn/images_boutons/control.png</normaloff>:/img_btn/images_boutons/control.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -1233,8 +1233,8 @@ directory</string>
      <string>Change Robot IP</string>
     </property>
     <property name="icon">
-     <iconset>
-      <normaloff>images_boutons/IP.png</normaloff>images_boutons/IP.png</iconset>
+     <iconset resource="images.qrc">
+      <normaloff>:/img_btn/images_boutons/IP.png</normaloff>:/img_btn/images_boutons/IP.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -1246,7 +1246,9 @@ directory</string>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>Reset</sender>

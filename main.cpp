@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
 
     // Icone et nom d'application
     w.setWindowTitle("Roboto Collaboratif");
-    w.setWindowIcon(QIcon("./icone"));
+    w.setWindowIcon(QIcon(":/icon/icone.ico"));
     w.showMaximized();
 
     return a.exec();
